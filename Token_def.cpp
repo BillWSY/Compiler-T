@@ -1,0 +1,51 @@
+#include "Token_def.h"
+
+typedef std::map<int, std::string> TokDesMap_t;
+
+const TokDesMap_t::value_type TokDesMap_const[] = {
+    std::make_pair(TOK_ARRAY, "TOK_ARRAY"),
+    std::make_pair(TOK_BREAK, "TOK_BREAK"),
+    std::make_pair(TOK_DO, "TOK_DO"),
+    std::make_pair(TOK_ELSE, "TOK_ELSE"),
+    std::make_pair(TOK_END, "TOK_END"),
+    std::make_pair(TOK_FOR, "TOK_FOR"),
+    std::make_pair(TOK_FUNCTION, "TOK_FUNCTION"),
+    std::make_pair(TOK_IF, "TOK_IF"),
+    std::make_pair(TOK_IN, "TOK_IN"),
+    std::make_pair(TOK_LET, "TOK_LET"),
+    std::make_pair(TOK_NIL, "TOK_NIL"),
+    std::make_pair(TOK_OF, "TOK_OF"),
+    std::make_pair(TOK_THEN, "TOK_THEN"),
+    std::make_pair(TOK_TO, "TOK_TO"),
+    std::make_pair(TOK_TYPE, "TOK_TYPE"),
+    std::make_pair(TOK_VAR, "TOK_VAR"),
+    std::make_pair(TOK_WHILE, "TOK_WHILE"),
+    std::make_pair(TOK_PLUS_SIGN, "TOK_PLUS_SIGN"),
+    std::make_pair(TOK_MINUS_SIGN, "TOK_MINUS_SIGN"),
+    std::make_pair(TOK_MULT_SIGN, "TOK_MULT_SIGN"),
+    std::make_pair(TOK_DIV, "TOK_DIV"),
+    std::make_pair(TOK_AND, "TOK_AND"),
+    std::make_pair(TOK_OR, "TOK_OR"),
+    std::make_pair(TOK_EQUALS, "TOK_EQUALS"),
+    std::make_pair(TOK_NEQ, "TOK_NEQ"),
+    std::make_pair(TOK_LT, "TOK_LT"),
+    std::make_pair(TOK_LTE, "TOK_LTE"),
+    std::make_pair(TOK_GT, "TOK_GT"),
+    std::make_pair(TOK_GTE, "TOK_GTE"),
+    std::make_pair(TOK_ASSIGN, "TOK_ASSIGN"),
+    std::make_pair(TOK_SEMIC, "TOK_SEMIC"),
+    std::make_pair(TOK_COMMA, "TOK_COMMA"),
+    std::make_pair(TOK_COLON, "TOK_COLON"),
+    std::make_pair(TOK_DOT, "TOK_DOT"),
+    std::make_pair(TOK_LBR, "TOK_LBR"),
+    std::make_pair(TOK_RBR, "TOK_RBR"),
+    std::make_pair(TOK_LSQB, "TOK_LSQB"),
+    std::make_pair(TOK_RSQB, "TOK_RSQB"),
+    std::make_pair(TOK_LCURLB, "TOK_LCURLB"),
+    std::make_pair(TOK_RCURLB, "TOK_RCURLB"),
+    std::make_pair(TOK_INTEGER, "TOK_INTEGER"),
+    std::make_pair(TOK_ID, "TOK_ID"),
+    std::make_pair(TOK_STRING, "TOK_STRING")
+};
+
+const TokDesMap_t tokDesMap(TokDesMap_const, TokDesMap_const + CNT_TOKEN);

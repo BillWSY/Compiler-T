@@ -51,6 +51,7 @@ using namespace std;
 "}"         { return TOK_RCURLB; }
 [0-9]+      { return TOK_INTEGER; }
 [a-zA-Z][0-9a-zA-z_]*      { return TOK_ID; }
+\".*\"      { return TOK_STRING; }
 
 %%
 
@@ -58,7 +59,7 @@ int main()
 {
     int t;
     while (t = yylex()) {
-        cout << yytext << "\t" << t << endl;
+        cout << yytext << " " << t << " " << (tokDesMap.find(t) -> second) << endl;
     }
 }
 
