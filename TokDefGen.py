@@ -21,20 +21,25 @@ for line in linelist:
             tokDes = tokDes + ",\n"
         tokenName = name.replace(";", "");
         fdef.write("#define " + tokenName + " " + str(defBase + cnt) + "\n")
-        tokDes = tokDes + "    std::make_pair(" + tokenName + ", \"" + tokenName + "\")"
+        tokDes = tokDes + "    \"" + tokenName + "\""
         cnt = cnt + 1
 fdef.write("\n#define CNT_TOKEN " + str(cnt) + "\n")
-fdef.write("\n#include <string>\n")
-fdef.write("#include <map>\n\n")
-fdef.write("typedef std::map<int, std::string> TokDesMap_t;\n")
-fdef.write("extern const TokDesMap_t tokDesMap;")
+fdef.write("#define BASE_TOKEN " + str(defBase) + "\n")
+fdef.write("\n#include <string>\n");
+fdef.write("\nstd::string getTokenName(int tokenType);")
+fdef.write("\n")
 
 ftokdes.write("#include \"Token_def.h\"\n")
-ftokdes.write("\ntypedef std::map<int, std::string> TokDesMap_t;\n")
-ftokdes.write("\nconst TokDesMap_t::value_type TokDesMap_const[] = {\n");
+ftokdes.write("#include <cassert>\n")
+ftokdes.write("const std::string tokenNameTable[] = {\n")
 ftokdes.write(tokDes);
 ftokdes.write("\n};\n\n");
-ftokdes.write("const TokDesMap_t tokDesMap(TokDesMap_const, TokDesMap_const + CNT_TOKEN);")
+ftokdes.write("std::string getTokenName(int tokenType)\n")
+ftokdes.write("{\n")
+ftokdes.write("    assert((tokenType >= BASE_TOKEN) && (tokenType < (BASE_TOKEN + CNT_TOKEN)));\n")
+ftokdes.write("    return tokenNameTable[tokenType - BASE_TOKEN];\n")
+ftokdes.write("}\n")
+ftokdes.write("\n")
 
 ftok.close()
 fdef.close()

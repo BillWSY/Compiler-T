@@ -2009,7 +2009,7 @@ int main()
 {
     int t;
     while (t = yylex()) {
-        cout << yytext << " " << t << " " << (tokDesMap.find(t) -> second) << endl;
+        cout << yytext << " " << t << " " << getTokenName(t) << endl;
     }
 }
 

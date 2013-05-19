@@ -43,9 +43,8 @@
 #define TOK_STRING 1042
 
 #define CNT_TOKEN 43
+#define BASE_TOKEN 1000
 
 #include <string>
-#include <map>
 
-typedef std::map<int, std::string> TokDesMap_t;
-extern const TokDesMap_t tokDesMap;
+std::string getTokenName(int tokenType);
