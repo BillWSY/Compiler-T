@@ -1,0 +1,22 @@
+flex version 2.5.35 Apple(flex-31) usage statistics:
+  scanner options: -vI8 -Cem -oTokeniser.c
+  222/2000 NFA states
+  86/1000 DFA states (384 words)
+  42 rules
+  Compressed tables always back-up
+  1/40 start conditions
+  131 epsilon states, 46 double epsilon states
+  4/100 character classes needed 130/500 words of storage, 0 reused
+  1517 state/nextstate pairs created
+  174/1343 unique/duplicate transitions
+  88/1000 base-def entries created
+  138/2000 (peak 106) nxt-chk entries created
+  4/2500 (peak 86) template nxt-chk entries created
+  0 empty table entries
+  2 protos created
+  2 templates created, 57 uses
+  43/256 equivalence classes created
+  2/256 meta-equivalence classes created
+  0 (0 saved) hash collisions, 91 DFAs equal
+  0 sets of reallocations needed
+  751 total table entries needed

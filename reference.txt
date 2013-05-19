@@ -1,0 +1,2 @@
+Lexicon adapted from
+    http://www.credmond.net/files/projects/tigerlexicalanalyser/TigerTokeniser.jj
