@@ -14,9 +14,8 @@ tokDes = ""
 tokList = []
 linelist = ftok.readlines()
 for line in linelist:
-    tokNames = re.findall("TOK_[A-Z0-9_]*;", line);
-    for name in tokNames:
-        tokenName = name.replace(";", "");
+    tokNames = re.findall("TOK_[A-Z0-9_]*", line);
+    for tokenName in tokNames:
         if (tokList.count(tokenName)==0):
             tokList.append(tokenName)
             if (isFirst):
