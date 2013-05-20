@@ -41,8 +41,11 @@
 #define TOK_INTEGER 1040
 #define TOK_ID 1041
 #define TOK_STRING 1042
+#define TOK_BLANK 1043
+#define TOK_COMMENT_IN 1044
+#define TOK_COMMENT_OUT 1045
 
-#define CNT_TOKEN 43
+#define CNT_TOKEN 46
 #define BASE_TOKEN 1000
 
 #include <string>

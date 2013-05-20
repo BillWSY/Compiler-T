@@ -5,6 +5,8 @@
 
 using namespace std;
 
+int commentNesting = 0;
+
 %}
 
 %%
@@ -50,8 +52,11 @@ using namespace std;
 "{"         { return TOK_LCURLB; }
 "}"         { return TOK_RCURLB; }
 [0-9]+      { return TOK_INTEGER; }
-[a-zA-Z][0-9a-zA-z_]*      { return TOK_ID; }
-\".*\"      { return TOK_STRING; }
+[a-zA-Z][0-9a-zA-z_]*       { return TOK_ID; }
+\"([^\"]|\\\")*\"           { return TOK_STRING; }
+[" "\t\n\r\f]   { return TOK_BLANK; }
+"/*"(([^\/\*])|(\/[^\*])|(\*[^\/]))* { ++ commentNesting; return TOK_COMMENT_IN; }
+"*/"        { -- commentNesting; return TOK_COMMENT_OUT; }
 
 %%
 
