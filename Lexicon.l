@@ -8,7 +8,7 @@ using namespace std;
 int commentNesting = 0;
 
 %}
-
+%x  COMMENT
 %%
 
 "array"     { return TOK_ARRAY; }
@@ -55,8 +55,19 @@ int commentNesting = 0;
 [a-zA-Z][0-9a-zA-z_]*       { return TOK_ID; }
 \"([^\"]|\\\")*\"           { return TOK_STRING; }
 [" "\t\n\r\f]   { return TOK_BLANK; }
-"/*"(([^\/\*])|(\/[^\*])|(\*[^\/]))* { ++ commentNesting; return TOK_COMMENT_IN; }
-"*/"        { -- commentNesting; return TOK_COMMENT_OUT; }
+"/*"            {   BEGIN COMMENT;
+                    ++ commentNesting;
+                    return TOK_COMMENT_IN; 
+                }
+<COMMENT>"/*"   {   ++ commentNesting;
+                    return TOK_COMMENT_IN; 
+                }
+<COMMENT>"*/"   {   -- commentNesting;
+                    if (commentNesting == 0) BEGIN INITIAL;
+                    return TOK_COMMENT_OUT;
+                }
+<COMMENT>.      |
+<COMMENT>\n     { return TOK_COMMENT_CONTENT; }
 
 %%
 

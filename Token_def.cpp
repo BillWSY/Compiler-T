@@ -46,7 +46,8 @@ const std::string tokenNameTable[] = {
     "TOK_STRING",
     "TOK_BLANK",
     "TOK_COMMENT_IN",
-    "TOK_COMMENT_OUT"
+    "TOK_COMMENT_OUT",
+    "TOK_COMMENT_CONTENT"
 };
 
 std::string getTokenName(int tokenType)

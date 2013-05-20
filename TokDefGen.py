@@ -11,18 +11,21 @@ cnt = 0
 
 isFirst = 1
 tokDes = ""
+tokList = []
 linelist = ftok.readlines()
 for line in linelist:
     tokNames = re.findall("TOK_.*;", line);
     for name in tokNames:
-        if (isFirst):
-            isFirst = 0
-        else:
-            tokDes = tokDes + ",\n"
         tokenName = name.replace(";", "");
-        fdef.write("#define " + tokenName + " " + str(defBase + cnt) + "\n")
-        tokDes = tokDes + "    \"" + tokenName + "\""
-        cnt = cnt + 1
+        if (tokList.count(tokenName)==0):
+            tokList.append(tokenName)
+            if (isFirst):
+                isFirst = 0
+            else:
+                tokDes = tokDes + ",\n"
+            fdef.write("#define " + tokenName + " " + str(defBase + cnt) + "\n")
+            tokDes = tokDes + "    \"" + tokenName + "\""
+            cnt = cnt + 1
 fdef.write("\n#define CNT_TOKEN " + str(cnt) + "\n")
 fdef.write("#define BASE_TOKEN " + str(defBase) + "\n")
 fdef.write("\n#include <string>\n");

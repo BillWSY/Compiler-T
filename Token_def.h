@@ -44,8 +44,9 @@
 #define TOK_BLANK 1043
 #define TOK_COMMENT_IN 1044
 #define TOK_COMMENT_OUT 1045
+#define TOK_COMMENT_CONTENT 1046
 
-#define CNT_TOKEN 46
+#define CNT_TOKEN 47
 #define BASE_TOKEN 1000
 
 #include <string>
