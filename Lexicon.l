@@ -86,6 +86,8 @@ HEXCH           \\x[0-9a-fA-F]{2}
 
 <STRING>"\""    {   
                     BEGIN INITIAL;
+                    strList.push_back(lexStr);
+                    yylval = strListCnt++;
                     return TOK_STRING;
                 }
 <STRING>"\\a"   {   lexStr += '\a';                 }
@@ -136,4 +138,5 @@ int main()
         if (t == TOK_STRING) cout << lexStr << endl;
     }
 }
+
 

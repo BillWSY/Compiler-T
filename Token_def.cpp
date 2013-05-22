@@ -1,5 +1,9 @@
 #include "Token_def.h"
 #include <cassert>
+
+std::vector<std::string> strList;
+
+int strListCnt;
 const std::string tokenNameTable[] = {
     "TOK_ARRAY",
     "TOK_BREAK",
