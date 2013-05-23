@@ -42,7 +42,7 @@ HEXCH           \\x[0-9a-fA-F]{2}
 "+"             {   return  TOK_PLUS_SIGN;          }
 "-"             {   return  TOK_MINUS_SIGN;         }
 "*"             {   return  TOK_MULT_SIGN;          }
-"/"             {   return  TOK_DIV;                }
+"/"             {   return  TOK_DIV_SIGN;           }
 "&"             {   return  TOK_AND;                }
 "|"             {   return  TOK_OR;                 }
 "="             {   return  TOK_EQUALS;             }

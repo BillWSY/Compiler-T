@@ -1,6 +1,6 @@
 %{
-#include stdio.h
-#include string.h
+#include <stdio.h>
+#include <string.h>
 #include "Tokeniser.h"
 
 extern int yyparse ();
@@ -33,6 +33,21 @@ int main()
 %token TOK_RBR TOK_LSQB TOK_RSQB TOK_LCURLB TOK_RCURLB
 %token TOK_INTEGER TOK_ID TOK_STRING
 
+%nonassoc EXP_REDUCE_PREC
+%left TOK_LSQB
+
+%nonassoc IF_WO_ELSE_PREC
+%nonassoc TOK_ELSE
+
+%right TOK_ASSIGN
+%left TOK_OR
+%left TOK_AND
+%nonassoc TOK_EQUALS TOK_NEQ TOK_LT TOK_LTE TOK_GT TOK_GTE
+%left TOK_PLUS_SIGN TOK_MINUS_SIGN
+%left TOK_MULT_SIGN TOK_DIV_SIGN
+%nonassoc UNIOP_PREC
+
+
 %%
 
 Prog            :       Exp
@@ -43,19 +58,25 @@ Exp             :       LValue
                 |       TOK_NIL
                 |       TOK_STRING
                 |       TOK_ID TOK_LBR ArgList TOK_RBR
-                |       Exp BinOp Exp
-                |       UnOp Exp
+                |       Exp BinOp_L1 Exp                                        %prec TOK_MULT_SIGN
+                |       Exp BinOp_L2 Exp                                        %prec TOK_PLUS_SIGN
+                |       Exp BinOp_L3 Exp                                        %prec TOK_NEQ
+                |       Exp BinOp_L4 Exp                                        %prec TOK_AND
+                |       Exp BinOp_L5 Exp                                        %prec TOK_OR
+                |       UnOp Exp                                                %prec UNIOP_PREC
                 |       TOK_ID TOK_LCURLB FieldExpList TOK_RCURLB
                 |       TOK_LBR ExpList TOK_RBR
                 |       LValue TOK_ASSIGN Exp
-                |       TOK_IF Exp TOK_THEN Exp
+                |       TOK_IF Exp TOK_THEN Exp                                 %prec IF_WO_ELSE_PREC
                 |       TOK_IF Exp TOK_THEN Exp TOK_ELSE Exp
-                |       TOK_WHILE Exp TOK_DO Exp
-                |       TOK_FOR TOK_ID TOK_ASSIGN Exp TOK_TO Exp TOK_DO Exp
+                |       TOK_WHILE Exp TOK_DO Exp                                %prec EXP_REDUCE_PREC
+                |       TOK_FOR TOK_ID TOK_ASSIGN Exp TOK_TO Exp TOK_DO Exp     %prec EXP_REDUCE_PREC
                 |       TOK_BREAK
                 |       TOK_LET DecList TOK_IN ExpList TOK_END
-                |       TOK_ID TOK_LSQB Exp TOK_RSQB TOK_OF Exp
+                |       TOK_ID TOK_OF SqBExp Exp                                 %prec EXP_REDUCE_PREC
                 ;
+
+SqBExp          :       TOK_LSQB Exp TOK_RSQB 
 
 DecList         :       /* nothing */
                 |       Dec DecList
@@ -84,7 +105,7 @@ FunDec          :       TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR Exp
 
 LValue          :       TOK_ID
                 |       LValue TOK_DOT TOK_ID
-                |       LValue TOK_LSQB Exp TOK_RSQB
+                |       LValue SqBExp
                 ;
 
 ExpList         :       /* nothing */
@@ -119,18 +140,22 @@ FieldExpListPr  :       /* nothing */
                 |       TOK_COMMA TOK_ID TOK_EQUALS Exp FieldExpListPr
                 ;
 
-BinOp           :       TOK_PLUS_SIGN
-                |       TOK_MINUS_SIGN
-                |       TOK_MULT_SIGN
+BinOp_L1        :       TOK_MULT_SIGN
                 |       TOK_DIV_SIGN
-                |       TOK_AND
-                |       TOK_OR
-                |       TOK_EQUALS
-                |       TOK_NEQ
+                ;
+BinOp_L2        :       TOK_PLUS_SIGN
+                |       TOK_MINUS_SIGN
+                ;
+BinOp_L3        :       TOK_NEQ
                 |       TOK_LT
                 |       TOK_LTE
                 |       TOK_GT
                 |       TOK_GTE
+                |       TOK_EQUALS
+                ;
+BinOp_L4        :       TOK_AND
+                ;
+BinOp_L5        :       TOK_OR
                 ;
 
 
