@@ -42,7 +42,7 @@ HEXCH           \\x[0-9a-fA-F]{2}
 "+"             {   return  TOK_PLUS_SIGN;          }
 "-"             {   return  TOK_MINUS_SIGN;         }
 "*"             {   return  TOK_MULT_SIGN;          }
-"/"             {   return  TOK_DIV_SIGN;           }
+"/"             {   return  TOK_DIV;                }
 "&"             {   return  TOK_AND;                }
 "|"             {   return  TOK_OR;                 }
 "="             {   return  TOK_EQUALS;             }
@@ -67,13 +67,17 @@ HEXCH           \\x[0-9a-fA-F]{2}
 {BLANK}         {   return  TOK_BLANK;              }
 "/*"            {   BEGIN COMMENT;
                     ++ commentNesting;
+                    return TOK_COMMENT_IN; 
                 }
-<COMMENT>"/*"   {   ++ commentNesting;              }
+<COMMENT>"/*"   {   ++ commentNesting;
+                    return TOK_COMMENT_IN; 
+                }
 <COMMENT>"*/"   {   -- commentNesting;
                     if (commentNesting == 0) BEGIN INITIAL;
+                    return TOK_COMMENT_OUT;
                 }
 <COMMENT>.      |
-<COMMENT>"\n"   {   /* do nothing */                }
+<COMMENT>"\n"   {   return  TOK_COMMENT_CONTENT;    }
 
 "\""            {   
                     BEGIN STRING;

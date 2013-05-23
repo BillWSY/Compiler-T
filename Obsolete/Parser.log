@@ -1,0 +1,164 @@
+Terminals unused in grammar
+
+   TOK_ARRAY
+   TOK_BREAK
+   TOK_DO
+   TOK_ELSE
+   TOK_END
+   TOK_FOR
+   TOK_FUNCTION
+   TOK_IF
+   TOK_IN
+   TOK_LET
+   TOK_NIL
+   TOK_OF
+   TOK_THEN
+   TOK_TO
+   TOK_TYPE
+   TOK_WHILE
+   TOK_PLUS_SIGN
+   TOK_MINUS_SIGN
+   TOK_MULT_SIGN
+   TOK_DIV
+   TOK_AND
+   TOK_OR
+   TOK_EQUALS
+   TOK_NEQ
+   TOK_LT
+   TOK_LTE
+   TOK_GT
+   TOK_GTE
+   TOK_SEMIC
+   TOK_COMMA
+   TOK_COLON
+   TOK_DOT
+   TOK_LBR
+   TOK_RBR
+   TOK_LSQB
+   TOK_RSQB
+   TOK_LCURLB
+   TOK_RCURLB
+   TOK_BLANK
+   TOK_COMMENT_IN
+   TOK_COMMENT_OUT
+   TOK_COMMENT_CONTENT
+   TOK_STRING
+
+
+Grammar
+
+    0 $accept: vardec $end
+
+    1 vardec: TOK_VAR TOK_ID TOK_ASSIGN TOK_INTEGER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+TOK_ARRAY (258)
+TOK_BREAK (259)
+TOK_DO (260)
+TOK_ELSE (261)
+TOK_END (262)
+TOK_FOR (263)
+TOK_FUNCTION (264)
+TOK_IF (265)
+TOK_IN (266)
+TOK_LET (267)
+TOK_NIL (268)
+TOK_OF (269)
+TOK_THEN (270)
+TOK_TO (271)
+TOK_TYPE (272)
+TOK_VAR (273) 1
+TOK_WHILE (274)
+TOK_PLUS_SIGN (275)
+TOK_MINUS_SIGN (276)
+TOK_MULT_SIGN (277)
+TOK_DIV (278)
+TOK_AND (279)
+TOK_OR (280)
+TOK_EQUALS (281)
+TOK_NEQ (282)
+TOK_LT (283)
+TOK_LTE (284)
+TOK_GT (285)
+TOK_GTE (286)
+TOK_ASSIGN (287) 1
+TOK_SEMIC (288)
+TOK_COMMA (289)
+TOK_COLON (290)
+TOK_DOT (291)
+TOK_LBR (292)
+TOK_RBR (293)
+TOK_LSQB (294)
+TOK_RSQB (295)
+TOK_LCURLB (296)
+TOK_RCURLB (297)
+TOK_INTEGER (298) 1
+TOK_ID (299) 1
+TOK_BLANK (300)
+TOK_COMMENT_IN (301)
+TOK_COMMENT_OUT (302)
+TOK_COMMENT_CONTENT (303)
+TOK_STRING (304)
+
+
+Nonterminals, with rules where they appear
+
+$accept (50)
+    on left: 0
+vardec (51)
+    on left: 1, on right: 0
+
+
+State 0
+
+    0 $accept: . vardec $end
+
+    TOK_VAR  shift, and go to state 1
+
+    vardec  go to state 2
+
+
+State 1
+
+    1 vardec: TOK_VAR . TOK_ID TOK_ASSIGN TOK_INTEGER
+
+    TOK_ID  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: vardec . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    1 vardec: TOK_VAR TOK_ID . TOK_ASSIGN TOK_INTEGER
+
+    TOK_ASSIGN  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: vardec $end .
+
+    $default  accept
+
+
+State 5
+
+    1 vardec: TOK_VAR TOK_ID TOK_ASSIGN . TOK_INTEGER
+
+    TOK_INTEGER  shift, and go to state 6
+
+
+State 6
+
+    1 vardec: TOK_VAR TOK_ID TOK_ASSIGN TOK_INTEGER .
+
+    $default  reduce using rule 1 (vardec)

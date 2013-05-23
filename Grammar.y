@@ -34,7 +34,6 @@ int main()
 %token TOK_INTEGER TOK_ID TOK_STRING
 
 %nonassoc EXP_REDUCE_PREC
-%left TOK_LSQB
 
 %nonassoc IF_WO_ELSE_PREC
 %nonassoc TOK_ELSE
@@ -73,7 +72,7 @@ Exp             :       LValue
                 |       TOK_FOR TOK_ID TOK_ASSIGN Exp TOK_TO Exp TOK_DO Exp     %prec EXP_REDUCE_PREC
                 |       TOK_BREAK
                 |       TOK_LET DecList TOK_IN ExpList TOK_END
-                |       TOK_ID TOK_OF SqBExp Exp                                 %prec EXP_REDUCE_PREC
+                |       TOK_ID TOK_OF SqBExp Exp                                %prec EXP_REDUCE_PREC
                 ;
 
 SqBExp          :       TOK_LSQB Exp TOK_RSQB 
