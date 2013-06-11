@@ -71,8 +71,9 @@ public:
 /*TOK_STRING 6 id(<ArgList>)*/
 class Expression5: public BasicNode {
 public:
-       BasicNode *id, *arglist;
-       Expression5(BasicNode*_id,BasicNode*_arglist) {
+       BasicNode *id;
+       vector<BasicNode *>arglist;
+       Expression5(BasicNode*_id,vector<BasicNode *>_arglist) {
                       id = _id;
                       arglist = _arglist;
                       kind = 6;
@@ -110,8 +111,9 @@ public:
 /* 9 id{FieldExpList} */
 class Expression8: public BasicNode {
 public:
-       BasicNode *id, *fieldexplist;
-       Expression8(BasicNode *_id,BasicNode *_fieldexplist) {
+       BasicNode *id;
+       vector<BasicNode *> fieldexplist;
+       Expression8(BasicNode *_id,vector<BasicNode*>_fieldexplist) {
                       id = _id;
                       fieldexplist = _fieldexplist;
                       kind = 9;
@@ -122,8 +124,8 @@ public:
 /* 10 (ExpList) */
 class Expression9: public BasicNode {
 public:
-       BasicNode *explist;
-       Expression9(BasicNode *_explist) {
+       vector <BasicNode *>explist;
+       Expression9(vector <BasicNode *>_explist) {
                       explist = _explist;
                       kind = 10;
                       data_for_print = "ExpList";
@@ -205,8 +207,8 @@ public:
 /* 17  let <DecList> in <ExpList> end*/
 class Expression16: public BasicNode {
 public:
-       BasicNode *declist,*explist;
-       Expression16(BasicNode*_declist,BasicNode*_explist) {
+       vector <BasicNode *>declist,explist;
+       Expression16(vector <BasicNode *>_declist,vector <BasicNode *>_explist) {
                     declist = _declist;
                     explist = _explist;
                     kind = 17;
@@ -228,61 +230,212 @@ public:
 };
 /*--------------------end of exp---------------------------------*/
 
-/* 19  None */
-class None: public BasicNode {
-      None() {kind = 19;  data_for_print = "NONE"; }
-};
 
 /*20  <DecList>      ->        <Dec> <Declist>*/
-class DecList1:public BasicNode {
-    BasicNode* dec, *decList;
-    DecList1(BasicNode *_dec, BasicNode *_declist) {
-        dec = _dec;
-        decList = _declist;
+class DecList:public BasicNode {
+    vector <BasicNode *> declist;
+    DecList(vector <BasicNode *> _declist) {
+        declist = _declist;
         kind = 20;
-        data_for_print = "DecList"
-    }
-};
-
-/*21 DecList ->  None*/
-class DecList2:public BasicNode {
-    BasicNode* none;
-    DecList2(BasicNode *_none)
-        node = _none;
-        kind = 21;
-        data_for_print = "DecList"
+        data_for_print = "DecList";
     }
 };
 
 /*22 Dec ->  TyDec*/
 class DecNode1:public BasicNode {
     BasicNode* tydec;
-    DecNode1(BasicNode *_tydec)
+    DecNode1(BasicNode *_tydec) {
         tydec = _tydec;
         kind = 22;
-        data_for_print = "Dec(TyDec)"
+        data_for_print = "Dec(TyDec)";
     }
 };
 
 /*23 Dec ->  VarDec*/
 class DecNode2:public BasicNode {
     BasicNode* vardec;
-    DecNode2(BasicNode *_vardec)
+    DecNode2(BasicNode *_vardec){
         vardec = _vardec;
         kind = 23;
-        data_for_print = "Dec(VarDec)"
+        data_for_print = "Dec(VarDec)";
     }
 };
 
 /*24 Dec ->  FunDec*/
-class DecNode2:public BasicNode {
+class DecNode3:public BasicNode {
     BasicNode* fundec;
-    DecNode2(BasicNode *_fundec)
+    DecNode3(BasicNode *_fundec){
         fundec = _fundec;
         kind = 24;
-        data_for_print = "Dec(FunDec)"
+        data_for_print = "Dec(FunDec)";
     }
 };
+
+/*25 <TyDec>        |         type id = <Ty>*/
+class TyDec:public BasicNode {
+    BasicNode* id, *ty;
+    TyDec(BasicNode *_id,BasicNode *_ty){
+        id = _id;
+        ty = _ty;
+        kind = 25;
+        data_for_print = "TyDec";
+    }
+};
+
+/*26 <Ty> -> id*/
+class Ty1:public BasicNode {
+    BasicNode* id;
+    Ty1(BasicNode *_id) {
+        id = _id;
+        kind = 26;
+        data_for_print = "Ty(id)";
+    }
+};
+
+/*27 <Ty> ->  {<FieldList>}*/
+class Ty2:public BasicNode {
+    vector <BasicNode *> fieldlist;
+    Ty2(vector <BasicNode *>_fieldlist) {
+        fieldlist = _fieldlist;
+        kind = 27;
+        data_for_print = "Ty<FieldList>";
+    }
+};
+
+/*28 <Ty> -> array of id*/
+class Ty3:public BasicNode {
+    BasicNode* id;
+    Ty3(BasicNode *_id) {
+        id = _id;
+        kind = 28;
+        data_for_print = "Ty(array)";
+    }
+};
+
+/*29 <VarDec> ->  var id := <Exp>*/
+class VarDec1:public BasicNode {
+    BasicNode* id,*exp;
+    VarDec1(BasicNode *_id,BasicNode *exp) {
+        id = _id;
+        kind = 29;
+        data_for_print = "VarDec1";
+    }
+};
+
+/*30 <VarDec> ->   var id:id:= <Exp>*/
+class VarDec2:public BasicNode {
+    BasicNode* id1, *id2, *exp;
+    VarDec2(BasicNode *_id1,BasicNode *_id2,BasicNode *_exp) {
+        id1 = _id1;
+        id2 = _id2;
+        exp = _exp;
+        kind = 30;
+        data_for_print = "VarDec2";
+    }
+};
+
+/*31 <FuncDec> ->   function id(FieldList)=Exp*/
+class FuncDec1:public BasicNode {
+    BasicNode* id;
+    vector <BasicNode *> fieldlist;
+    BasicNode *exp;
+    FuncDec1(BasicNode *_id,vector <BasicNode *>_fieldlist,BasicNode *_exp) {
+        id = _id;
+        fieldlist = _fieldlist;
+        exp = _exp;
+        kind = 31;
+        data_for_print = "FuncDec1";
+    }
+};
+
+/*32 <FuncDec> ->    function id(FieldList):id=<Exp>*/
+class FuncDec2:public BasicNode {
+    BasicNode* id1,*id2, *exp;
+    vector <BasicNode *> fieldlist;
+    FuncDec2(BasicNode *_id1,vector <BasicNode *>_fieldlist,BasicNode *_id2,BasicNode *_exp) {
+        id1 = _id1;
+        id2 = _id2;
+        fieldlist = _fieldlist;
+        exp = _exp;
+        kind = 32;
+        data_for_print = "FuncDec2";
+    }
+};
+
+/*33 <LValue> ->  id*/
+class Lvalue1:public BasicNode {
+    BasicNode* id;
+    Lvalue1(BasicNode *_id) {
+        id = _id;
+        kind = 33;
+        data_for_print = "LValue1";
+    }
+};
+
+/*34 <LValue> ->   LValue.id*/
+class Lvalue2:public BasicNode {
+    BasicNode* lvalue,* id;
+    Lvalue2(BasicNode* _lvalue,BasicNode *_id) {
+        id = _id;
+        lvalue = _lvalue;
+        kind = 34;
+        data_for_print = "LValue2";
+    }
+};
+
+/*35 <LValue> ->    LValue[Exp]*/
+class Lvalue3:public BasicNode {
+    BasicNode* exp,*id;
+    Lvalue3(BasicNode* _id,BasicNode *_exp) {
+        id = _id;
+        exp = _exp;
+        kind = 35;
+        data_for_print = "LValue3";
+    }
+};
+
+/*36  <ExpList> -> <Exp> ExpList*/
+class ExpList:public BasicNode {
+    vector <BasicNode *> explist;
+    ExpList(vector <BasicNode *> _explist) {
+        explist = _explist;
+        kind = 36;
+        data_for_print = "ExpList";
+    }
+};
+
+/*37  <ArgList> -> <Exp> <ArgList'>*/
+class ArgList:public BasicNode {
+    vector <BasicNode *> arglist;
+    ArgList(vector <BasicNode *> _arglist) {
+        arglist = _arglist;
+        kind = 37;
+        data_for_print = "ArgList";
+    }
+};
+
+/*38  <FieldList>    ->        id:id FieldList' | ¦Å
+      <FieldList'>   ->        , id:id FieldList' | ¦Å*/
+class FieldList:public BasicNode {
+    vector <BasicNode *> fieldlist;
+    FieldList(vector <BasicNode *> _fieldlist) {
+        fieldlist = _fieldlist;
+        kind = 38;
+        data_for_print = "FieldList";
+    }
+};
+
+/*39  <FieldExpList> -> id = Exp FieldExpList' |         ¦Å
+<FieldExpList'> ->  , id = Exp FieldExpList' |        ¦Å */
+class FieldExpList:public BasicNode {
+    vector <BasicNode *> fieldexplist;
+    FieldExpList(vector <BasicNode *> _fieldexplist) {
+        fieldexplist = _fieldexplist;
+        kind = 39;
+        data_for_print = "FieldExpList";
+    }
+};
+
 
 
 int main() {
