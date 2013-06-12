@@ -70,8 +70,9 @@ enum BinOpType {
 
 enum UnOpType {
     UO_None,
-    UO_NEG
+    UO_Neg
 };
 
 typedef unsigned int IDType;
+typedef long long TInt;
 

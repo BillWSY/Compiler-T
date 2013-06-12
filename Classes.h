@@ -29,9 +29,12 @@ class LValElement;
 
 typedef vector<Expression*> ExpList;
 typedef vector<Expression*> ArgList;
-typedef vector<pair<string, string> > FieldList;
-typedef vector<pair<string, Expression*> > FieldExpList;
-typedef vector<Dec> DecList;
+typedef <pair<string, string> > FieldEle;
+typedef vector<FieldEle> FieldList;
+typedef <pair<string, Expression*> > IdSqB;
+typedef <pair<string, Expression*> > FieldExpEle;
+typedef vector<FieldExpEle> FieldExpList;
+typedef vector<Dec*> DecList;
 
 
 

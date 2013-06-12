@@ -27,11 +27,11 @@ class ExpLValue : public Expression {
 
 class ExpInteger : public Expression {
   public:
-      int num;
+      TInt num;
       ExpInteger():Expression(E_Integer) {
           num = 0;
       }
-      ExpInteger(int _num):Expression(E_Integer) {
+      ExpInteger(TInt _num):Expression(E_Integer) {
           num = _num;
       }
 };
@@ -107,6 +107,16 @@ class ExpRecord : public Expression {
       }
 };
 
+class ExpExpList : public Expression {
+  public:
+      ExpList* expList;
+      ExpExpList(ExpList* _expList):Expression(E_ExpList){
+          expList = _expList;
+      }
+      ExpExpList():Expression(E_ExpList) {
+          expList = NULL;
+      }
+};
 
 class ExpAssign : public Expression {
   public:
@@ -122,21 +132,10 @@ class ExpAssign : public Expression {
       }
 };
 
-class ExpExpList : public Expression {
-  public:
-      ExpList* expList;
-      ExpExpList(ExpList* _expList):Expression(E_ExpList){
-          expList = _expList;
-      }
-      ExpExpList():Expression(E_ExpList) {
-          expList = NULL;
-      }
-};
-
 class ExpIf : public Expression {
   public:
       Expression *cond, *trueStatement, *falseStatement;
-      ExpIf(Expression *_cond, Expression *_trueStatement, Expression *_falseStatement):Expression(E_If) {
+      ExpIf(Expression *_cond, Expression *_trueStatement, Expression *_falseStatement = NULL):Expression(E_If) {
           cond = _cond;
           trueStatement = _trueStatement;
           falseStatement = _falseStatement;
