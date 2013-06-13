@@ -64,7 +64,10 @@ HEXCH           \\x[0-9a-fA-F]{2}
 "{"             {   return  TOK_LCURLB;             }
 "}"             {   return  TOK_RCURLB;             }
 [0-9]+          {   return  TOK_INTEGER;            }
-{ID}            {   return  TOK_ID;                 }
+{ID}            {   
+                    yylval.strPtr = new string(yytext);
+                    return  TOK_ID;
+                }
 {BLANK}         {   /* ignore */                    }
 "/*"            {   BEGIN COMMENT;
                     ++ commentNesting;

@@ -1,5 +1,5 @@
 test : Tokeniser.cpp
-	g++ Parser.cpp Tokeniser.cpp main.cpp -ll -o test
+	g++ Parser.cpp Tokeniser.cpp main.cpp -ll -o test -g
 
 .PHONY : Tokeniser
 Tokeniser : Tokeniser.cpp
