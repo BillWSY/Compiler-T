@@ -4,11 +4,8 @@ test : Tokeniser.cpp
 .PHONY : Tokeniser
 Tokeniser : Tokeniser.cpp
 
-Tokeniser.cpp : Lexicon.l Token_def.h Parser.h
+Tokeniser.cpp : Lexicon.l Parser.h
 	flex -v -o Tokeniser.cpp --header-file=Tokeniser.h Lexicon.l 2>Lexicon.log
-
-Token_def.h : Lexicon.l TokDefGen.py
-	./TokDefGen.py
 
 .PHONY : Parser
 Parser : Parser.cpp Parser.h

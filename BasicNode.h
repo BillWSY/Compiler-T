@@ -1,9 +1,13 @@
-#include "ClassTypeDef.h"
+#ifndef BASICNODE_H_
+#define BASICNODE_H_
+
+#include "ASTClass.h"
+#include "ClassEnum.h"
 
 class BasicNode {
   private:
       IDType id;
-      static idCnt = 0;
+      static int idCnt;
       NodeType nodeType;
   protected:
       BasicNode(NodeType nType) {
@@ -19,3 +23,4 @@ class BasicNode {
       }
 };
 
+#endif // BASICNODE_H_

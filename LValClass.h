@@ -1,5 +1,9 @@
+#ifndef LVALCLASS_H_
+#define LVALCLASS_H_
+
 #include "BasicNode.h"
-#include "Classes.h"
+#include "ASTClass.h"
+#include "ClassEnum.h"
 
 class LVal : public BasicNode {
   private:
@@ -20,30 +24,30 @@ class LValID : public LVal {
       LValID(const string& _lValName):LVal(L_ID) {
           lValName = _lValName;
       }
-      TyLVal():LVal(L_ID) {
+      LValID():LVal(L_ID) {
       }
 };
 
 class LValMember : public LVal {
   public:
-      LValue *major;
+      LVal *major;
       string memberName;
-      VarLVal(LValue *_major, const string& _memberName) : LVal(L_Member) {
+      LValMember(LVal *_major, const string& _memberName) : LVal(L_Member) {
           major = _major;
           memberName = _memberName;
       }
-      VarLVal() : LVal(L_Member) {
+      LValMember() : LVal(L_Member) {
           major = NULL;
       }
 };
 
 class LValElement : public LVal {
   public:
-      LValue *major;
+      LVal *major;
       Expression *idx;
-      LValElement(LValue *_major, Expression* _idx) : LVal(L_Element) {
+      LValElement(LVal *_major, Expression* _idx) : LVal(L_Element) {
           major = _major;
-          idx = _idx
+          idx = _idx;
       }
       LValElement() : LVal(L_Element) {
           major = NULL;
@@ -51,3 +55,4 @@ class LValElement : public LVal {
       }
 };
 
+#endif // LVALCLASS_H_

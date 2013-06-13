@@ -97,7 +97,30 @@ extern int yydebug;
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+/* Line 2058 of yacc.c  */
+#line 26 "Grammar.y"
+
+    string *strPtr;
+    TInt integer;
+    Expression* exp;
+    Dec* dec;
+    IdSqB* idSqB;
+    LVal* lVal;
+    ExpList* expList;
+    ArgList* argList;
+    FieldList* fieldList;
+    FieldExpList* fieldExpList;
+    DecList* decList;
+    Ty* ty;
+    BinOpType binOpType;
+    UnOpType unOpType;
+
+
+/* Line 2058 of yacc.c  */
+#line 123 "Parser.h"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

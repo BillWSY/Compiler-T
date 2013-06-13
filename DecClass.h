@@ -1,5 +1,9 @@
+#ifndef DECCLASS_H_
+#define DECCLASS_H_
+
 #include "BasicNode.h"
-#include "Classes.h"
+#include "ASTClass.h"
+#include "ClassEnum.h"
 
 class Dec : public BasicNode {
   private:
@@ -32,16 +36,16 @@ class Ty : public BasicNode {
       TyType tyType;
       string tyName;
       FieldList* fieldList;
-      TyDec():BasicNode(N_Ty) {
-          TyType = TY_None;
+      Ty():BasicNode(N_Ty) {
+          tyType = TY_None;
       }
-      TyDec(TyType _tyType, string _tyName):BasicNode(N_Ty) {
-          TyType = _tyType;
+      Ty(TyType _tyType, string _tyName):BasicNode(N_Ty) {
+          tyType = _tyType;
           tyName = _tyName; 
           fieldList = NULL;
       }
-      TyDec(TyType _tyType, FieldList* _fieldList):BasicNode(N_Ty) {
-          TyType = _tyType;
+      Ty(TyType _tyType, FieldList* _fieldList):BasicNode(N_Ty) {
+          tyType = _tyType;
           fieldList = _fieldList;
           tyName = "";
       }
@@ -87,7 +91,6 @@ class FuncDec : public Dec {
           hasReturn = false;
           funcName = _funcName;
           fieldList = _fieldList;
-          typeName = _typeName;
           body = _body;
       }
 
@@ -98,3 +101,4 @@ class FuncDec : public Dec {
       }
 };
 
+#endif // DECCLASS_H_

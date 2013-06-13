@@ -1,5 +1,9 @@
+#ifndef EXPCLASS_H_
+#define EXPCLASS_H_
+
 #include "BasicNode.h"
-#include "Classes.h"
+#include "ASTClass.h"
+#include "ClassEnum.h"
 
 class Expression : public BasicNode {
   private:
@@ -16,11 +20,11 @@ class Expression : public BasicNode {
 
 class ExpLValue : public Expression {
   public:
-      LValue* lValue;
+      LVal* lValue;
       ExpLValue():Expression(E_LValue) {
           lValue = NULL;
       }
-      ExpLValue(LValue* _lValue):Expression(E_LValue) {
+      ExpLValue(LVal* _lValue):Expression(E_LValue) {
           lValue = _lValue;
       }
 };
@@ -84,11 +88,11 @@ class ExpUnOp : public Expression {
   public:
       Expression *exp;
       UnOpType unOp;
-      ExpUnOP(Expression* _exp, UnOpType _unOp):Expression(E_UnOp) {
+      ExpUnOp(Expression* _exp, UnOpType _unOp):Expression(E_UnOp) {
           exp = _exp;
           unOp = _unOp;
       }
-      ExpUnOP():Expression(E_UnOp) {
+      ExpUnOp():Expression(E_UnOp) {
           exp = NULL;
           unOp = UO_None;
       }
@@ -120,13 +124,13 @@ class ExpExpList : public Expression {
 
 class ExpAssign : public Expression {
   public:
-      LValue* lValue;
+      LVal* lValue;
       Expression* rhsValue;
       ExpAssign():Expression(E_Assign) {
           lValue = NULL;
           rhsValue = NULL;
       }
-      ExpAssign(LValue* _lValue, Expression* _rhsValue):Expression(E_Assign) {
+      ExpAssign(LVal* _lValue, Expression* _rhsValue):Expression(E_Assign) {
           lValue = _lValue;
           rhsValue = _rhsValue;
       }
@@ -150,11 +154,11 @@ class ExpIf : public Expression {
 class ExpWhile : public Expression {
   public:
       Expression *cond, *loopStatement;
-      ExpIf(Expression *_cond, Expression *_loopStatement):Expression(E_While) {
+      ExpWhile(Expression *_cond, Expression *_loopStatement):Expression(E_While) {
           cond = _cond;
           loopStatement = _loopStatement;
       }
-      ExpIf():Expression(E_While) {
+      ExpWhile():Expression(E_While) {
           cond = NULL;
           loopStatement = NULL;
       }
@@ -164,13 +168,13 @@ class ExpFor : public Expression {
   public:
       Expression *beg, *end, *loopStatement;
       string loopVar;
-      ExpIf(const string& _loopVar, Expression *_beg, Expression *_end, Expression *_loopStatement):Expression(E_For) {
+      ExpFor(const string& _loopVar, Expression *_beg, Expression *_end, Expression *_loopStatement):Expression(E_For) {
           loopVar = _loopVar;
           beg = _beg;
           end = _end;
           loopStatement = _loopStatement;
       }
-      ExpIf():Expression(E_For) {
+      ExpFor():Expression(E_For) {
           beg = NULL;
           end = NULL;
           loopStatement = NULL;
@@ -210,3 +214,4 @@ class ExpArray : public Expression {
     }
 };
 
+#endif // EXPCLASS_H_

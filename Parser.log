@@ -33,7 +33,7 @@ Grammar
 
    26 Dec: TyDec
    27    | VarDec
-   28    | FunDec
+   28    | FuncDec
 
    29 TyDec: TOK_TYPE TOK_ID TOK_EQUALS Ty
 
@@ -44,8 +44,8 @@ Grammar
    33 VarDec: TOK_VAR TOK_ID TOK_ASSIGN Exp
    34       | TOK_VAR TOK_ID TOK_COLON TOK_ID TOK_ASSIGN Exp
 
-   35 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp
-   36       | TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
+   35 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp
+   36        | TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
 
    37 IdSqB: TOK_ID SqBExp
 
@@ -164,7 +164,7 @@ Ty (56)
     on left: 30 31 32, on right: 29
 VarDec (57)
     on left: 33 34, on right: 27
-FunDec (58)
+FuncDec (58)
     on left: 35 36, on right: 28
 IdSqB (59)
     on left: 37, on right: 22 40
@@ -486,10 +486,10 @@ State 19
     TOK_TYPE      shift, and go to state 54
     TOK_VAR       shift, and go to state 55
 
-    Dec     go to state 56
-    TyDec   go to state 57
-    VarDec  go to state 58
-    FunDec  go to state 59
+    Dec      go to state 56
+    TyDec    go to state 57
+    VarDec   go to state 58
+    FuncDec  go to state 59
 
 
 State 20
@@ -951,8 +951,8 @@ State 51
 
 State 52
 
-   35 FunDec: TOK_FUNCTION . TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp
-   36       | TOK_FUNCTION . TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
+   35 FuncDec: TOK_FUNCTION . TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp
+   36        | TOK_FUNCTION . TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
 
     TOK_ID  shift, and go to state 78
 
@@ -1020,7 +1020,7 @@ State 58
 
 State 59
 
-   28 Dec: FunDec .
+   28 Dec: FuncDec .
 
     $default  reduce using rule 28 (Dec)
 
@@ -1424,8 +1424,8 @@ State 77
 
 State 78
 
-   35 FunDec: TOK_FUNCTION TOK_ID . TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp
-   36       | TOK_FUNCTION TOK_ID . TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
+   35 FuncDec: TOK_FUNCTION TOK_ID . TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp
+   36        | TOK_FUNCTION TOK_ID . TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
 
     TOK_LBR  shift, and go to state 92
 
@@ -1635,8 +1635,8 @@ State 91
 
 State 92
 
-   35 FunDec: TOK_FUNCTION TOK_ID TOK_LBR . FieldList TOK_RBR TOK_EQUALS Exp
-   36       | TOK_FUNCTION TOK_ID TOK_LBR . FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
+   35 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR . FieldList TOK_RBR TOK_EQUALS Exp
+   36        | TOK_FUNCTION TOK_ID TOK_LBR . FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
 
     TOK_ID  shift, and go to state 102
 
@@ -1831,8 +1831,8 @@ State 102
 
 State 103
 
-   35 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList . TOK_RBR TOK_EQUALS Exp
-   36       | TOK_FUNCTION TOK_ID TOK_LBR FieldList . TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
+   35 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList . TOK_RBR TOK_EQUALS Exp
+   36        | TOK_FUNCTION TOK_ID TOK_LBR FieldList . TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp
    50 FieldList: FieldList . TOK_COMMA TOK_ID TOK_COLON TOK_ID
 
     TOK_COMMA  shift, and go to state 113
@@ -1969,8 +1969,8 @@ State 113
 
 State 114
 
-   35 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR . TOK_EQUALS Exp
-   36       | TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR . TOK_COLON TOK_ID TOK_EQUALS Exp
+   35 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR . TOK_EQUALS Exp
+   36        | TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR . TOK_COLON TOK_ID TOK_EQUALS Exp
 
     TOK_EQUALS  shift, and go to state 122
     TOK_COLON   shift, and go to state 123
@@ -2092,7 +2092,7 @@ State 121
 
 State 122
 
-   35 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS . Exp
+   35 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS . Exp
 
     TOK_BREAK       shift, and go to state 1
     TOK_FOR         shift, and go to state 2
@@ -2114,7 +2114,7 @@ State 122
 
 State 123
 
-   36 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON . TOK_ID TOK_EQUALS Exp
+   36 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON . TOK_ID TOK_EQUALS Exp
 
     TOK_ID  shift, and go to state 129
 
@@ -2178,7 +2178,7 @@ State 128
     9    | Exp . BinOp_L3 Exp
    10    | Exp . BinOp_L4 Exp
    11    | Exp . BinOp_L5 Exp
-   35 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp .
+   35 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp .
 
     TOK_PLUS_SIGN   shift, and go to state 28
     TOK_MINUS_SIGN  shift, and go to state 29
@@ -2193,7 +2193,7 @@ State 128
     TOK_GT          shift, and go to state 38
     TOK_GTE         shift, and go to state 39
 
-    $default  reduce using rule 35 (FunDec)
+    $default  reduce using rule 35 (FuncDec)
 
     BinOp_L1  go to state 40
     BinOp_L2  go to state 41
@@ -2204,7 +2204,7 @@ State 128
 
 State 129
 
-   36 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID . TOK_EQUALS Exp
+   36 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID . TOK_EQUALS Exp
 
     TOK_EQUALS  shift, and go to state 131
 
@@ -2218,7 +2218,7 @@ State 130
 
 State 131
 
-   36 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS . Exp
+   36 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS . Exp
 
     TOK_BREAK       shift, and go to state 1
     TOK_FOR         shift, and go to state 2
@@ -2245,7 +2245,7 @@ State 132
     9    | Exp . BinOp_L3 Exp
    10    | Exp . BinOp_L4 Exp
    11    | Exp . BinOp_L5 Exp
-   36 FunDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp .
+   36 FuncDec: TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp .
 
     TOK_PLUS_SIGN   shift, and go to state 28
     TOK_MINUS_SIGN  shift, and go to state 29
@@ -2260,7 +2260,7 @@ State 132
     TOK_GT          shift, and go to state 38
     TOK_GTE         shift, and go to state 39
 
-    $default  reduce using rule 36 (FunDec)
+    $default  reduce using rule 36 (FuncDec)
 
     BinOp_L1  go to state 40
     BinOp_L2  go to state 41

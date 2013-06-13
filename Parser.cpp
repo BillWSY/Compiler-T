@@ -67,7 +67,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "Tokeniser.h"
+#include "ASTClass.h"
 
 extern int yyparse ();
 
@@ -176,7 +176,30 @@ extern int yydebug;
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+/* Line 387 of yacc.c  */
+#line 26 "Grammar.y"
+
+    string *strPtr;
+    TInt integer;
+    Expression* exp;
+    Dec* dec;
+    IdSqB* idSqB;
+    LVal* lVal;
+    ExpList* expList;
+    ArgList* argList;
+    FieldList* fieldList;
+    FieldExpList* fieldExpList;
+    DecList* decList;
+    Ty* ty;
+    BinOpType binOpType;
+    UnOpType unOpType;
+
+
+/* Line 387 of yacc.c  */
+#line 202 "Parser.cpp"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -203,7 +226,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 207 "Parser.cpp"
+#line 230 "Parser.cpp"
 
 #ifdef short
 # undef short
@@ -520,15 +543,15 @@ static const yytype_int8 yyrhs[] =
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    53,    53,    56,    57,    58,    59,    60,    61,    62,
-      63,    64,    65,    66,    67,    68,    69,    70,    71,    72,
-      73,    74,    75,    76,    79,    81,    82,    85,    86,    87,
-      90,    93,    94,    95,    98,    99,   102,   103,   106,   108,
-     109,   110,   111,   114,   115,   116,   119,   120,   121,   124,
-     125,   126,   129,   130,   131,   134,   135,   137,   138,   140,
-     141,   142,   143,   144,   145,   147,   149,   151
+       0,    85,    85,    88,    92,    96,   100,   105,   110,   114,
+     118,   122,   126,   130,   134,   139,   143,   147,   151,   155,
+     159,   164,   168,   172,   179,   185,   188,   195,   196,   197,
+     200,   207,   212,   216,   223,   228,   236,   241,   249,   255,
+     260,   265,   269,   276,   279,   284,   292,   295,   300,   308,
+     311,   318,   328,   331,   337,   345,   349,   354,   358,   363,
+     367,   371,   375,   379,   383,   388,   393,   398
 };
 #endif
 
@@ -547,7 +570,7 @@ static const char *const yytname[] =
   "TOK_LSQB", "TOK_RSQB", "TOK_LCURLB", "TOK_RCURLB", "TOK_INTEGER",
   "TOK_ID", "TOK_STRING", "EXP_REDUCE_PREC", "IF_WO_ELSE_PREC",
   "UNIOP_PREC", "$accept", "Prog", "Exp", "SqBExp", "DecList", "Dec",
-  "TyDec", "Ty", "VarDec", "FunDec", "IdSqB", "LValue", "ExpList",
+  "TyDec", "Ty", "VarDec", "FuncDec", "IdSqB", "LValue", "ExpList",
   "ArgList", "FieldList", "FieldExpList", "BinOp_L1", "BinOp_L2",
   "BinOp_L3", "BinOp_L4", "BinOp_L5", "UnOp", YY_NULL
 };
@@ -1535,9 +1558,537 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
+        case 3:
 /* Line 1792 of yacc.c  */
-#line 1541 "Parser.cpp"
+#line 89 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpLValue((yyvsp[(1) - (1)].lVal));
+                        }
+    break;
+
+  case 4:
+/* Line 1792 of yacc.c  */
+#line 93 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpInteger((yyvsp[(1) - (1)].integer));
+                        }
+    break;
+
+  case 5:
+/* Line 1792 of yacc.c  */
+#line 97 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpNil();
+                        }
+    break;
+
+  case 6:
+/* Line 1792 of yacc.c  */
+#line 101 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpString(*(yyvsp[(1) - (1)].strPtr));
+                            delete (yyvsp[(1) - (1)].strPtr); (yyvsp[(1) - (1)].strPtr) = NULL;
+                        }
+    break;
+
+  case 7:
+/* Line 1792 of yacc.c  */
+#line 106 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpFuncCall(*(yyvsp[(1) - (4)].strPtr), (yyvsp[(3) - (4)].argList));
+                            delete (yyvsp[(1) - (4)].strPtr); (yyvsp[(1) - (4)].strPtr) = NULL;
+                        }
+    break;
+
+  case 8:
+/* Line 1792 of yacc.c  */
+#line 111 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
+                        }
+    break;
+
+  case 9:
+/* Line 1792 of yacc.c  */
+#line 115 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
+                        }
+    break;
+
+  case 10:
+/* Line 1792 of yacc.c  */
+#line 119 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
+                        }
+    break;
+
+  case 11:
+/* Line 1792 of yacc.c  */
+#line 123 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
+                        }
+    break;
+
+  case 12:
+/* Line 1792 of yacc.c  */
+#line 127 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
+                        }
+    break;
+
+  case 13:
+/* Line 1792 of yacc.c  */
+#line 131 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpUnOp((yyvsp[(2) - (2)].exp), (yyvsp[(1) - (2)].unOpType));
+                        }
+    break;
+
+  case 14:
+/* Line 1792 of yacc.c  */
+#line 135 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpRecord(*(yyvsp[(1) - (4)].strPtr), (yyvsp[(3) - (4)].fieldExpList));
+                            delete (yyvsp[(1) - (4)].strPtr); (yyvsp[(1) - (4)].strPtr) = NULL;
+                        }
+    break;
+
+  case 15:
+/* Line 1792 of yacc.c  */
+#line 140 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpExpList((yyvsp[(2) - (3)].expList));
+                        }
+    break;
+
+  case 16:
+/* Line 1792 of yacc.c  */
+#line 144 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpLValue((yyvsp[(1) - (3)].lVal), (yyvsp[(3) - (3)].exp));
+                        }
+    break;
+
+  case 17:
+/* Line 1792 of yacc.c  */
+#line 148 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpIf((yyvsp[(2) - (4)].exp), (yyvsp[(4) - (4)].exp));
+                        }
+    break;
+
+  case 18:
+/* Line 1792 of yacc.c  */
+#line 152 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpIf((yyvsp[(2) - (6)].exp), (yyvsp[(4) - (6)].exp), (yyvsp[(6) - (6)].exp));
+                        }
+    break;
+
+  case 19:
+/* Line 1792 of yacc.c  */
+#line 156 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpWhile((yyvsp[(2) - (4)].exp), (yyvsp[(4) - (4)].exp));
+                        }
+    break;
+
+  case 20:
+/* Line 1792 of yacc.c  */
+#line 160 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpIf(*(yyvsp[(2) - (8)].strPtr), (yyvsp[(4) - (8)].exp), (yyvsp[(6) - (8)].exp), (yyvsp[(8) - (8)].exp));
+                            delete (yyvsp[(2) - (8)].strPtr); (yyvsp[(2) - (8)].strPtr) = NULL;
+                        }
+    break;
+
+  case 21:
+/* Line 1792 of yacc.c  */
+#line 165 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpBreak();
+                        }
+    break;
+
+  case 22:
+/* Line 1792 of yacc.c  */
+#line 169 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpIf((yyvsp[(2) - (5)].decList), (yyvsp[(4) - (5)].expList));
+                        }
+    break;
+
+  case 23:
+/* Line 1792 of yacc.c  */
+#line 173 "Grammar.y"
+    {
+                            (yyval.exp) = (*Expression) new ExpIf((yyvsp[(1) - (3)].idSqB) -> first, (yyvsp[(1) - (3)].idSqB) -> second,  (yyvsp[(3) - (3)].exp));
+                            delete (yyvsp[(1) - (3)].idSqB); (yyvsp[(1) - (3)].idSqB) = NULL;
+                        }
+    break;
+
+  case 24:
+/* Line 1792 of yacc.c  */
+#line 180 "Grammar.y"
+    {
+                            (yyval.exp) = (yyvsp[(2) - (3)].exp);
+                        }
+    break;
+
+  case 25:
+/* Line 1792 of yacc.c  */
+#line 185 "Grammar.y"
+    {
+                            (yyval.decList) = new DecList;
+                        }
+    break;
+
+  case 26:
+/* Line 1792 of yacc.c  */
+#line 189 "Grammar.y"
+    {
+                            (yyvsp[(1) - (2)].decList) -> push_back((yyvsp[(2) - (2)].dec));
+                            (yyval.decList) = (yyvsp[(1) - (2)].decList);
+                        }
+    break;
+
+  case 30:
+/* Line 1792 of yacc.c  */
+#line 201 "Grammar.y"
+    {
+                            (yyval.dec) = (Dec*) new TyDec(*(yyvsp[(2) - (4)].strPtr), (yyvsp[(4) - (4)].ty));
+                            delete (yyvsp[(2) - (4)].strPtr); (yyvsp[(2) - (4)].strPtr) = NULL;
+                        }
+    break;
+
+  case 31:
+/* Line 1792 of yacc.c  */
+#line 208 "Grammar.y"
+    {
+                            (yyval.ty) = new Ty(TY_ID, *(yyvsp[(1) - (1)].strPtr));
+                            delete (yyvsp[(1) - (1)].strPtr); (yyvsp[(1) - (1)].strPtr) = NULL;
+                        }
+    break;
+
+  case 32:
+/* Line 1792 of yacc.c  */
+#line 213 "Grammar.y"
+    {
+                            (yyval.ty) = new Ty(TY_Record, (yyvsp[(2) - (3)].fieldList));
+                        }
+    break;
+
+  case 33:
+/* Line 1792 of yacc.c  */
+#line 217 "Grammar.y"
+    {
+                            (yyval.ty) = new Ty(TY_Array, *(yyvsp[(3) - (3)].strPtr));
+                            delete (yyvsp[(3) - (3)].strPtr); (yyvsp[(3) - (3)].strPtr) = NULL;
+                        }
+    break;
+
+  case 34:
+/* Line 1792 of yacc.c  */
+#line 224 "Grammar.y"
+    {
+                            (yyval.dec) = (Dec*) new VarDec(*(yyvsp[(2) - (4)].strPtr), (yyvsp[(4) - (4)].exp));
+                            delete (yyvsp[(2) - (4)].strPtr); (yyvsp[(2) - (4)].strPtr) = NULL;
+                        }
+    break;
+
+  case 35:
+/* Line 1792 of yacc.c  */
+#line 229 "Grammar.y"
+    {
+                            (yyval.dec) = (Dec*) new VarDec(*(yyvsp[(2) - (6)].strPtr), *(yyvsp[(4) - (6)].strPtr), (yyvsp[(6) - (6)].exp));
+                            delete (yyvsp[(2) - (6)].strPtr); (yyvsp[(2) - (6)].strPtr) = NULL;
+                            delete (yyvsp[(4) - (6)].strPtr); (yyvsp[(4) - (6)].strPtr) = NULL;
+                        }
+    break;
+
+  case 36:
+/* Line 1792 of yacc.c  */
+#line 237 "Grammar.y"
+    {
+                            (yyval.dec) = new (Dec*) FuncDec(*(yyvsp[(2) - (7)].strPtr), (yyvsp[(4) - (7)].fieldList), (yyvsp[(7) - (7)].exp));
+                            delete (yyvsp[(2) - (7)].strPtr); (yyvsp[(2) - (7)].strPtr) = NULL;
+                        }
+    break;
+
+  case 37:
+/* Line 1792 of yacc.c  */
+#line 242 "Grammar.y"
+    {
+                            (yyval.dec) = new (Dec*) FuncDec(*(yyvsp[(2) - (9)].strPtr), (yyvsp[(4) - (9)].fieldList), *(yyvsp[(7) - (9)].strPtr), (yyvsp[(9) - (9)].exp));
+                            delete (yyvsp[(2) - (9)].strPtr); (yyvsp[(2) - (9)].strPtr) = NULL;
+                            delete (yyvsp[(7) - (9)].strPtr); (yyvsp[(7) - (9)].strPtr) = NULL;
+                        }
+    break;
+
+  case 38:
+/* Line 1792 of yacc.c  */
+#line 250 "Grammar.y"
+    {
+                            (yyval.idSqB) = new IdSqB(*(yyvsp[(1) - (2)].strPtr), (yyvsp[(2) - (2)].exp));
+                            delete (yyvsp[(1) - (2)].strPtr); (yyvsp[(1) - (2)].strPtr) = NULL;
+                        }
+    break;
+
+  case 39:
+/* Line 1792 of yacc.c  */
+#line 256 "Grammar.y"
+    {
+                            (yyval.lVal) = (*LVal) new LValID(*(yyvsp[(1) - (1)].strPtr));
+                            delete (yyvsp[(1) - (1)].strPtr); (yyvsp[(1) - (1)].strPtr) = NULL;
+                        }
+    break;
+
+  case 40:
+/* Line 1792 of yacc.c  */
+#line 261 "Grammar.y"
+    {
+                            (yyval.lVal) = (*LVal) new LValMember((yyvsp[(1) - (3)].lVal), *(yyvsp[(3) - (3)].strPtr));
+                            delete (yyvsp[(3) - (3)].strPtr); (yyvsp[(3) - (3)].strPtr) = NULL;
+                        }
+    break;
+
+  case 41:
+/* Line 1792 of yacc.c  */
+#line 266 "Grammar.y"
+    {
+                            (yyval.lVal) = (*LVal) new LValElement((*LVal) new LValID((yyvsp[(1) - (1)].idSqB) -> first), (yyvsp[(1) - (1)].idSqB) -> second);
+                        }
+    break;
+
+  case 42:
+/* Line 1792 of yacc.c  */
+#line 270 "Grammar.y"
+    {
+                            (yyval.lVal) = (*LVal) new LValElement((yyvsp[(1) - (2)].lVal), (yyvsp[(2) - (2)].exp));
+                        }
+    break;
+
+  case 43:
+/* Line 1792 of yacc.c  */
+#line 276 "Grammar.y"
+    {
+                            (yyval.expList) = new ExpList;
+                        }
+    break;
+
+  case 44:
+/* Line 1792 of yacc.c  */
+#line 280 "Grammar.y"
+    {
+                            (yyval.expList) = new ExpList;
+                            (yyval.expList) -> push_back((yyvsp[(1) - (1)].exp));
+                        }
+    break;
+
+  case 45:
+/* Line 1792 of yacc.c  */
+#line 285 "Grammar.y"
+    {
+                            (yyval.expList) = (yyvsp[(1) - (3)].expList);
+                            (yyval.expList) -> push_back((yyvsp[(1) - (3)].expList));
+                        }
+    break;
+
+  case 46:
+/* Line 1792 of yacc.c  */
+#line 292 "Grammar.y"
+    {
+                            (yyval.argList) = new ArgList;
+                        }
+    break;
+
+  case 47:
+/* Line 1792 of yacc.c  */
+#line 296 "Grammar.y"
+    {
+                            (yyval.argList) = new ExpList;
+                            (yyval.argList) -> push_back((yyvsp[(1) - (1)].exp));
+                        }
+    break;
+
+  case 48:
+/* Line 1792 of yacc.c  */
+#line 301 "Grammar.y"
+    {
+                            (yyval.argList) = (yyvsp[(1) - (3)].argList);
+                            (yyval.argList) -> push_back((yyvsp[(3) - (3)].exp));
+                        }
+    break;
+
+  case 49:
+/* Line 1792 of yacc.c  */
+#line 308 "Grammar.y"
+    {
+                            (yyval.fieldList) = new FieldList;
+                        }
+    break;
+
+  case 50:
+/* Line 1792 of yacc.c  */
+#line 312 "Grammar.y"
+    {
+                            (yyval.fieldList) = new FieldList;
+                            (yyval.fieldList) -> push_back(new FieldEle(*(yyvsp[(1) - (3)].strPtr), *(yyvsp[(3) - (3)].strPtr)));
+                            delete (yyvsp[(1) - (3)].strPtr); (yyvsp[(1) - (3)].strPtr) = NULL;
+                            delete (yyvsp[(3) - (3)].strPtr); (yyvsp[(3) - (3)].strPtr) = NULL;
+                        }
+    break;
+
+  case 51:
+/* Line 1792 of yacc.c  */
+#line 319 "Grammar.y"
+    {
+                            (yyval.fieldList) = (yyvsp[(1) - (5)].fieldList);
+                            (yyval.fieldList) -> push_back(new FieldEle(*(yyvsp[(3) - (5)].strPtr), *(yyvsp[(5) - (5)].strPtr)));
+                            delete (yyvsp[(3) - (5)].strPtr); (yyvsp[(3) - (5)].strPtr) = NULL;
+                            delete (yyvsp[(5) - (5)].strPtr); (yyvsp[(5) - (5)].strPtr) = NULL;
+                        }
+    break;
+
+  case 52:
+/* Line 1792 of yacc.c  */
+#line 328 "Grammar.y"
+    {
+                            (yyval.fieldExpList) = new FieldExpList;
+                        }
+    break;
+
+  case 53:
+/* Line 1792 of yacc.c  */
+#line 332 "Grammar.y"
+    {
+                            (yyval.fieldExpList) = new FieldExpList;
+                            (yyval.fieldExpList) -> push_back(new FieldExpEle(*(yyvsp[(1) - (3)].strPtr), (yyvsp[(3) - (3)].exp)));
+                            delete (yyvsp[(1) - (3)].strPtr); (yyvsp[(1) - (3)].strPtr) = NULL;
+                        }
+    break;
+
+  case 54:
+/* Line 1792 of yacc.c  */
+#line 338 "Grammar.y"
+    {
+                            (yyval.fieldExpList) = (yyvsp[(1) - (5)].fieldExpList);
+                            (yyval.fieldExpList) -> push_back(new FieldExpEle(*(yyvsp[(3) - (5)].strPtr), (yyvsp[(5) - (5)].exp)));
+                            delete (yyvsp[(3) - (5)].strPtr); (yyvsp[(3) - (5)].strPtr) = NULL;
+                        }
+    break;
+
+  case 55:
+/* Line 1792 of yacc.c  */
+#line 346 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_Mul;
+                        }
+    break;
+
+  case 56:
+/* Line 1792 of yacc.c  */
+#line 350 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_Div;
+                        }
+    break;
+
+  case 57:
+/* Line 1792 of yacc.c  */
+#line 355 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_Plus;
+                        }
+    break;
+
+  case 58:
+/* Line 1792 of yacc.c  */
+#line 359 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_Minus;
+                        }
+    break;
+
+  case 59:
+/* Line 1792 of yacc.c  */
+#line 364 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_Neq;
+                        }
+    break;
+
+  case 60:
+/* Line 1792 of yacc.c  */
+#line 368 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_LT;
+                        }
+    break;
+
+  case 61:
+/* Line 1792 of yacc.c  */
+#line 372 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_LTE;
+                        }
+    break;
+
+  case 62:
+/* Line 1792 of yacc.c  */
+#line 376 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_GT;
+                        }
+    break;
+
+  case 63:
+/* Line 1792 of yacc.c  */
+#line 380 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_GTE;
+                        }
+    break;
+
+  case 64:
+/* Line 1792 of yacc.c  */
+#line 384 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_Equal;
+                        }
+    break;
+
+  case 65:
+/* Line 1792 of yacc.c  */
+#line 389 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_And;
+                        }
+    break;
+
+  case 66:
+/* Line 1792 of yacc.c  */
+#line 394 "Grammar.y"
+    {
+                            (yyval.binOpType) = BO_Or;
+                        }
+    break;
+
+  case 67:
+/* Line 1792 of yacc.c  */
+#line 399 "Grammar.y"
+    {
+                            (yyval.unOpType) = UO_Neg;
+                        }
+    break;
+
+
+/* Line 1792 of yacc.c  */
+#line 2092 "Parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

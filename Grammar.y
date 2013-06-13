@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "Tokeniser.h"
+#include "ASTClass.h"
 
 extern int yyparse ();
 
@@ -24,20 +24,20 @@ int main()
 %}
 
 %union {
-    string* strPtr,
-    TInt integer,
-    Expression* exp,
-    Dec* dec,
-    IdSqB* IdSqB,
-    LVal* lVal,
-    ExpList* expList,
-    ArgList* argList,
-    FieldList* fieldList,
-    FieldExpList* fieldExpList,
-    DecList* decList,
-    Ty* ty,
-    BinOpType binOpType,
-    UnOpType unOpType
+    string *strPtr;
+    TInt integer;
+    Expression* exp;
+    Dec* dec;
+    IdSqB* idSqB;
+    LVal* lVal;
+    ExpList* expList;
+    ArgList* argList;
+    FieldList* fieldList;
+    FieldExpList* fieldExpList;
+    DecList* decList;
+    Ty* ty;
+    BinOpType binOpType;
+    UnOpType unOpType;
 };
 
 %token TOK_ARRAY TOK_BREAK TOK_DO TOK_ELSE TOK_END

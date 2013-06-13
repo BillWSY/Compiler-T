@@ -1,6 +1,7 @@
 %{
 
-#include "global.h"
+#include "ASTClass.h"
+#include "Parser.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -64,7 +65,7 @@ HEXCH           \\x[0-9a-fA-F]{2}
 "}"             {   return  TOK_RCURLB;             }
 [0-9]+          {   return  TOK_INTEGER;            }
 {ID}            {   return  TOK_ID;                 }
-{BLANK}         {   return  TOK_BLANK;              }
+{BLANK}         {   /* ignore */                    }
 "/*"            {   BEGIN COMMENT;
                     ++ commentNesting;
                 }
@@ -82,8 +83,7 @@ HEXCH           \\x[0-9a-fA-F]{2}
 
 <STRING>"\""    {   
                     BEGIN INITIAL;
-                    strList.push_back(lexStr);
-                    yylval = strListCnt++;
+                    yylval.strPtr = new string(lexStr);
                     return TOK_STRING;
                 }
 <STRING>"\\a"   {   lexStr += '\a';                 }
@@ -125,7 +125,7 @@ HEXCH           \\x[0-9a-fA-F]{2}
 <STRING>.       {   lexStr += yytext;               }
 
 %%
-
+/*
 int main()
 {
     int t;
@@ -134,5 +134,6 @@ int main()
         if (t == TOK_STRING) cout << lexStr << endl;
     }
 }
+*/
 
 
