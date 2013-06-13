@@ -189,29 +189,31 @@ class ExpBreak : public Expression {
 };
 
 class ExpLet : public Expression {
-    DecList* decList;
-    ExpList* expList;
-    ExpLet(DecList* _decList, ExpList* _expList):Expression(E_Let) {
-        decList = _decList;
-        expList = _expList;
-    }
-    ExpLet():Expression(E_Let) {
-        decList = NULL;
-        expList = NULL;
-    }
+  public:
+      DecList* decList;
+      ExpList* expList;
+      ExpLet(DecList* _decList, ExpList* _expList):Expression(E_Let) {
+          decList = _decList;
+          expList = _expList;
+      }
+      ExpLet():Expression(E_Let) {
+          decList = NULL;
+          expList = NULL;
+      }
 };
 
 class ExpArray : public Expression {
-    string typeName;
-    Expression *expSize, *expInitVal;
-    ExpArray(const string& _typeName, Expression *_expSize, Expression *_expInitVal):Expression(E_Array) {
-        expSize = _expSize;
-        expInitVal = _expInitVal;
-    }
-    ExpArray():Expression(E_Array) {
-        expSize = NULL;
-        expInitVal = NULL;
-    }
+  public:
+      string typeName;
+      Expression *expSize, *expInitVal;
+      ExpArray(const string& _typeName, Expression *_expSize, Expression *_expInitVal):Expression(E_Array) {
+          expSize = _expSize;
+          expInitVal = _expInitVal;
+      }
+      ExpArray():Expression(E_Array) {
+          expSize = NULL;
+          expInitVal = NULL;
+      }
 };
 
 #endif // EXPCLASS_H_

@@ -3,7 +3,8 @@
 #include <string.h>
 #include "ASTClass.h"
 
-extern int yyparse ();
+extern int yyparse();
+extern int yylex();
 
 void yyerror(const char *str)
 {
@@ -14,6 +15,9 @@ int yywrap()
 {
     return 1;
 }
+
+int BasicNode::idCnt = 0;
+
 /*
 int main()
 {
@@ -87,91 +91,91 @@ Prog            :       Exp
 
 Exp             :       LValue
                         {
-                            $$ = (*Expression) new ExpLValue($1);
+                            $$ = (Expression*) new ExpLValue($1);
                         }
                 |       TOK_INTEGER
                         {
-                            $$ = (*Expression) new ExpInteger($1);
+                            $$ = (Expression*) new ExpInteger($1);
                         }
                 |       TOK_NIL
                         {
-                            $$ = (*Expression) new ExpNil();
+                            $$ = (Expression*) new ExpNil();
                         }
                 |       TOK_STRING
                         {
-                            $$ = (*Expression) new ExpString(*$1);
+                            $$ = (Expression*) new ExpString(*$1);
                             delete $1; $1 = NULL;
                         }
                 |       TOK_ID TOK_LBR ArgList TOK_RBR
                         {
-                            $$ = (*Expression) new ExpFuncCall(*$1, $3);
+                            $$ = (Expression*) new ExpFuncCall(*$1, $3);
                             delete $1; $1 = NULL;
                         }
                 |       Exp BinOp_L1 Exp                                        %prec TOK_MULT_SIGN
                         {
-                            $$ = (*Expression) new ExpBinOp($1, $3, $2);
+                            $$ = (Expression*) new ExpBinOp($1, $3, $2);
                         }
                 |       Exp BinOp_L2 Exp                                        %prec TOK_PLUS_SIGN
                         {
-                            $$ = (*Expression) new ExpBinOp($1, $3, $2);
+                            $$ = (Expression*) new ExpBinOp($1, $3, $2);
                         }
                 |       Exp BinOp_L3 Exp                                        %prec TOK_NEQ
                         {
-                            $$ = (*Expression) new ExpBinOp($1, $3, $2);
+                            $$ = (Expression*) new ExpBinOp($1, $3, $2);
                         }
                 |       Exp BinOp_L4 Exp                                        %prec TOK_AND
                         {
-                            $$ = (*Expression) new ExpBinOp($1, $3, $2);
+                            $$ = (Expression*) new ExpBinOp($1, $3, $2);
                         }
                 |       Exp BinOp_L5 Exp                                        %prec TOK_OR
                         {
-                            $$ = (*Expression) new ExpBinOp($1, $3, $2);
+                            $$ = (Expression*) new ExpBinOp($1, $3, $2);
                         }
                 |       UnOp Exp                                                %prec UNIOP_PREC
                         {
-                            $$ = (*Expression) new ExpUnOp($2, $1);
+                            $$ = (Expression*) new ExpUnOp($2, $1);
                         }
                 |       TOK_ID TOK_LCURLB FieldExpList TOK_RCURLB
                         {
-                            $$ = (*Expression) new ExpRecord(*$1, $3);
+                            $$ = (Expression*) new ExpRecord(*$1, $3);
                             delete $1; $1 = NULL;
                         }
                 |       TOK_LBR ExpList TOK_RBR
                         {
-                            $$ = (*Expression) new ExpExpList($2);
+                            $$ = (Expression*) new ExpExpList($2);
                         }
                 |       LValue TOK_ASSIGN Exp                                   %prec EXP_REDUCE_PREC
                         {
-                            $$ = (*Expression) new ExpLValue($1, $3);
+                            $$ = (Expression*) new ExpAssign($1, $3);
                         }
                 |       TOK_IF Exp TOK_THEN Exp                                 %prec IF_WO_ELSE_PREC
                         {
-                            $$ = (*Expression) new ExpIf($2, $4);
+                            $$ = (Expression*) new ExpIf($2, $4);
                         }
                 |       TOK_IF Exp TOK_THEN Exp TOK_ELSE Exp                    %prec EXP_REDUCE_PREC
                         {
-                            $$ = (*Expression) new ExpIf($2, $4, $6);
+                            $$ = (Expression*) new ExpIf($2, $4, $6);
                         }
                 |       TOK_WHILE Exp TOK_DO Exp                                %prec EXP_REDUCE_PREC
                         {
-                            $$ = (*Expression) new ExpWhile($2, $4);
+                            $$ = (Expression*) new ExpWhile($2, $4);
                         }
                 |       TOK_FOR TOK_ID TOK_ASSIGN Exp TOK_TO Exp TOK_DO Exp     %prec EXP_REDUCE_PREC
                         {
-                            $$ = (*Expression) new ExpIf(*$2, $4, $6, $8);
+                            $$ = (Expression*) new ExpFor(*$2, $4, $6, $8);
                             delete $2; $2 = NULL;
                         }
                 |       TOK_BREAK
                         {
-                            $$ = (*Expression) new ExpBreak();
+                            $$ = (Expression*) new ExpBreak();
                         }
                 |       TOK_LET DecList TOK_IN ExpList TOK_END
                         {
-                            $$ = (*Expression) new ExpIf($2, $4);
+                            $$ = (Expression*) new ExpLet($2, $4);
                         }
                 |       IdSqB TOK_OF Exp                                        %prec EXP_REDUCE_PREC
                         {
-                            $$ = (*Expression) new ExpIf($1 -> first, $1 -> second,  $3);
+                            $$ = (Expression*) new ExpArray($1 -> first, $1 -> second,  $3);
                             delete $1; $1 = NULL;
                         }
                 ;
@@ -235,12 +239,12 @@ VarDec          :       TOK_VAR TOK_ID TOK_ASSIGN Exp                           
 
 FuncDec         :       TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_EQUALS Exp   %prec EXP_REDUCE_PREC
                         {
-                            $$ = new (Dec*) FuncDec(*$2, $4, $7);
+                            $$ = (Dec*) new FuncDec(*$2, $4, $7);
                             delete $2; $2 = NULL;
                         }
                 |       TOK_FUNCTION TOK_ID TOK_LBR FieldList TOK_RBR TOK_COLON TOK_ID TOK_EQUALS Exp   %prec EXP_REDUCE_PREC
                         {
-                            $$ = new (Dec*) FuncDec(*$2, $4, *$7, $9);
+                            $$ = (Dec*) new FuncDec(*$2, $4, *$7, $9);
                             delete $2; $2 = NULL;
                             delete $7; $7 = NULL;
                         }
@@ -254,21 +258,21 @@ IdSqB           :       TOK_ID SqBExp
 
 LValue          :       TOK_ID                                                  %prec EXP_REDUCE_PREC
                         {
-                            $$ = (*LVal) new LValID(*$1);
+                            $$ = (LVal*) new LValID(*$1);
                             delete $1; $1 = NULL;
                         }
                 |       LValue TOK_DOT TOK_ID
                         {
-                            $$ = (*LVal) new LValMember($1, *$3);
+                            $$ = (LVal*) new LValMember($1, *$3);
                             delete $3; $3 = NULL;
                         }
                 |       IdSqB
                         {
-                            $$ = (*LVal) new LValElement((*LVal) new LValID($1 -> first), $1 -> second);
+                            $$ = (LVal*) new LValElement((LVal*) new LValID($1 -> first), $1 -> second);
                         }
                 |       LValue SqBExp
                         {
-                            $$ = (*LVal) new LValElement($1, $2);
+                            $$ = (LVal*) new LValElement($1, $2);
                         }
                 ;
 
@@ -284,7 +288,7 @@ ExpList         :       /* nothing */
                 |       ExpList TOK_SEMIC Exp
                         {
                             $$ = $1;
-                            $$ -> push_back($1);
+                            $$ -> push_back($3);
                         }
                 ;
 
@@ -311,14 +315,14 @@ FieldList       :       /* nothing */
                 |       TOK_ID TOK_COLON TOK_ID
                         {
                             $$ = new FieldList;
-                            $$ -> push_back(new FieldEle(*$1, *$3));
+                            $$ -> push_back(FieldEle(*$1, *$3));
                             delete $1; $1 = NULL;
                             delete $3; $3 = NULL;
                         }
                 |       FieldList TOK_COMMA TOK_ID TOK_COLON TOK_ID
                         {
                             $$ = $1;
-                            $$ -> push_back(new FieldEle(*$3, *$5));
+                            $$ -> push_back(FieldEle(*$3, *$5));
                             delete $3; $3 = NULL;
                             delete $5; $5 = NULL;
                         }
@@ -331,13 +335,13 @@ FieldExpList    :       /* nothing */
                 |       TOK_ID TOK_EQUALS Exp
                         {
                             $$ = new FieldExpList;
-                            $$ -> push_back(new FieldExpEle(*$1, $3));
+                            $$ -> push_back(FieldExpEle(*$1, $3));
                             delete $1; $1 = NULL;
                         }
                 |       FieldExpList TOK_COMMA TOK_ID TOK_EQUALS Exp
                         {
                             $$ = $1;
-                            $$ -> push_back(new FieldExpEle(*$3, $5));
+                            $$ -> push_back(FieldExpEle(*$3, $5));
                             delete $3; $3 = NULL;
                         }
                 ;
