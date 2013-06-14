@@ -63,7 +63,10 @@ HEXCH           \\x[0-9a-fA-F]{2}
 "]"             {   return  TOK_RSQB;               }
 "{"             {   return  TOK_LCURLB;             }
 "}"             {   return  TOK_RCURLB;             }
-[0-9]+          {   return  TOK_INTEGER;            }
+[0-9]+          {   
+                    yylval.integer = strToTInt(string(yytext));
+                    return  TOK_INTEGER;
+                }
 {ID}            {   
                     yylval.strPtr = new string(yytext);
                     return  TOK_ID;

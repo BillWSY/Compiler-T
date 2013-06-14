@@ -3,6 +3,8 @@
 #include <string.h>
 #include "ASTClass.h"
 
+extern Expression* root;
+
 extern int yyparse();
 extern int yylex();
 
@@ -87,6 +89,9 @@ int main()
 %%
 
 Prog            :       Exp
+                        {
+                            root = $1;
+                        }
                 ;
 
 Exp             :       LValue
