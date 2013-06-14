@@ -6,114 +6,125 @@
 
 using namespace std;
 
-extern Expression* root = NULL;
+extern Expression* root;
+Expression* root = NULL;
 int indent;
+
+string strVisitExpression(Expression* exp);
+string strVisitExpList(ExpList* expList);
+string strVisitDecList(DecList* decList);
+string strVisitLVal(LVal* lVal);
+string strVisitArgList(ArgList* argList);
+string strVisitFieldExpList(FieldExpList* fieldExpList);
+string strVisitDec(Dec* dec);
+string strVisitTy(Ty* ty);
+string strVisitFieldList(FieldList* fieldList);
 
 string strVisitExpression(Expression* exp)
 {
     if (!exp) return string("");
     string rtn;
-    switch(exp->expNodeType) {
+    switch(exp->getExpType()) {
         case E_LValue:
-            return strVisitLVal((ExpLValue*)exp->lValue);
+            return strVisitLVal(((ExpLValue*)exp)->lValue);
             break;
         case E_Integer:
-            return toStr((ExpInteger*)exp->num);
+            return toStr(((ExpInteger*)exp)->num);
             break;
         case E_Nil:
             return string("nil");
             break;
         case E_String:
-            return "\"" + (ExpString*)exp->str + "\"";
+            return "\"" + ((ExpString*)exp)->str + "\"";
             break;
         case E_FuncCall:
-            rtn = (ExpFuncCall*)exp->funcName;
+            rtn = ((ExpFuncCall*)exp)->funcName;
             rtn += "(";
-            rtn += strVisitArgList((ExpFuncCall*)exp->argList);
+            rtn += strVisitArgList(((ExpFuncCall*)exp)->argList);
             rtn += ")";
             return rtn;
             break;
         case E_BinOp:
-            rtn = strVisitExpression((ExpBinOp*)exp->exp0);
-            rtn += " " + binOpToStr((ExpBinOp*)exp->binOp) + " ";
-            rtn += strVisitExpression((ExpBinOp*)exp->exp1);
+            rtn = strVisitExpression(((ExpBinOp*)exp)->exp0);
+            rtn += " " + binOpToStr(((ExpBinOp*)exp)->binOp) + " ";
+            rtn += strVisitExpression(((ExpBinOp*)exp)->exp1);
             return rtn;
             break;
-        case E_ExpUnOp:
-            rtn = unOpToStr((ExpUnOp*)exp->unOp) + " ";
-            rtn += strVisitExpression((ExpBinOp*)exp->exp);
+        case E_UnOp:
+            rtn = unOpToStr(((ExpUnOp*)exp)->unOp) + " ";
+            rtn += strVisitExpression(((ExpUnOp*)exp)->exp);
             return rtn;
             break;
-        case E_ExpRecord:
-            rtn = (ExpRecord*)exp->typeName;
+        case E_Record:
+            rtn = ((ExpRecord*)exp)->typeName;
             rtn += "{";
-            rtn += strVisitFieldExpList((ExpRecord*)exp->fieldExpList);
+            rtn += strVisitFieldExpList(((ExpRecord*)exp)->fieldExpList);
             rtn += "}";
             return rtn;
             break;
-        case E_ExpExpList:
-            rtn = strVisitExpList((ExpExpList*)exp->expList);
+        case E_ExpList:
+            rtn = strVisitExpList(((ExpExpList*)exp)->expList);
             return rtn;
             break;
         case E_Assign:
-            rtn = strVisitLVal((ExpAssign*)exp->lValue);
+            rtn = strVisitLVal(((ExpAssign*)exp)->lValue);
             rtn += " := ";
-            rtn += strVisitExpression((ExpAssign*)exp->rhsValue);
+            rtn += strVisitExpression(((ExpAssign*)exp)->rhsValue);
             return rtn;
             break;
         case E_If:
-            rtn = "if " + strVisitExpression((ExpIf*)exp->cond) + " then\n";
+            rtn = "if " + strVisitExpression(((ExpIf*)exp)->cond) + " then\n";
             ++ indent;
-            rtn += makeIndent(indent) + strVisitExpression((ExpIf*)exp->trueStatement) + "\n";
+            rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->trueStatement) + "\n";
             -- indent;
-            if ((ExpIf*)exp->falseStatement) {
+            if (((ExpIf*)exp)->falseStatement) {
                 rtn += makeIndent(indent) + "else";
                 ++ indent;
-                rtn += makeIndent(indent) + strVisitExpression((ExpIf*)exp->falseStatement) + "\n";
+                rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->falseStatement) + "\n";
                 -- indent;
             }
             return rtn;
             break;
         case E_While:
-            rtn = "while " + strVisitExpression((ExpWhile*)exp->cond) + " do\n";
+            rtn = "while " + strVisitExpression(((ExpWhile*)exp)->cond) + " do\n";
             ++ indent;
-            rtn += makeIndent(indent) + strVisitExpression((ExpWhile*)exp->loopStatement) + "\n";
+            rtn += makeIndent(indent) + strVisitExpression(((ExpWhile*)exp)->loopStatement) + "\n";
             -- indent;
             return rtn;
             break;
         case E_For:
-            rtn = "for " + (ExpFor*)exp->loopVar + " := ";
-            rtn += strVisitExpression((ExpFor*)exp->beg);
+            rtn = "for " + ((ExpFor*)exp)->loopVar + " := ";
+            rtn += strVisitExpression(((ExpFor*)exp)->beg);
             rtn += " to ";
-            rtn += strVisitExpression((ExpFor*)exp->end);
+            rtn += strVisitExpression(((ExpFor*)exp)->end);
             rtn += " do\n";
             ++ indent;
-            rtn += makeIndent(indent):
-            rtn += strVisitExpression((ExpFor*)exp->loopStatement);
+            rtn += makeIndent(indent);
+            rtn += strVisitExpression(((ExpFor*)exp)->loopStatement);
             --indent;
             return rtn;
             break;
-        case E_Break;
+        case E_Break:
             return string("break");
             break;
-        case E_ExpLet:
+        case E_Let:
             rtn = "let\n";
             ++ indent;
             rtn += makeIndent(indent);
-            rtn += strVisitDecList((ExpLet*)exp->decList);
+            rtn += strVisitDecList(((ExpLet*)exp)->decList);
             -- indent;
             rtn += "in\n";
             ++ indent;
             rtn += makeIndent(indent);
-            rtn += strVisitExpList((ExpLet*)exp->expList);
+            rtn += strVisitExpList(((ExpLet*)exp)->expList);
             -- indent;
             rtn += "end";
             return rtn;
             break;
-        case ExpArray:
-            rtn = (ExpArray*)exp->typeName;
-            rtn += "[" + strVisitExpression((ExpArray*)exp->expSize) + "]";
-            rtn += " of " += strVisitExpression((ExpArray*)exp->expInitVal);
+        case E_Array:
+            rtn = ((ExpArray*)exp)->typeName;
+            rtn += "[" + strVisitExpression(((ExpArray*)exp)->expSize) + "]";
+            rtn += " of " + strVisitExpression(((ExpArray*)exp)->expInitVal);
             return rtn;
             break;
         default:
@@ -151,20 +162,20 @@ string strVisitDecList(DecList* decList)
 string strVisitLVal(LVal* lVal)
 {
     string rtn;
-    switch(lVal->lValNodeType) {
+    switch(lVal->getLValType()) {
         case L_ID:
-            return (LValID*)lVal->lValName;
+            return ((LValID*)lVal)->lValName;
             break;
         case L_Member:
-            rtn = strVisitLVal((LValMember*)lVal->major);
+            rtn = strVisitLVal(((LValMember*)lVal)->major);
             rtn += ".";
-            rtn += (LValMember*)lVal->memberName;
+            rtn += ((LValMember*)lVal)->memberName;
             return rtn;
             break;
         case L_Element:
-            rtn = strVisitLVal((LValElement*)lVal->major);
+            rtn = strVisitLVal(((LValElement*)lVal)->major);
             rtn += "[";
-            rtn += strVisitExpression((LValElement*)lVal->idx);
+            rtn += strVisitExpression(((LValElement*)lVal)->idx);
             rtn += "]";
             return rtn;
             break;
@@ -201,36 +212,40 @@ string strVisitFieldExpList(FieldExpList* fieldExpList)
 string strVisitDec(Dec* dec)
 {
     string rtn = "";
-    switch(dec) {
+    switch(dec->getDecType()) {
         case D_Var:
             rtn = "var ";
-            rtn += (VarDec*)dec->varName;
-            if ((VarDec*)dec->typeName != "") {
+            rtn += ((VarDec*)dec)->varName;
+            if (((VarDec*)dec)->typeName != "") {
                 rtn += " : ";
-                rtn += (VarDec*)dec->typeName;
+                rtn += ((VarDec*)dec)->typeName;
             }
             rtn += " := ";
-            rtn += strVisitExpression((VarDec*)dec->initVal);
+            rtn += strVisitExpression(((VarDec*)dec)->initVal);
             return rtn;
             break;
         case D_Func:
             rtn = "function ";
-            rtn += (FuncDec*)dec->funcName;
+            rtn += ((FuncDec*)dec)->funcName;
             rtn += "(";
-            rtn += strVisitFieldList((FuncDec*)dec->fieldList);
+            rtn += strVisitFieldList(((FuncDec*)dec)->fieldList);
             rtn += ")";
-            if ((FuncDec*)dec -> hasReturn) {
-                rtn += (FuncDec*)dec->typeName;
+            if (((FuncDec*)dec)->hasReturn) {
+                rtn += " : ";
+                rtn += ((FuncDec*)dec)->typeName;
             }
-            rtn += "=";
-            rtn += strVisitExpression((FuncDec*)dec->body);
+            rtn += " = \n";
+            ++ indent;
+            rtn += makeIndent(indent);
+            rtn += strVisitExpression(((FuncDec*)dec)->body);
+            -- indent;
             return rtn;
             break;
         case D_Type:
             rtn = "type ";
-            rtn += (TyDec*)dec->typeName;
-            rtn += " = "
-            rtn += strVisitTy((TyDec*)dec->ty);
+            rtn += ((TyDec*)dec)->typeName;
+            rtn += " = ";
+            rtn += strVisitTy(((TyDec*)dec)->ty);
             return rtn;
             break;
         default:
@@ -265,7 +280,7 @@ string strVisitFieldList(FieldList* fieldList)
     string rtn;
     for(int i = 0; i < fieldList->size(); ++ i) {
         FieldEle cur = (*fieldList)[i];
-        rtn += cur.first + " = " + cur.second;
+        rtn += cur.first + " : " + cur.second;
         if (i != fieldList->size() - 1) {
             rtn += ", ";
         }

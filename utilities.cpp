@@ -4,13 +4,6 @@
 
 using namespace std;
 
-template <typename T> toStr(const T& content)
-{
-    stringstream ss;
-    ss << content;
-    return ss.str();
-}
-
 TInt strToTInt(string str)
 {
     TInt rtn;
@@ -22,29 +15,29 @@ TInt strToTInt(string str)
 string binOpToStr(BinOpType binOp)
 {
     switch(binOp) {
-        BO_Mul:
+        case BO_Mul:
             return string("*");
-        BO_Div:
+        case BO_Div:
             return string("/");
-        BO_Plus:
+        case BO_Plus:
             return string("+");
-        BO_Minus:
+        case BO_Minus:
             return string("-");
-        BO_Neq:
+        case BO_Neq:
             return string("<>");
-        BO_LT:
+        case BO_LT:
             return string("<");
-        BO_LTE:
+        case BO_LTE:
             return string("<=");
-        BO_GT:
+        case BO_GT:
             return string(">");
-        BO_GTE:
+        case BO_GTE:
             return string(">=");
-        BO_Equal:
+        case BO_Equal:
             return string("=");
-        BO_And:
+        case BO_And:
             return string("&");
-        BO_Or:
+        case BO_Or:
             return string("|");
         default:
             return string("WRONG_BINOP");
@@ -54,7 +47,7 @@ string binOpToStr(BinOpType binOp)
 string unOpToStr(UnOpType unOp)
 {
     switch (unOp) {
-        UO_Neg:
+        case UO_Neg:
             return string("-");
         default:
             return string("WRONG_UNOP");

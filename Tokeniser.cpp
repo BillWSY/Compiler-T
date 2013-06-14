@@ -536,6 +536,7 @@ char *yytext;
 
 #include "ASTClass.h"
 #include "Parser.h"
+#include "utilities.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -549,7 +550,7 @@ int convTmp;
 
 
 
-#line 553 "Tokeniser.cpp"
+#line 554 "Tokeniser.cpp"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -733,10 +734,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 24 "Lexicon.l"
+#line 25 "Lexicon.l"
 
 
-#line 740 "Tokeniser.cpp"
+#line 741 "Tokeniser.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -821,212 +822,215 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 26 "Lexicon.l"
+#line 27 "Lexicon.l"
 {   return  TOK_ARRAY;              }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 27 "Lexicon.l"
+#line 28 "Lexicon.l"
 {   return  TOK_BREAK;              }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 28 "Lexicon.l"
+#line 29 "Lexicon.l"
 {   return  TOK_DO;                 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 29 "Lexicon.l"
+#line 30 "Lexicon.l"
 {   return  TOK_ELSE;               }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 30 "Lexicon.l"
+#line 31 "Lexicon.l"
 {   return  TOK_END;                }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 31 "Lexicon.l"
+#line 32 "Lexicon.l"
 {   return  TOK_FOR;                }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 32 "Lexicon.l"
+#line 33 "Lexicon.l"
 {   return  TOK_FUNCTION;           }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 33 "Lexicon.l"
+#line 34 "Lexicon.l"
 {   return  TOK_IF;                 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 34 "Lexicon.l"
+#line 35 "Lexicon.l"
 {   return  TOK_IN;                 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 35 "Lexicon.l"
+#line 36 "Lexicon.l"
 {   return  TOK_LET;                }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 36 "Lexicon.l"
+#line 37 "Lexicon.l"
 {   return  TOK_NIL;                }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "Lexicon.l"
+#line 38 "Lexicon.l"
 {   return  TOK_OF;                 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 38 "Lexicon.l"
+#line 39 "Lexicon.l"
 {   return  TOK_THEN;               }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 39 "Lexicon.l"
+#line 40 "Lexicon.l"
 {   return  TOK_TO;                 }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 40 "Lexicon.l"
+#line 41 "Lexicon.l"
 {   return  TOK_TYPE;               }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 41 "Lexicon.l"
+#line 42 "Lexicon.l"
 {   return  TOK_VAR;                }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 42 "Lexicon.l"
+#line 43 "Lexicon.l"
 {   return  TOK_WHILE;              }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 43 "Lexicon.l"
+#line 44 "Lexicon.l"
 {   return  TOK_PLUS_SIGN;          }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 44 "Lexicon.l"
+#line 45 "Lexicon.l"
 {   return  TOK_MINUS_SIGN;         }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 45 "Lexicon.l"
+#line 46 "Lexicon.l"
 {   return  TOK_MULT_SIGN;          }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 46 "Lexicon.l"
+#line 47 "Lexicon.l"
 {   return  TOK_DIV_SIGN;           }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "Lexicon.l"
+#line 48 "Lexicon.l"
 {   return  TOK_AND;                }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "Lexicon.l"
+#line 49 "Lexicon.l"
 {   return  TOK_OR;                 }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "Lexicon.l"
+#line 50 "Lexicon.l"
 {   return  TOK_EQUALS;             }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "Lexicon.l"
+#line 51 "Lexicon.l"
 {   return  TOK_NEQ;                }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 51 "Lexicon.l"
+#line 52 "Lexicon.l"
 {   return  TOK_LT;                 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 52 "Lexicon.l"
+#line 53 "Lexicon.l"
 {   return  TOK_LTE;                }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 53 "Lexicon.l"
+#line 54 "Lexicon.l"
 {   return  TOK_GT;                 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 54 "Lexicon.l"
+#line 55 "Lexicon.l"
 {   return  TOK_GTE;                }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 55 "Lexicon.l"
+#line 56 "Lexicon.l"
 {   return  TOK_ASSIGN;             }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 56 "Lexicon.l"
+#line 57 "Lexicon.l"
 {   return  TOK_SEMIC;              }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 57 "Lexicon.l"
+#line 58 "Lexicon.l"
 {   return  TOK_COMMA;              }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 58 "Lexicon.l"
+#line 59 "Lexicon.l"
 {   return  TOK_COLON;              }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 59 "Lexicon.l"
+#line 60 "Lexicon.l"
 {   return  TOK_DOT;                }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 60 "Lexicon.l"
+#line 61 "Lexicon.l"
 {   return  TOK_LBR;                }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 61 "Lexicon.l"
+#line 62 "Lexicon.l"
 {   return  TOK_RBR;                }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 62 "Lexicon.l"
+#line 63 "Lexicon.l"
 {   return  TOK_LSQB;               }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 63 "Lexicon.l"
+#line 64 "Lexicon.l"
 {   return  TOK_RSQB;               }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 64 "Lexicon.l"
+#line 65 "Lexicon.l"
 {   return  TOK_LCURLB;             }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 65 "Lexicon.l"
+#line 66 "Lexicon.l"
 {   return  TOK_RCURLB;             }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 66 "Lexicon.l"
-{   return  TOK_INTEGER;            }
+#line 67 "Lexicon.l"
+{   
+                    yylval.integer = strToTInt(string(yytext));
+                    return  TOK_INTEGER;
+                }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 67 "Lexicon.l"
+#line 71 "Lexicon.l"
 {   
                     yylval.strPtr = new string(yytext);
                     return  TOK_ID;
@@ -1035,39 +1039,39 @@ YY_RULE_SETUP
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 71 "Lexicon.l"
+#line 75 "Lexicon.l"
 {   /* ignore */                    }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 72 "Lexicon.l"
+#line 76 "Lexicon.l"
 {   BEGIN COMMENT;
                     ++ commentNesting;
                 }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 75 "Lexicon.l"
+#line 79 "Lexicon.l"
 {   ++ commentNesting;              }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 76 "Lexicon.l"
+#line 80 "Lexicon.l"
 {   -- commentNesting;
                     if (commentNesting == 0) BEGIN INITIAL;
                 }
 	YY_BREAK
 case 47:
-#line 80 "Lexicon.l"
+#line 84 "Lexicon.l"
 case 48:
 /* rule 48 can match eol */
 YY_RULE_SETUP
-#line 80 "Lexicon.l"
+#line 84 "Lexicon.l"
 {   /* do nothing */                }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 82 "Lexicon.l"
+#line 86 "Lexicon.l"
 {   
                     BEGIN STRING;
                     lexStr = "";
@@ -1075,7 +1079,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 87 "Lexicon.l"
+#line 91 "Lexicon.l"
 {   
                     BEGIN INITIAL;
                     yylval.strPtr = new string(lexStr);
@@ -1084,62 +1088,62 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 92 "Lexicon.l"
+#line 96 "Lexicon.l"
 {   lexStr += '\a';                 }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 93 "Lexicon.l"
+#line 97 "Lexicon.l"
 {   lexStr += '\b';                 }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 94 "Lexicon.l"
+#line 98 "Lexicon.l"
 {   lexStr += '\f';                 }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 95 "Lexicon.l"
+#line 99 "Lexicon.l"
 {   lexStr += '\n';                 }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 96 "Lexicon.l"
+#line 100 "Lexicon.l"
 {   lexStr += '\r';                 }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 97 "Lexicon.l"
+#line 101 "Lexicon.l"
 {   lexStr += '\t';                 }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 98 "Lexicon.l"
+#line 102 "Lexicon.l"
 {   lexStr += '\v';                 }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 99 "Lexicon.l"
+#line 103 "Lexicon.l"
 {   lexStr += '\'';                 }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 100 "Lexicon.l"
+#line 104 "Lexicon.l"
 {   lexStr += '\"';                 }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 101 "Lexicon.l"
+#line 105 "Lexicon.l"
 {   lexStr += '\\';                 }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 102 "Lexicon.l"
+#line 106 "Lexicon.l"
 {   lexStr += '\?';                 }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 103 "Lexicon.l"
+#line 107 "Lexicon.l"
 {   assert(strlen(yytext) == 4);
                     assert(yytext[0] == '\\');
                     char tmpChr = 0;
@@ -1152,7 +1156,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 112 "Lexicon.l"
+#line 116 "Lexicon.l"
 {   assert(strlen(yytext) == 4);
                     assert(yytext[0] == '\\');
                     assert(yytext[1] == 'x');
@@ -1172,15 +1176,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 128 "Lexicon.l"
+#line 132 "Lexicon.l"
 {   lexStr += yytext;               }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 130 "Lexicon.l"
+#line 134 "Lexicon.l"
 ECHO;
 	YY_BREAK
-#line 1184 "Tokeniser.cpp"
+#line 1188 "Tokeniser.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(STRING):
@@ -2176,7 +2180,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 130 "Lexicon.l"
+#line 134 "Lexicon.l"
 
 
 /*

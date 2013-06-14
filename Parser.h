@@ -100,7 +100,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 30 "Grammar.y"
+#line 32 "Grammar.y"
 
     string *strPtr;
     TInt integer;

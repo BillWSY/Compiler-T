@@ -2,6 +2,7 @@
 
 #include "ASTClass.h"
 #include "Parser.h"
+#include "utilities.h"
 #include <iostream>
 #include <string>
 #include <cstring>

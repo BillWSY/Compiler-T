@@ -2,8 +2,15 @@
 #define UTILITIES_H_
 
 #include "ASTClass.h"
+#include <sstream>
 
-template <typename T> toStr(const T& content);
+template <typename T> string toStr(const T& content)
+{
+    stringstream ss;
+    ss << content;
+    return ss.str();
+}
+
 TInt strToTInt(string str);
 string binOpToStr(BinOpType binOp);
 string unOpToStr(UnOpType unOp);
