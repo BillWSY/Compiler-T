@@ -63,7 +63,7 @@ string strVisitExpression(Expression* exp)
             return rtn;
             break;
         case E_ExpList:
-            rtn = strVisitExpList(((ExpExpList*)exp)->expList);
+            rtn = "(" + strVisitExpList(((ExpExpList*)exp)->expList) + ")";
             return rtn;
             break;
         case E_Assign:
@@ -78,7 +78,7 @@ string strVisitExpression(Expression* exp)
             rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->trueStatement) + "\n";
             -- indent;
             if (((ExpIf*)exp)->falseStatement) {
-                rtn += makeIndent(indent) + "else";
+                rtn += makeIndent(indent) + "else\n";
                 ++ indent;
                 rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->falseStatement) + "\n";
                 -- indent;
@@ -113,12 +113,12 @@ string strVisitExpression(Expression* exp)
             rtn += makeIndent(indent);
             rtn += strVisitDecList(((ExpLet*)exp)->decList);
             -- indent;
-            rtn += "in\n";
+            rtn += "\n" + makeIndent(indent) + "in\n";
             ++ indent;
             rtn += makeIndent(indent);
             rtn += strVisitExpList(((ExpLet*)exp)->expList);
             -- indent;
-            rtn += "end";
+            rtn += "\n" + makeIndent(indent) + "end";
             return rtn;
             break;
         case E_Array:
@@ -135,14 +135,12 @@ string strVisitExpression(Expression* exp)
 string strVisitExpList(ExpList* expList)
 {
     string rtn;
-    rtn = "(";
     for(int i = 0; i < expList->size(); ++ i) {
         rtn += strVisitExpression((*expList)[i]);
         if (i != expList->size() - 1) {
             rtn += "; ";
         }
     }
-    rtn += ")";
     return rtn;
 }
 

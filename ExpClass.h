@@ -59,11 +59,11 @@ class ExpFuncCall : public Expression {
   public:
       string funcName;
       ArgList* argList;
-      ExpFuncCall(const string& _funcName, ArgList* _argList):Expression(E_String) {
+      ExpFuncCall(const string& _funcName, ArgList* _argList):Expression(E_FuncCall) {
           argList = _argList;
           funcName = _funcName;
       }
-      ExpFuncCall():Expression(E_String) {
+      ExpFuncCall():Expression(E_FuncCall) {
           argList = NULL;
       }
 };
