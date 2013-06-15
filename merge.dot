@@ -1,0 +1,223 @@
+digraph ast {
+0 [shape=record, label="{ { <ptr> Expression | 0 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+2 [shape=record, label="{ { <ptr> Declartion | 2 } | {Type | Name any | <ty> Type } }"];
+4 [shape=record, label="{ { <ptr> Field Expression List | 4 } | { 0 | any | int } }"]
+3 [shape=record, label="{ { <ptr> Type | 3 } | { Record | <flist> Field List } } "];
+3:flist -> 4:ptr;
+2:ty -> 3:ptr;
+1:pos0 -> 2:ptr;
+5 [shape=record, label="{ { <ptr> Declartion | 5 } | {Variable | buffer | <initval> Initial Value } }"];
+6 [shape=record, label="{ { <ptr> Expression | 6 } |{ Function Call | getchar | <argpos> Arguments} }"];
+7 [shape=record, label="{ { <ptr> Argument List | 7 } | {Argument List Empty} }"];
+6:argpos -> 7:ptr
+5:initval -> 6:ptr;
+1:pos1 -> 5:ptr;
+8 [shape=record, label="{ { <ptr> Declartion | 8 } | {Function | readint | Type int | <exp> Expression } }"];
+9 [shape=record, label="{ { <ptr> Expression | 9 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+11 [shape=record, label="{ { <ptr> Declartion | 11 } | {Variable | i | <initval> Initial Value } }"];
+12 [shape=record, label="{ { <ptr> Expression | 12 } |{ Integer | 0 } }"];
+11:initval -> 12:ptr;
+10:pos0 -> 11:ptr;
+13 [shape=record, label="{ { <ptr> Declartion | 13 } | {Function | isdigit | Type int | <exp> Expression } }"];
+14 [shape=record, label="{ { <ptr> Expression | 14 } |{ Binary Operation | <exp0> Expression 0 | & | <exp1> Expression 1} }"];
+15 [shape=record, label="{ { <ptr> Expression | 15 } |{ Binary Operation | <exp0> Expression 0 | \>= | <exp1> Expression 1} }"];
+16 [shape=record, label="{ { <ptr> Expression | 16 } |{ Function Call | ord | <argpos> Arguments} }"];
+18 [shape=record, label="{ { <ptr> Left Hand Value | 18 } | { ID | buffer } } "];
+17:pos0 -> 18:ptr;
+17 [shape=record, label="{ { <ptr> Argument List | 17 } | { 0 | <pos0> Argument } }"];
+16:argpos -> 17:ptr
+15:exp0 -> 16:ptr
+19 [shape=record, label="{ { <ptr> Expression | 19 } |{ Function Call | ord | <argpos> Arguments} }"];
+21 [shape=record, label="{ { <ptr> Expression | 21 } |{ String | 0 } }"];
+20:pos0 -> 21:ptr;
+20 [shape=record, label="{ { <ptr> Argument List | 20 } | { 0 | <pos0> Argument } }"];
+19:argpos -> 20:ptr
+15:exp1 -> 19:ptr
+14:exp0 -> 15:ptr
+22 [shape=record, label="{ { <ptr> Expression | 22 } |{ Binary Operation | <exp0> Expression 0 | \<= | <exp1> Expression 1} }"];
+23 [shape=record, label="{ { <ptr> Expression | 23 } |{ Function Call | ord | <argpos> Arguments} }"];
+25 [shape=record, label="{ { <ptr> Left Hand Value | 25 } | { ID | buffer } } "];
+24:pos0 -> 25:ptr;
+24 [shape=record, label="{ { <ptr> Argument List | 24 } | { 0 | <pos0> Argument } }"];
+23:argpos -> 24:ptr
+22:exp0 -> 23:ptr
+26 [shape=record, label="{ { <ptr> Expression | 26 } |{ Function Call | ord | <argpos> Arguments} }"];
+28 [shape=record, label="{ { <ptr> Expression | 28 } |{ String | 9 } }"];
+27:pos0 -> 28:ptr;
+27 [shape=record, label="{ { <ptr> Argument List | 27 } | { 0 | <pos0> Argument } }"];
+26:argpos -> 27:ptr
+22:exp1 -> 26:ptr
+14:exp1 -> 22:ptr
+13:exp -> 14:ptr;
+10:pos1 -> 13:ptr;
+29 [shape=record, label="{ { <ptr> Declartion | 29 } | {Function | skipto | <exp> Expression } }"];
+10:pos2 -> 29:ptr;
+10 [shape=record, label="{ { <ptr> Declartion List | 10 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion }| { 2 | <pos2> Declartion } }"];
+9:dec -> 10:ptr
+31 [shape=record, label="{ { <ptr> Expression | 31 } |{ Function Call | skipto | <argpos> Arguments} }"];
+32 [shape=record, label="{ { <ptr> Argument List | 32 } | {Argument List Empty} }"];
+31:argpos -> 32:ptr
+30:pos0 -> 31:ptr;
+33 [shape=record, label="{ { <ptr> Expression | 33 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+34 [shape=record, label="{ { <ptr> Left Hand Value | 34 } | { Member Reference | <maj> Major Name | Member Nameany} } "];
+35 [shape=record, label="{ { <ptr> Left Hand Value | 35 } | { ID | any } } "];
+34:maj -> 35:ptr;
+33:lval -> 34:ptr
+36 [shape=record, label="{ { <ptr> Expression | 36 } |{ Function Call | isdigit | <argpos> Arguments} }"];
+38 [shape=record, label="{ { <ptr> Left Hand Value | 38 } | { ID | buffer } } "];
+37:pos0 -> 38:ptr;
+37 [shape=record, label="{ { <ptr> Argument List | 37 } | { 0 | <pos0> Argument } }"];
+36:argpos -> 37:ptr
+33:rhs -> 36:ptr
+30:pos1 -> 33:ptr;
+39 [shape=record, label="{ { <ptr> Expression | 39 } |{ While Loop | <cond> Condition | <stmt> Statement } } "];
+40 [shape=record, label="{ { <ptr> Expression | 40 } |{ Function Call | isdigit | <argpos> Arguments} }"];
+42 [shape=record, label="{ { <ptr> Left Hand Value | 42 } | { ID | buffer } } "];
+41:pos0 -> 42:ptr;
+41 [shape=record, label="{ { <ptr> Argument List | 41 } | { 0 | <pos0> Argument } }"];
+40:argpos -> 41:ptr
+39:cond -> 40:ptr
+44 [shape=record, label="{ { <ptr> Expression | 44 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+45 [shape=record, label="{ { <ptr> Left Hand Value | 45 } | { ID | i } } "];
+44:lval -> 45:ptr
+46 [shape=record, label="{ { <ptr> Expression | 46 } |{ Binary Operation | <exp0> Expression 0 | - | <exp1> Expression 1} }"];
+47 [shape=record, label="{ { <ptr> Expression | 47 } |{ Binary Operation | <exp0> Expression 0 | + | <exp1> Expression 1} }"];
+48 [shape=record, label="{ { <ptr> Expression | 48 } |{ Binary Operation | <exp0> Expression 0 | * | <exp1> Expression 1} }"];
+49 [shape=record, label="{ { <ptr> Left Hand Value | 49 } | { ID | i } } "];
+48:exp0 -> 49:ptr
+50 [shape=record, label="{ { <ptr> Expression | 50 } |{ Integer | 10 } }"];
+48:exp1 -> 50:ptr
+47:exp0 -> 48:ptr
+51 [shape=record, label="{ { <ptr> Expression | 51 } |{ Function Call | ord | <argpos> Arguments} }"];
+53 [shape=record, label="{ { <ptr> Left Hand Value | 53 } | { ID | buffer } } "];
+52:pos0 -> 53:ptr;
+52 [shape=record, label="{ { <ptr> Argument List | 52 } | { 0 | <pos0> Argument } }"];
+51:argpos -> 52:ptr
+47:exp1 -> 51:ptr
+46:exp0 -> 47:ptr
+54 [shape=record, label="{ { <ptr> Expression | 54 } |{ Function Call | ord | <argpos> Arguments} }"];
+56 [shape=record, label="{ { <ptr> Expression | 56 } |{ String | 0 } }"];
+55:pos0 -> 56:ptr;
+55 [shape=record, label="{ { <ptr> Argument List | 55 } | { 0 | <pos0> Argument } }"];
+54:argpos -> 55:ptr
+46:exp1 -> 54:ptr
+44:rhs -> 46:ptr
+43:pos0 -> 44:ptr;
+57 [shape=record, label="{ { <ptr> Expression | 57 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+58 [shape=record, label="{ { <ptr> Left Hand Value | 58 } | { ID | buffer } } "];
+57:lval -> 58:ptr
+59 [shape=record, label="{ { <ptr> Expression | 59 } |{ Function Call | getchar | <argpos> Arguments} }"];
+60 [shape=record, label="{ { <ptr> Argument List | 60 } | {Argument List Empty} }"];
+59:argpos -> 60:ptr
+57:rhs -> 59:ptr
+43:pos1 -> 57:ptr;
+43 [shape=record, label="{ { <ptr> Expression List | 43 } | { 0 | <pos0> Expression }| { 1 | <pos1> Expression } }"];
+39:stmt -> 43:ptr
+30:pos2 -> 39:ptr;
+61 [shape=record, label="{ { <ptr> Left Hand Value | 61 } | { ID | i } } "];
+30:pos3 -> 61:ptr;
+30 [shape=record, label="{ { <ptr> Expression List | 30 } | { 0 | <pos0> Expression }| { 1 | <pos1> Expression }| { 2 | <pos2> Expression }| { 3 | <pos3> Expression } }"];
+9:stmt -> 30:ptr
+8:exp -> 9:ptr;
+1:pos2 -> 8:ptr;
+62 [shape=record, label="{ { <ptr> Declartion | 62 } | {Type | Name list | <ty> Type } }"];
+64 [shape=record, label="{ { <ptr> Field Expression List | 64 } | { 0 | first | int }| { 1 | rest | list } }"]
+63 [shape=record, label="{ { <ptr> Type | 63 } | { Record | <flist> Field List } } "];
+63:flist -> 64:ptr;
+62:ty -> 63:ptr;
+1:pos3 -> 62:ptr;
+65 [shape=record, label="{ { <ptr> Declartion | 65 } | {Function | readlist | Type list | <exp> Expression } }"];
+66 [shape=record, label="{ { <ptr> Expression | 66 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+68 [shape=record, label="{ { <ptr> Declartion | 68 } | {Variable | any | <initval> Initial Value } }"];
+69 [shape=record, label="{ { <ptr> Expression | 69 } |{ Record | any | <flistpos> Field List} }"];
+71 [shape=record, label="{ { <ptr> Expression | 71 } |{ Integer | 0 } }"];
+70:pos0 -> 71:ptr;
+70 [shape=record, label="{ { <ptr> Field Expression List | 70 } | { 0 | any | <pos0> Expression } }"];
+69:flistpos -> 70:ptr
+68:initval -> 69:ptr;
+67:pos0 -> 68:ptr;
+72 [shape=record, label="{ { <ptr> Declartion | 72 } | {Variable | i | <initval> Initial Value } }"];
+73 [shape=record, label="{ { <ptr> Expression | 73 } |{ Function Call | readint | <argpos> Arguments} }"];
+75 [shape=record, label="{ { <ptr> Left Hand Value | 75 } | { ID | any } } "];
+74:pos0 -> 75:ptr;
+74 [shape=record, label="{ { <ptr> Argument List | 74 } | { 0 | <pos0> Argument } }"];
+73:argpos -> 74:ptr
+72:initval -> 73:ptr;
+67:pos1 -> 72:ptr;
+67 [shape=record, label="{ { <ptr> Declartion List | 67 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion } }"];
+66:dec -> 67:ptr
+77 [shape=record, label="{ { <ptr> Expression | 77 } |{ If | <cond> Condition | <stmt> Statement } } "];
+78 [shape=record, label="{ { <ptr> Left Hand Value | 78 } | { Member Reference | <maj> Major Name | Member Nameany} } "];
+79 [shape=record, label="{ { <ptr> Left Hand Value | 79 } | { ID | any } } "];
+78:maj -> 79:ptr;
+77:cond -> 78:ptr
+80 [shape=record, label="{ { <ptr> Expression | 80 } |{ Record | list | <flistpos> Field List} }"];
+82 [shape=record, label="{ { <ptr> Left Hand Value | 82 } | { ID | i } } "];
+81:pos0 -> 82:ptr;
+83 [shape=record, label="{ { <ptr> Expression | 83 } |{ Function Call | readlist | <argpos> Arguments} }"];
+84 [shape=record, label="{ { <ptr> Argument List | 84 } | {Argument List Empty} }"];
+83:argpos -> 84:ptr
+81:pos1 -> 83:ptr;
+81 [shape=record, label="{ { <ptr> Field Expression List | 81 } | { 0 | first | <pos0> Expression }| { 1 | rest | <pos1> Expression } }"];
+80:flistpos -> 81:ptr
+77:stmt -> 80:ptr
+76:pos0 -> 77:ptr;
+76 [shape=record, label="{ { <ptr> Expression List | 76 } | { 0 | <pos0> Expression } }"];
+66:stmt -> 76:ptr
+65:exp -> 66:ptr;
+1:pos4 -> 65:ptr;
+85 [shape=record, label="{ { <ptr> Declartion | 85 } | {Function | merge | Type list | <exp> Expression } }"];
+86 [shape=record, label="{ { <ptr> Expression | 86 } |{ If | <cond> Condition | <stmt> Statement } } "];
+87 [shape=record, label="{ { <ptr> Expression | 87 } |{ Binary Operation | <exp0> Expression 0 | = | <exp1> Expression 1} }"];
+88 [shape=record, label="{ { <ptr> Left Hand Value | 88 } | { ID | a } } "];
+87:exp0 -> 88:ptr
+89 [shape=record, label="{ { <ptr> Expression | 89 } |{ Nil } }"];
+87:exp1 -> 89:ptr
+86:cond -> 87:ptr
+90 [shape=record, label="{ { <ptr> Left Hand Value | 90 } | { ID | b } } "];
+86:stmt -> 90:ptr
+85:exp -> 86:ptr;
+1:pos5 -> 85:ptr;
+91 [shape=record, label="{ { <ptr> Declartion | 91 } | {Function | printint | <exp> Expression } }"];
+1:pos6 -> 91:ptr;
+92 [shape=record, label="{ { <ptr> Declartion | 92 } | {Function | printlist | <exp> Expression } }"];
+1:pos7 -> 92:ptr;
+93 [shape=record, label="{ { <ptr> Declartion | 93 } | {Variable | list1 | <initval> Initial Value } }"];
+94 [shape=record, label="{ { <ptr> Expression | 94 } |{ Function Call | readlist | <argpos> Arguments} }"];
+95 [shape=record, label="{ { <ptr> Argument List | 95 } | {Argument List Empty} }"];
+94:argpos -> 95:ptr
+93:initval -> 94:ptr;
+1:pos8 -> 93:ptr;
+96 [shape=record, label="{ { <ptr> Declartion | 96 } | {Variable | list2 | <initval> Initial Value } }"];
+98 [shape=record, label="{ { <ptr> Expression | 98 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+99 [shape=record, label="{ { <ptr> Left Hand Value | 99 } | { ID | buffer } } "];
+98:lval -> 99:ptr
+100 [shape=record, label="{ { <ptr> Expression | 100 } |{ Function Call | getchar | <argpos> Arguments} }"];
+101 [shape=record, label="{ { <ptr> Argument List | 101 } | {Argument List Empty} }"];
+100:argpos -> 101:ptr
+98:rhs -> 100:ptr
+97:pos0 -> 98:ptr;
+102 [shape=record, label="{ { <ptr> Expression | 102 } |{ Function Call | readlist | <argpos> Arguments} }"];
+103 [shape=record, label="{ { <ptr> Argument List | 103 } | {Argument List Empty} }"];
+102:argpos -> 103:ptr
+97:pos1 -> 102:ptr;
+97 [shape=record, label="{ { <ptr> Expression List | 97 } | { 0 | <pos0> Expression }| { 1 | <pos1> Expression } }"];
+96:initval -> 97:ptr;
+1:pos9 -> 96:ptr;
+1 [shape=record, label="{ { <ptr> Declartion List | 1 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion }| { 2 | <pos2> Declartion }| { 3 | <pos3> Declartion }| { 4 | <pos4> Declartion }| { 5 | <pos5> Declartion }| { 6 | <pos6> Declartion }| { 7 | <pos7> Declartion }| { 8 | <pos8> Declartion }| { 9 | <pos9> Declartion } }"];
+0:dec -> 1:ptr
+105 [shape=record, label="{ { <ptr> Expression | 105 } |{ Function Call | printlist | <argpos> Arguments} }"];
+107 [shape=record, label="{ { <ptr> Expression | 107 } |{ Function Call | merge | <argpos> Arguments} }"];
+109 [shape=record, label="{ { <ptr> Left Hand Value | 109 } | { ID | list1 } } "];
+108:pos0 -> 109:ptr;
+110 [shape=record, label="{ { <ptr> Left Hand Value | 110 } | { ID | list2 } } "];
+108:pos1 -> 110:ptr;
+108 [shape=record, label="{ { <ptr> Argument List | 108 } | { 0 | <pos0> Argument }| { 1 | <pos1> Argument } }"];
+107:argpos -> 108:ptr
+106:pos0 -> 107:ptr;
+106 [shape=record, label="{ { <ptr> Argument List | 106 } | { 0 | <pos0> Argument } }"];
+105:argpos -> 106:ptr
+104:pos0 -> 105:ptr;
+104 [shape=record, label="{ { <ptr> Expression List | 104 } | { 0 | <pos0> Expression } }"];
+0:stmt -> 104:ptr
+}

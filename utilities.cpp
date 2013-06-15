@@ -12,6 +12,38 @@ TInt strToTInt(string str)
     return rtn;
 }
 
+string binOpToStrEsc(BinOpType binOp)
+{
+    switch(binOp) {
+        case BO_Mul:
+            return string("*");
+        case BO_Div:
+            return string("/");
+        case BO_Plus:
+            return string("+");
+        case BO_Minus:
+            return string("-");
+        case BO_Neq:
+            return string("\\<\\>");
+        case BO_LT:
+            return string("\\<");
+        case BO_LTE:
+            return string("\\<=");
+        case BO_GT:
+            return string("\\>");
+        case BO_GTE:
+            return string("\\>=");
+        case BO_Equal:
+            return string("=");
+        case BO_And:
+            return string("&");
+        case BO_Or:
+            return string("\\|");
+        default:
+            return string("WRONG_BINOP");
+    }
+}
+
 string binOpToStr(BinOpType binOp)
 {
     switch(binOp) {

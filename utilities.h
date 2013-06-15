@@ -13,6 +13,7 @@ template <typename T> string toStr(const T& content)
 
 TInt strToTInt(string str);
 string binOpToStr(BinOpType binOp);
+string binOpToStrEsc(BinOpType binOp);
 string unOpToStr(UnOpType unOp);
 string makeIndent(int n);
 

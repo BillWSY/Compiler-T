@@ -1,11 +1,16 @@
-formatter : Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp
-	g++ Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp -ll -o formatter -g
-
 graph : Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp
 	g++ Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp -ll -o graph -g
 
-.PHONY : run
-run : test merge_formater.tig merge.tig
+.PHONY: run
+run : graph merge.tig
+	./graph < merge.tig > merge.dot
+	dot -Tpng merge.dot -o merge.png
+
+formatter : Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp
+	g++ Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp -ll -o formatter -g
+
+.PHONY : format
+format : test merge_formater.tig merge.tig
 	cat merge.tig | ./test > merge_formater.tig
 
 .PHONY : Tokeniser
