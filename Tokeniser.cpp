@@ -546,7 +546,7 @@ using namespace std;
 
 int commentNesting = 0;
 string lexStr;
-int convTmp;
+bool escStr;
 
 
 
@@ -1089,102 +1089,177 @@ YY_RULE_SETUP
 case 51:
 YY_RULE_SETUP
 #line 96 "Lexicon.l"
-{   lexStr += '\a';                 }
+{   
+                    if (escStr) {
+                        lexStr += '\a';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 97 "Lexicon.l"
-{   lexStr += '\b';                 }
+#line 103 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\b';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 98 "Lexicon.l"
-{   lexStr += '\f';                 }
+#line 110 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\f';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 99 "Lexicon.l"
-{   lexStr += '\n';                 }
+#line 117 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\n';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 100 "Lexicon.l"
-{   lexStr += '\r';                 }
+#line 124 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\r';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 101 "Lexicon.l"
-{   lexStr += '\t';                 }
+#line 131 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\t';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 102 "Lexicon.l"
-{   lexStr += '\v';                 }
+#line 138 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\v';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 103 "Lexicon.l"
-{   lexStr += '\'';                 }
+#line 145 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\'';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 104 "Lexicon.l"
-{   lexStr += '\"';                 }
+#line 152 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\"';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 105 "Lexicon.l"
-{   lexStr += '\\';                 }
+#line 159 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\\';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 106 "Lexicon.l"
-{   lexStr += '\?';                 }
+#line 166 "Lexicon.l"
+{   
+                    if (escStr) {
+                        lexStr += '\?';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 107 "Lexicon.l"
-{   assert(strlen(yytext) == 4);
-                    assert(yytext[0] == '\\');
-                    char tmpChr = 0;
-                    for (int i = 1; i < 4; ++ i) {
-                        assert((yytext[i] <= '7') && (yytext[i] >= '0'));
-                        tmpChr = tmpChr * 8 + yytext[i] - '0';
+#line 173 "Lexicon.l"
+{   if (escStr) {
+                        assert(strlen(yytext) == 4);
+                        assert(yytext[0] == '\\');
+                        char tmpChr = 0;
+                        for (int i = 1; i < 4; ++ i) {
+                            assert((yytext[i] <= '7') && (yytext[i] >= '0'));
+                            tmpChr = tmpChr * 8 + yytext[i] - '0';
+                        }
+                        lexStr += tmpChr;
+                    } else {
+                        lexStr += yytext;
                     }
-                    lexStr += tmpChr;
                 }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 116 "Lexicon.l"
-{   assert(strlen(yytext) == 4);
-                    assert(yytext[0] == '\\');
-                    assert(yytext[1] == 'x');
-                    char tmpChr = 0;
-                    for (int i = 2; i < 4; ++ i) {
-                        yytext[i] = toupper(yytext[i]);
-                        assert(((yytext[i] <= '9') && (yytext[i] >= '0'))
-                                    || ((yytext[i] <= 'F') && (yytext[i] >= 'A')) );
-                        if ((yytext[i] <= '9') && (yytext[i] >= '0')) {
-                            tmpChr = tmpChr * 16 + yytext[i] - '0';
-                        } else {
-                            tmpChr = tmpChr * 16 + yytext[i] - 'A' + 10;
+#line 186 "Lexicon.l"
+{   
+                    if (escStr) {
+                        assert(strlen(yytext) == 4);
+                        assert(yytext[0] == '\\');
+                        assert(yytext[1] == 'x');
+                        char tmpChr = 0;
+                        for (int i = 2; i < 4; ++ i) {
+                            yytext[i] = toupper(yytext[i]);
+                            assert(((yytext[i] <= '9') && (yytext[i] >= '0'))
+                                        || ((yytext[i] <= 'F') && (yytext[i] >= 'A')) );
+                            if ((yytext[i] <= '9') && (yytext[i] >= '0')) {
+                                tmpChr = tmpChr * 16 + yytext[i] - '0';
+                            } else {
+                                tmpChr = tmpChr * 16 + yytext[i] - 'A' + 10;
+                            }
                         }
+                        lexStr += tmpChr;
+                    } else {
+                        lexStr += yytext;
                     }
-                    lexStr += tmpChr;
                 }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 132 "Lexicon.l"
+#line 207 "Lexicon.l"
 {   lexStr += yytext;               }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 134 "Lexicon.l"
+#line 209 "Lexicon.l"
 ECHO;
 	YY_BREAK
-#line 1188 "Tokeniser.cpp"
+#line 1263 "Tokeniser.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(STRING):
@@ -2180,19 +2255,8 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 134 "Lexicon.l"
+#line 209 "Lexicon.l"
 
-
-/*
-int main()
-{
-    int t;
-    while (t = yylex()) {
-        cout << yytext << " " << t << " " << getTokenName(t) << endl;
-        if (t == TOK_STRING) cout << lexStr << endl;
-    }
-}
-*/
 
 
 

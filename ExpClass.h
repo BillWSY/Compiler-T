@@ -139,15 +139,22 @@ class ExpAssign : public Expression {
 class ExpIf : public Expression {
   public:
       Expression *cond, *trueStatement, *falseStatement;
+      bool hasElse;
       ExpIf(Expression *_cond, Expression *_trueStatement, Expression *_falseStatement = NULL):Expression(E_If) {
           cond = _cond;
           trueStatement = _trueStatement;
           falseStatement = _falseStatement;
+          if (falseStatement) {
+              hasElse = true;
+          } else {
+              hasElse = false;
+          }
       }
       ExpIf():Expression(E_If) {
           cond = NULL;
           trueStatement = NULL;
           falseStatement = NULL;
+          hasElse = false;
       }
 };
 

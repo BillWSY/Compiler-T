@@ -1,6 +1,10 @@
 test : Parser.cpp Tokeniser.cpp main.cpp utilities.cpp
 	g++ Parser.cpp Tokeniser.cpp main.cpp utilities.cpp -ll -o test -g
 
+.PHONY : run
+run : test merge_formater.tig merge.tig
+	cat merge.tig | ./test > merge_formater.tig
+
 .PHONY : Tokeniser
 Tokeniser : Tokeniser.cpp
 

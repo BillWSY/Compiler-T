@@ -12,7 +12,7 @@ using namespace std;
 
 int commentNesting = 0;
 string lexStr;
-int convTmp;
+bool escStr;
 
 %}
 ID              [a-zA-Z][0-9a-zA-z_]*
@@ -93,54 +93,118 @@ HEXCH           \\x[0-9a-fA-F]{2}
                     yylval.strPtr = new string(lexStr);
                     return TOK_STRING;
                 }
-<STRING>"\\a"   {   lexStr += '\a';                 }
-<STRING>"\\b"   {   lexStr += '\b';                 }
-<STRING>"\\f"   {   lexStr += '\f';                 }
-<STRING>"\\n"   {   lexStr += '\n';                 }
-<STRING>"\\r"   {   lexStr += '\r';                 }
-<STRING>"\\t"   {   lexStr += '\t';                 }
-<STRING>"\\v"   {   lexStr += '\v';                 }
-<STRING>"\\'"   {   lexStr += '\'';                 }
-<STRING>"\\\""  {   lexStr += '\"';                 }
-<STRING>"\\\\"  {   lexStr += '\\';                 }
-<STRING>"\\?"   {   lexStr += '\?';                 }
-<STRING>{OCTCH} {   assert(strlen(yytext) == 4);
-                    assert(yytext[0] == '\\');
-                    char tmpChr = 0;
-                    for (int i = 1; i < 4; ++ i) {
-                        assert((yytext[i] <= '7') && (yytext[i] >= '0'));
-                        tmpChr = tmpChr * 8 + yytext[i] - '0';
+<STRING>"\\a"   {   
+                    if (escStr) {
+                        lexStr += '\a';
+                    } else {
+                        lexStr += yytext;
                     }
-                    lexStr += tmpChr;
                 }
-<STRING>{HEXCH} {   assert(strlen(yytext) == 4);
-                    assert(yytext[0] == '\\');
-                    assert(yytext[1] == 'x');
-                    char tmpChr = 0;
-                    for (int i = 2; i < 4; ++ i) {
-                        yytext[i] = toupper(yytext[i]);
-                        assert(((yytext[i] <= '9') && (yytext[i] >= '0'))
-                                    || ((yytext[i] <= 'F') && (yytext[i] >= 'A')) );
-                        if ((yytext[i] <= '9') && (yytext[i] >= '0')) {
-                            tmpChr = tmpChr * 16 + yytext[i] - '0';
-                        } else {
-                            tmpChr = tmpChr * 16 + yytext[i] - 'A' + 10;
-                        }
+<STRING>"\\b"   {   
+                    if (escStr) {
+                        lexStr += '\b';
+                    } else {
+                        lexStr += yytext;
                     }
-                    lexStr += tmpChr;
+                }
+<STRING>"\\f"   {   
+                    if (escStr) {
+                        lexStr += '\f';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\n"   {   
+                    if (escStr) {
+                        lexStr += '\n';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\r"   {   
+                    if (escStr) {
+                        lexStr += '\r';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\t"   {   
+                    if (escStr) {
+                        lexStr += '\t';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\v"   {   
+                    if (escStr) {
+                        lexStr += '\v';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\'"   {   
+                    if (escStr) {
+                        lexStr += '\'';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\\""  {   
+                    if (escStr) {
+                        lexStr += '\"';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\\\"  {   
+                    if (escStr) {
+                        lexStr += '\\';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>"\\?"   {   
+                    if (escStr) {
+                        lexStr += '\?';
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>{OCTCH} {   if (escStr) {
+                        assert(strlen(yytext) == 4);
+                        assert(yytext[0] == '\\');
+                        char tmpChr = 0;
+                        for (int i = 1; i < 4; ++ i) {
+                            assert((yytext[i] <= '7') && (yytext[i] >= '0'));
+                            tmpChr = tmpChr * 8 + yytext[i] - '0';
+                        }
+                        lexStr += tmpChr;
+                    } else {
+                        lexStr += yytext;
+                    }
+                }
+<STRING>{HEXCH} {   
+                    if (escStr) {
+                        assert(strlen(yytext) == 4);
+                        assert(yytext[0] == '\\');
+                        assert(yytext[1] == 'x');
+                        char tmpChr = 0;
+                        for (int i = 2; i < 4; ++ i) {
+                            yytext[i] = toupper(yytext[i]);
+                            assert(((yytext[i] <= '9') && (yytext[i] >= '0'))
+                                        || ((yytext[i] <= 'F') && (yytext[i] >= 'A')) );
+                            if ((yytext[i] <= '9') && (yytext[i] >= '0')) {
+                                tmpChr = tmpChr * 16 + yytext[i] - '0';
+                            } else {
+                                tmpChr = tmpChr * 16 + yytext[i] - 'A' + 10;
+                            }
+                        }
+                        lexStr += tmpChr;
+                    } else {
+                        lexStr += yytext;
+                    }
                 }
 <STRING>.       {   lexStr += yytext;               }
 
 %%
-/*
-int main()
-{
-    int t;
-    while (t = yylex()) {
-        cout << yytext << " " << t << " " << getTokenName(t) << endl;
-        if (t == TOK_STRING) cout << lexStr << endl;
-    }
-}
-*/
-
 
