@@ -1,5 +1,8 @@
-test : Parser.cpp Tokeniser.cpp main.cpp utilities.cpp
-	g++ Parser.cpp Tokeniser.cpp main.cpp utilities.cpp -ll -o test -g
+formatter : Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp
+	g++ Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp -ll -o formatter -g
+
+graph : Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp
+	g++ Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp -ll -o graph -g
 
 .PHONY : run
 run : test merge_formater.tig merge.tig

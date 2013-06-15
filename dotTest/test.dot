@@ -1,0 +1,5 @@
+digraph g {
+    12 -> 34;
+    12 [label = <<table> <tr><td>asdf</td></tr> </table>>]
+}
+
