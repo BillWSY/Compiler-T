@@ -1,5 +1,8 @@
-digraph g {
-    12 -> 34;
-    12 [label = <<table> <tr><td>asdf</td></tr> </table>>]
+digraph structs {
+    node [shape=record];
+    struct1 [label="<f0> left|<f1> mid' dle|<f2> right"];
+    struct2 [label="<f0> one|<f1> two"];
+    struct3 [label="{ {<here> b|x} |{c|<there> d|e}}"];
+    struct1:f1 -> struct2;
+    struct1:f2 -> struct3:here;
 }
-

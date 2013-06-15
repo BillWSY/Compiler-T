@@ -10,208 +10,284 @@ extern Expression* root;
 Expression* root = NULL;
 int indent;
 
-string strVisitExpression(Expression* exp);
-string strVisitExpList(ExpList* expList);
-string strVisitDecList(DecList* decList);
-string strVisitLVal(LVal* lVal);
-string strVisitArgList(ArgList* argList);
-string strVisitFieldExpList(FieldExpList* fieldExpList);
-string strVisitDec(Dec* dec);
-string strVisitTy(Ty* ty);
-string strVisitFieldList(FieldList* fieldList);
+string graphVisitExpression(Expression* exp);
+string graphVisitExpList(ExpList* expList);
+string graphVisitDecList(DecList* decList);
+string graphVisitLVal(LVal* lVal);
+string graphVisitArgList(ArgList* argList);
+string graphVisitFieldExpList(FieldExpList* fieldExpList);
+string graphVisitDec(Dec* dec);
+string graphVisitTy(Ty* ty);
+string graphVisitFieldList(FieldList* fieldList);
 
-string strVisitExpression(Expression* exp)
+int gNodeTot = 0;
+string getNewNodeID()
 {
+    return toStr(gNodeTot++);
+}
+
+string addEdge(string node1, string node2)
+{
+    cout << node1 + " -> " + node2;
+}
+
+string graphVisitExpression(Expression* exp)
+{
+    string curID;
+    string strTmp;
     if (!exp) return string("");
-    string rtn;
     switch(exp->getExpType()) {
         case E_LValue:
-            return strVisitLVal(((ExpLValue*)exp)->lValue);
+            return graphVisitLVal(((ExpLValue*)exp)->lValue);
             break;
         case E_Integer:
-            return toStr(((ExpInteger*)exp)->num);
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{Integer | " << toStr(((ExpInteger*)exp)->num) << " }\"]";
+            return curID + ":ptr";
             break;
         case E_Nil:
-            return string("nil");
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{ Nil }\"]";
+            return curID + ":ptr";
             break;
         case E_String:
-            return "\"" + ((ExpString*)exp)->str + "\"";
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{Integer | " << ((ExpString*)exp)->str << " }\"]";
+            return curID + ":ptr";
             break;
         case E_FuncCall:
-            rtn = ((ExpFuncCall*)exp)->funcName;
-            rtn += "(";
-            rtn += strVisitArgList(((ExpFuncCall*)exp)->argList);
-            rtn += ")";
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{Function Call | " << ((ExpFuncCall*)exp)->funcName << " | <argpos> Arguments} }\"]";
+            cout << curID << ":argpos" << " -> " << graphVisitArgList(((ExpFuncCall*)exp)->argList);
+            return curID + ":ptr";
             break;
         case E_BinOp:
-            rtn = strVisitExpression(((ExpBinOp*)exp)->exp0);
-            rtn += " " + binOpToStr(((ExpBinOp*)exp)->binOp) + " ";
-            rtn += strVisitExpression(((ExpBinOp*)exp)->exp1);
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{Binary Operation | <exp0> Expression 0 | " << binOpToStr(((ExpBinOp*)exp)->binOp);
+            cout << " | <exp1> Expression 1} }\"]";
+            cout << curID << ":exp0" << " -> " << graphVisitExpression(((ExpBinOp*)exp)->exp0);
+            cout << curID << ":exp1" << " -> " << graphVisitExpression(((ExpBinOp*)exp)->exp1);
+            return curID + ":ptr";
             break;
         case E_UnOp:
-            rtn = unOpToStr(((ExpUnOp*)exp)->unOp) + " ";
-            rtn += strVisitExpression(((ExpUnOp*)exp)->exp);
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{Uni-Operation | " << unOpToStr(((ExpUnOp*)exp)->unOp) + " ";
+            cout << " | <exp> Expression} }\"]";
+            cout << curID << ":exp" << " -> " << graphVisitExpression(((ExpUnOp*)exp)->exp);
+            return curID + ":ptr";
             break;
         case E_Record:
-            rtn = ((ExpRecord*)exp)->typeName;
-            rtn += "{";
-            rtn += strVisitFieldExpList(((ExpRecord*)exp)->fieldExpList);
-            rtn += "}";
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{Record | " << ((ExpRecord*)exp)->typeName << " | <flistpos> Field List} }\"]";
+            cout << curID << ":argpos" << " -> " << graphVisitFieldExpList(((ExpRecord*)exp)->fieldExpList);
+            return curID + ":ptr";
             break;
         case E_ExpList:
-            rtn = "(" + strVisitExpList(((ExpExpList*)exp)->expList) + ")";
-            return rtn;
+            return graphVisitExpList(((ExpExpList*)exp)->expList);
             break;
         case E_Assign:
-            rtn = strVisitLVal(((ExpAssign*)exp)->lValue);
-            rtn += " := ";
-            rtn += strVisitExpression(((ExpAssign*)exp)->rhsValue);
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{Assignment | <lval> LHS | <rhs> RHS } } \""
+            cout << curID << ":lval" << " -> " << graphVisitLVal(((ExpAssign*)exp)->lValue);
+            cout << curID << ":rhs" << " -> " << graphVisitExpression(((ExpAssign*)exp)->rhsValue);
+            return curID + ":ptr";
             break;
         case E_If:
-            rtn = "if " + strVisitExpression(((ExpIf*)exp)->cond) + " then\n";
-            ++ indent;
-            rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->trueStatement);
-            -- indent;
             if (((ExpIf*)exp)->hasElse) {
-                rtn += "\n";
-                rtn += makeIndent(indent) + "else\n";
-                ++ indent;
-                rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->falseStatement);
-                -- indent;
+                curID = getNewNodeID();
+                cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+                cout << "{If | <cond> Condition | <stmt> Statement } } \"";
+                cout << curID << ":cond" << " -> " << graphVisitExpression(((ExpIf*)exp)->cond);
+                cout << curID << ":stmt" << " -> " << graphVisitExpression(((ExpIf*)exp)->trueStatement);
+                return curID + ":ptr";
+            } else {
+                curID = getNewNodeID();
+                cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+                cout << "{If | <cond> Condition | <tstmt> True Statement | <fstmt> False Statement } } \"";
+                cout << curID << ":cond" << " -> " << graphVisitExpression(((ExpIf*)exp)->cond);
+                cout << curID << ":tstmt" << " -> " << graphVisitExpression(((ExpIf*)exp)->trueStatement);
+                cout << curID << ":fstmt" << " -> " << graphVisitExpression(((ExpIf*)exp)->falseStatement);
+                return curID + ":ptr";
             }
-            return rtn;
             break;
         case E_While:
-            rtn = "while " + strVisitExpression(((ExpWhile*)exp)->cond) + " do\n";
-            ++ indent;
-            rtn += makeIndent(indent) + strVisitExpression(((ExpWhile*)exp)->loopStatement);
-            -- indent;
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{While Loop | <cond> Condition | <stmt> Statement } } \"";
+            cout << curID << ":cond" << " -> " << graphVisitExpression(((ExpWhile*)exp)->cond);
+            cout << curID << ":stmt" << " -> " << graphVisitExpression(((ExpWhile*)exp)->loopStatement);
+            return curID + ":ptr";
             break;
         case E_For:
-            rtn = "for " + ((ExpFor*)exp)->loopVar + " := ";
-            rtn += strVisitExpression(((ExpFor*)exp)->beg);
-            rtn += " to ";
-            rtn += strVisitExpression(((ExpFor*)exp)->end);
-            rtn += " do\n";
-            ++ indent;
-            rtn += makeIndent(indent);
-            rtn += strVisitExpression(((ExpFor*)exp)->loopStatement);
-            --indent;
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{For Loop | <forvar> Varible [" << ((ExpFor*)exp)->loopVar << "] ";
+            cout << "| <beg> Begin Value | <ed> End Value | <stmt> Statement } } \"";
+            cout << curID << ":beg" << " -> " << graphVisitExpression(((ExpFor*)exp)->beg);
+            cout << curID << ":ed" << " -> " << graphVisitExpression(((ExpFor*)exp)->end);
+            cout << curID << ":stmt" << " -> " << graphVisitExpression(((ExpFor*)exp)->loopStatement);
+            return curID + ":ptr";
             break;
         case E_Break:
-            return string("break");
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |"
+            cout << "{ Break }\"]";
+            return curID + ":ptr";
             break;
         case E_Let:
-            rtn = "let\n";
-            ++ indent;
-            rtn += makeIndent(indent);
-            rtn += strVisitDecList(((ExpLet*)exp)->decList);
-            -- indent;
-            rtn += "\n" + makeIndent(indent) + "in\n";
-            ++ indent;
-            rtn += makeIndent(indent);
-            rtn += strVisitExpList(((ExpLet*)exp)->expList);
-            -- indent;
-            rtn += "\n" + makeIndent(indent) + "end";
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |"
+            cout << "{Let | <dec> Declaration | <stmt> Statement } } \"" << endl;
+            cout << curID << ":dec" << " -> " << graphVisitDecList(((ExpLet*)exp)->decList);
+            cout << curID << ":stmt" << " -> " << graphVisitExpList(((ExpLet*)exp)->expList);
+            return curID + ":ptr";
             break;
         case E_Array:
-            rtn = ((ExpArray*)exp)->typeName;
-            rtn += "[" + strVisitExpression(((ExpArray*)exp)->expSize) + "]";
-            rtn += " of " + strVisitExpression(((ExpArray*)exp)->expInitVal);
-            return rtn;
+            curID = getNewNodeID();
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |"
+            cout << "{Array | Type [" << ((ExpArray*)exp)->typeName << "] | <sz> Size | <ival> Initial Value} } \"" << endl;
+            cout << curID << ":sz" << " -> " << graphVisitExpression(((ExpArray*)exp)->expSize);
+            cout << curID << ":ival" << " -> " << graphVisitExpression(((ExpArray*)exp)->expInitVal);
+            return curID + ":ptr";
             break;
         default:
             return string("WRONG_EXPRESSION");
     }
 }
 
-string strVisitExpList(ExpList* expList)
+string graphVisitExpList(ExpList* expList)
 {
-    string rtn;
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Expression List | " << curID << " } ";
     for(int i = 0; i < expList->size(); ++ i) {
-        rtn += strVisitExpression((*expList)[i]);
-        if (i != expList->size() - 1) {
-            rtn += ";";
-            rtn += "\n" + makeIndent(indent);
-        }
+        result += "| { " + toStr(i) + " | <pos" + toStr(i) + "> Expression }";
+        tmpStr = graphVisitExpression((*expList)[i]);
+        cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";";
     }
-    return rtn;
+    if (expList->size() == 0) {
+        result += "| {Expression List Empty}";
+    }
+    result += " }\"]";
+    cout << result;
+    return curID + ":ptr";
 }
 
-string strVisitDecList(DecList* decList)
+string graphVisitDecList(DecList* decList)
 {
-    string rtn;
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Declartion List | " << curID << " } ";
     for(int i = 0; i < decList->size(); ++ i) {
-        rtn += strVisitDec((*decList)[i]);
-        if (i != decList->size() - 1) {
-            rtn += "\n";
-            rtn += makeIndent(indent);
-        }
+        result += "| { " + toStr(i) + " | <pos" + toStr(i) + "> Declartion }";
+        tmpStr = graphVisitDec((*decList)[i]);
+        cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";";
     }
-    return rtn;
+    if (decList->size() == 0) {
+        result += "| {Declartion List Empty}";
+    }
+    result += " }\"]";
+    cout << result;
+    return curID + ":ptr";
 }
 
-string strVisitLVal(LVal* lVal)
+string graphVisitLVal(LVal* lVal)
 {
-    string rtn;
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Left Hand Value | " + curID + " } ";
     switch(lVal->getLValType()) {
         case L_ID:
-            return ((LValID*)lVal)->lValName;
+            result += "| { ID | " + ((LValID*)lVal)->lValName + " } } \"]";
+            cout << result << endl;
+            return curID + ":ptr";
             break;
         case L_Member:
-            rtn = strVisitLVal(((LValMember*)lVal)->major);
-            rtn += ".";
-            rtn += ((LValMember*)lVal)->memberName;
-            return rtn;
+            result += "| { Member Reference | <maj> Major Name | <mbr> Member Name } } \"]";
+            cout << result << endl;
+            tmpStr = graphVisitLVal(((LValMember*)lVal)->major);
+            cout << curID << ":maj -> " << tmpStr << ";";
+            tmpStr = ((LValMember*)lVal)->memberName;
+            cout << curID << ":mbr -> " << tmpStr << ";";
+            return curID + ":ptr";
             break;
         case L_Element:
-            rtn = strVisitLVal(((LValElement*)lVal)->major);
-            rtn += "[";
-            rtn += strVisitExpression(((LValElement*)lVal)->idx);
-            rtn += "]";
-            return rtn;
+            result += "| { Element Reference | <maj> Major Name | <idx> Index } } \"]";
+            cout << result << endl;
+            tmpStr = graphVisitLVal(((LValElement*)lVal)->major);
+            cout << curID << ":maj -> " << tmpStr << ";";
+            tmpStr = graphVisitExpression(((LValElement*)lVal)->idx);
+            cout << curID << ":idx -> " << tmpStr << ";";
+            return curID + ":ptr";
             break;
         default:
             return "WRONG_LVALUE";
     }
 }
 
-string strVisitArgList(ArgList* argList)
+string graphVisitArgList(ArgList* argList)
 {
-    string rtn;
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Argument List | " << curID << " } ";
     for(int i = 0; i < argList->size(); ++ i) {
-        rtn += strVisitExpression((*argList)[i]);
-        if (i != argList->size() - 1) {
-            rtn += ", ";
-        }
+        result += "| { " + toStr(i) + " | <pos" + toStr(i) + "> Argument }";
+        tmpStr = graphVisitExpression((*argList)[i]);
+        cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";";
     }
-    return rtn;
+    if (argList->size() == 0) {
+        result += "| {Argument List Empty}";
+    }
+    result += " }\"]";
+    cout << result;
+    return curID + ":ptr";
 }
 
-string strVisitFieldExpList(FieldExpList* fieldExpList)
+string graphVisitFieldExpList(FieldExpList* fieldExpList)
 {
-    string rtn;
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Field Expression List | " << curID << " } ";
     for(int i = 0; i < fieldExpList->size(); ++ i) {
         FieldExpEle cur = (*fieldExpList)[i];
-        rtn += cur.first + " = " + strVisitExpression(cur.second);
-        if (i != fieldExpList->size() - 1) {
-            rtn += ", ";
-        }
+        result += "| { " + toStr(i) + " | " + cur.first + " | ";
+        result += "<pos" + toStr(i) + "> Expression }";
+        tmpStr = graphVisitExpression(cur.second);
+        cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";";
     }
-    return rtn;
+    if (argList->size() == 0) {
+        result += "| {Field Expression List Empty}";
+    }
+    result += " }\"]";
+    cout << result;
+    return curID + ":ptr";
 }
 
-string strVisitDec(Dec* dec)
+string graphVisitDec(Dec* dec)
 {
-    string rtn = "";
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Type | " + curID + " } ";
     switch(dec->getDecType()) {
         case D_Var:
             rtn = "var ";
@@ -221,14 +297,14 @@ string strVisitDec(Dec* dec)
                 rtn += ((VarDec*)dec)->typeName;
             }
             rtn += " := ";
-            rtn += strVisitExpression(((VarDec*)dec)->initVal);
+            rtn += graphVisitExpression(((VarDec*)dec)->initVal);
             return rtn;
             break;
         case D_Func:
             rtn = "function ";
             rtn += ((FuncDec*)dec)->funcName;
             rtn += "(";
-            rtn += strVisitFieldList(((FuncDec*)dec)->fieldList);
+            rtn += graphVisitFieldList(((FuncDec*)dec)->fieldList);
             rtn += ")";
             if (((FuncDec*)dec)->hasReturn) {
                 rtn += " : ";
@@ -237,7 +313,7 @@ string strVisitDec(Dec* dec)
             rtn += " = \n";
             ++ indent;
             rtn += makeIndent(indent);
-            rtn += strVisitExpression(((FuncDec*)dec)->body);
+            rtn += graphVisitExpression(((FuncDec*)dec)->body);
             -- indent;
             return rtn;
             break;
@@ -245,7 +321,7 @@ string strVisitDec(Dec* dec)
             rtn = "type ";
             rtn += ((TyDec*)dec)->typeName;
             rtn += " = ";
-            rtn += strVisitTy(((TyDec*)dec)->ty);
+            rtn += graphVisitTy(((TyDec*)dec)->ty);
             return rtn;
             break;
         default:
@@ -253,44 +329,60 @@ string strVisitDec(Dec* dec)
     }
 }
 
-string strVisitTy(Ty* ty)
+string graphVisitTy(Ty* ty)
 {
-    string rtn = "";
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Type | " + curID + " } ";
     switch (ty->tyType) {
         case TY_ID:
-            return ty->tyName;
+            result += "| { Name | " + ty->tyName + " } } \"];";
+            cout << result << endl;
+            return curID + ":ptr";
             break;
         case TY_Array:
-            rtn = "array of " + ty->tyName;
-            return rtn;
+            result += "| { Array | " + ty->tyName + " } } \"];";
+            cout << result << endl;
+            return curID + ":ptr";
             break;
         case TY_Record:
-            rtn = "{";
-            rtn += strVisitFieldList(ty->fieldList);
-            rtn += "}";
-            return rtn;
+            result += "| { Record | <flist> Field List } } \"];";
+            tmpStr = graphVisitFieldList(ty->fieldList);
+            cout << result << endl;
+            cout << curID << ":flist -> " << tmpStr << ";";
+            return curID + ":ptr";
             break;
         default:
             return string("WRONG_TY");
     }
 }
 
-string strVisitFieldList(FieldList* fieldList)
+string graphVisitFieldList(FieldList* fieldList)
 {
-    string rtn;
+    string curID;
+    curID = getNewNodeID();
+    string result;
+    string tmpStr;
+    result = curID + " [shape=record, label=\"{ { <ptr> Field Expression List | " << curID << " } ";
     for(int i = 0; i < fieldList->size(); ++ i) {
         FieldEle cur = (*fieldList)[i];
-        rtn += cur.first + " : " + cur.second;
-        if (i != fieldList->size() - 1) {
-            rtn += ", ";
-        }
+        result += "| { " + toStr(i) + " | " + cur.first + " | " + cur.second + " }";
+        tmpStr = graphVisitExpression(cur.second);
+        cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";";
     }
-    return rtn;
+    if (argList->size() == 0) {
+        result += "| {Field List Empty}";
+    }
+    result += " }\"]";
+    cout << result;
+    return curID + ":ptr";
 }
 
 int main()
 {
     yyparse();
-    cout << strVisitExpression(root);
+    graphVisitExpression(root);
 }
 

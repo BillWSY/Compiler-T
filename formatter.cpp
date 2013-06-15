@@ -63,7 +63,12 @@ string strVisitExpression(Expression* exp)
             return rtn;
             break;
         case E_ExpList:
-            rtn = "(" + strVisitExpList(((ExpExpList*)exp)->expList) + ")";
+            rtn = "(\n";
+            ++ indent;
+            rtn += makeIndent(indent);
+            rtn += strVisitExpList(((ExpExpList*)exp)->expList);
+            -- indent;
+            rtn += "\n" + makeIndent(indent) + ")";
             return rtn;
             break;
         case E_Assign:

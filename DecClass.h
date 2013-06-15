@@ -56,17 +56,21 @@ class VarDec : public Dec {
       string varName;
       string typeName;
       Expression* initVal;
+      bool hasType;
       VarDec(const string& _varName, const string& _typeName, Expression* _initVal) : Dec(D_Var) {
           varName = _varName;
           typeName = _typeName;
+          hasType = true;
           initVal = _initVal;
       }
       VarDec(const string& _varName, Expression* _initVal) : Dec(D_Var) {
           varName = _varName;
           typeName = "";
+          hasType = false;
           initVal = _initVal;
       }
       VarDec() : Dec(D_Var) {
+          hasType = false;
           initVal = NULL;
       }
 };
