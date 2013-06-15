@@ -36,19 +36,20 @@ class LVal;
 class LValID;
 class LValMember;
 class LValElement;
-typedef vector<Expression*> ExpList;
-typedef vector<Expression*> ArgList;
-typedef pair<string, string> FieldEle;
-typedef vector<FieldEle> FieldList;
+class ExpList;
+class ArgList;
+class FieldList;
+class FieldExpList;
+class DecList;
 typedef pair<string, Expression*> IdSqB;
+typedef pair<string, string> FieldEle;
 typedef pair<string, Expression*> FieldExpEle;
-typedef vector<FieldExpEle> FieldExpList;
-typedef vector<Dec*> DecList;
 
 #include "BasicNode.h"
 #include "ClassEnum.h"
 #include "DecClass.h"
 #include "ExpClass.h"
 #include "LValClass.h"
+#include "MiscClass.h"
 
 #endif // ASTCLASS_H

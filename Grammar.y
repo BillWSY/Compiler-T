@@ -303,7 +303,7 @@ ArgList         :       /* nothing */
                         }
                 |       Exp
                         {
-                            $$ = new ExpList;
+                            $$ = new ArgList;
                             $$ -> push_back($1);
                         }
                 |       ArgList TOK_COMMA Exp

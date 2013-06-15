@@ -25,8 +25,8 @@ Parser.cpp Parser.h Parser.dot : Grammar.y
 	mv Parser.output Parser.log
 
 clean:
-	rm *.log
-	rm token_def.h
+	rm formatter
+	rm graph
 	rm Token_def.cpp
 	rm Parser.h
 	rm Parser.cpp

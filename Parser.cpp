@@ -1924,7 +1924,7 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 305 "Grammar.y"
     {
-                            (yyval.argList) = new ExpList;
+                            (yyval.argList) = new ArgList;
                             (yyval.argList) -> push_back((yyvsp[(1) - (1)].exp));
                         }
     break;

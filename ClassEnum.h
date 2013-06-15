@@ -3,17 +3,14 @@
 
 enum NodeType {
     N_Exp,
-    N_SqBExp,
-    N_DecList,
     N_Dec,
-    N_TyDec,
     N_Ty,
-    N_VarDec,
-    N_FunDec,
     N_IdSqB,
     N_LValue,
     N_ExpList,
     N_ArgList,
+    N_DecList,
+    N_FieldExpList,
     N_FieldList
 };
 
