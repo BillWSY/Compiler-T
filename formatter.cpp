@@ -221,7 +221,7 @@ string strVisitDec(Dec* dec)
         case D_Var:
             rtn = "var ";
             rtn += ((VarDec*)dec)->varName;
-            if (((VarDec*)dec)->typeName != "") {
+            if (((VarDec*)dec)->hasType) {
                 rtn += " : ";
                 rtn += ((VarDec*)dec)->typeName;
             }
