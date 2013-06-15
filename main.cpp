@@ -9,7 +9,6 @@ using namespace std;
 extern Expression* root;
 Expression* root = NULL;
 int indent;
-bool expListNewLine = false;
 
 string strVisitExpression(Expression* exp);
 string strVisitExpList(ExpList* expList);
@@ -23,7 +22,6 @@ string strVisitFieldList(FieldList* fieldList);
 
 string strVisitExpression(Expression* exp)
 {
-    bool lastExpListNewLine = false;
     if (!exp) return string("");
     string rtn;
     switch(exp->getExpType()) {
@@ -77,9 +75,10 @@ string strVisitExpression(Expression* exp)
         case E_If:
             rtn = "if " + strVisitExpression(((ExpIf*)exp)->cond) + " then\n";
             ++ indent;
-            rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->trueStatement) + "\n";
+            rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->trueStatement);
             -- indent;
             if (((ExpIf*)exp)->hasElse) {
+                rtn += "\n";
                 rtn += makeIndent(indent) + "else\n";
                 ++ indent;
                 rtn += makeIndent(indent) + strVisitExpression(((ExpIf*)exp)->falseStatement);
@@ -90,7 +89,7 @@ string strVisitExpression(Expression* exp)
         case E_While:
             rtn = "while " + strVisitExpression(((ExpWhile*)exp)->cond) + " do\n";
             ++ indent;
-            rtn += makeIndent(indent) + strVisitExpression(((ExpWhile*)exp)->loopStatement) + "\n";
+            rtn += makeIndent(indent) + strVisitExpression(((ExpWhile*)exp)->loopStatement);
             -- indent;
             return rtn;
             break;
@@ -118,10 +117,7 @@ string strVisitExpression(Expression* exp)
             rtn += "\n" + makeIndent(indent) + "in\n";
             ++ indent;
             rtn += makeIndent(indent);
-            lastExpListNewLine = expListNewLine;
-            expListNewLine = true;
             rtn += strVisitExpList(((ExpLet*)exp)->expList);
-            expListNewLine = lastExpListNewLine;
             -- indent;
             rtn += "\n" + makeIndent(indent) + "end";
             return rtn;
@@ -144,11 +140,7 @@ string strVisitExpList(ExpList* expList)
         rtn += strVisitExpression((*expList)[i]);
         if (i != expList->size() - 1) {
             rtn += ";";
-            if (expListNewLine) {
-                rtn += "\n" + makeIndent(indent);
-            } else {
-                rtn += " ";
-            }
+            rtn += "\n" + makeIndent(indent);
         }
     }
     return rtn;

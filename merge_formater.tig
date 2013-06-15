@@ -9,14 +9,12 @@ let
             function skipto() = 
                 while buffer = " " | buffer = "\n" do
                     buffer := getchar()
-
         in
             skipto();
             any.any := isdigit(buffer);
             while isdigit(buffer) do
                 (i := i * 10 + ord(buffer) - ord("0");
-                buffer := getchar())
-;
+                buffer := getchar());
             i
         end
     type list = {first : int, rest : list}
@@ -45,8 +43,8 @@ let
         let
             function f(i : int) = 
                 if i > 0 then
-                    (f(i / 10); print(chr(i - i / 10 * 10 + ord("0"))))
-
+                    (f(i / 10);
+                    print(chr(i - i / 10 * 10 + ord("0"))))
         in
             if i < 0 then
                 (print("-");
@@ -61,9 +59,12 @@ let
         if l = nil then
             print("\n")
         else
-            (printint(l.first); print(" "); printlist(l.rest))
+            (printint(l.first);
+            print(" ");
+            printlist(l.rest))
     var list1 := readlist()
-    var list2 := (buffer := getchar(); readlist())
+    var list2 := (buffer := getchar();
+    readlist())
 in
     printlist(merge(list1, list2))
 end
