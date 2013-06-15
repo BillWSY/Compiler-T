@@ -287,42 +287,46 @@ string graphVisitDec(Dec* dec)
     curID = getNewNodeID();
     string result;
     string tmpStr;
-    result = curID + " [shape=record, label=\"{ { <ptr> Type | " + curID + " } ";
+    result = curID + " [shape=record, label=\"{ { <ptr> Declartion | " + curID + " } ";
     switch(dec->getDecType()) {
         case D_Var:
-            rtn = "var ";
             rtn += ((VarDec*)dec)->varName;
-            if (((VarDec*)dec)->typeName != "") {
-                rtn += " : ";
-                rtn += ((VarDec*)dec)->typeName;
+            if (((VarDec*)dec)->hasType) {
+                result += "| {Variable | " + ((VarDec*)dec)->varName + " | " + "Type " + ((VarDec*)dec)->typeName;
+                result += " | <initval> Initial Value } }\"]";
+                cout << result << endl;
+                tmpStr = graphVisitExpression(((VarDec*)dec)->initVal);
+                cout << curID << ":initval -> " << tmpStr << ";";
+            } else {
+                result += "| {Variable | " + ((VarDec*)dec)->varName;
+                result += " | <initval> Initial Value } }\"]";
+                cout << result << endl;
+                tmpStr = graphVisitExpression(((VarDec*)dec)->initVal);
+                cout << curID << ":initval -> " << tmpStr << ";";
             }
-            rtn += " := ";
-            rtn += graphVisitExpression(((VarDec*)dec)->initVal);
-            return rtn;
+            return curID + ":pos";
             break;
         case D_Func:
-            rtn = "function ";
-            rtn += ((FuncDec*)dec)->funcName;
-            rtn += "(";
-            rtn += graphVisitFieldList(((FuncDec*)dec)->fieldList);
-            rtn += ")";
             if (((FuncDec*)dec)->hasReturn) {
-                rtn += " : ";
-                rtn += ((FuncDec*)dec)->typeName;
+                result += "| {Function | " + ((FuncDec*)dec)->funcName + " | " + "Type " + ((FuncDec*)dec)->typeName;
+                result += " | <exp> Expression } }\"]";
+                cout << result << endl;
+                tmpStr = graphVisitExpression(((FuncDec*)dec)->body);
+                cout << curID << ":exp -> " << tmpStr << ";";
+                return curID + ":pos";
+            } else {
+                result += "| {Function | " + ((FuncDec*)dec)->funcName;
+                result += " | <exp> Expression } }\"]";
+                cout << result << endl;
+                return curID + ":pos";
             }
-            rtn += " = \n";
-            ++ indent;
-            rtn += makeIndent(indent);
-            rtn += graphVisitExpression(((FuncDec*)dec)->body);
-            -- indent;
-            return rtn;
             break;
         case D_Type:
-            rtn = "type ";
-            rtn += ((TyDec*)dec)->typeName;
-            rtn += " = ";
-            rtn += graphVisitTy(((TyDec*)dec)->ty);
-            return rtn;
+            result += "| {Type | Name " + ((TyDec*)dec)->typeName;
+            result += " | <ty> Type } }\"]";
+            cout << result << endl;
+            tmpStr = graphVisitTy(((TyDec*)dec)->ty);
+            cout << curID << ":ty -> " << tmpStr << ";";
             break;
         default:
             return string("WRONG_DECLARATION");
