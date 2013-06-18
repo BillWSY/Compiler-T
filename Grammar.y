@@ -1,9 +1,16 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "ASTClass.h"
-#include "utilities.h"
 #include <string>
+#include <exception>
+#include "ASTClass.h"
+#include "BasicNode.h"
+#include "ClassEnum.h"
+#include "ExpClass.h"
+#include "DecClass.h"
+#include "LValClass.h"
+#include "MiscClass.h"
+#include "utilities.h"
 
 using namespace std;
 
@@ -22,6 +29,7 @@ int main()
 */
 
 IDType BasicNode::idCnt = 0;
+IDType BasicNode::nodeCnt = 0;
 
 %}
 
@@ -477,11 +485,13 @@ void yyerror(const char *str)
         string_replace(linebuf, "\t", " ");
         cerr << errHead << linebuf << endl;
         
-        string errFill(errHead.length(), ' ');
-        string errLeading(yylloc.first_column - 1, '.');
-        string errSymbol(yylloc.last_column - yylloc.first_column + 1, '^');
-        string errTrailing(linebuf.length() - yylloc.last_column, '.');
-        cerr << errFill << errLeading << errSymbol << errTrailing << endl;
+        if ((linebuf.length() - yylloc.last_column >= 0) && (yylloc.first_column - 1)) {
+            string errFill(errHead.length(), ' ');
+            string errLeading(yylloc.first_column - 1, '.');
+            string errSymbol(yylloc.last_column - yylloc.first_column + 1, '^');
+            string errTrailing(linebuf.length() - yylloc.last_column, '.');
+            cerr << errFill << errLeading << errSymbol << errTrailing << endl;
+        }
         
         // cerr << yylloc.first_line << ":" << yylloc.first_column << " - ";
         // cerr << yylloc.last_line << ":" << yylloc.last_column << endl;

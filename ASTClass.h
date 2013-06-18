@@ -8,8 +8,11 @@
 
 using namespace std;
 
+#include "ClassEnum.h"
 typedef long long TInt;
 
+
+class BasicNode;
 class Expression;
 class ExpLValue;
 class ExpInteger;
@@ -41,15 +44,9 @@ class ArgList;
 class FieldList;
 class FieldExpList;
 class DecList;
+
 typedef pair<string, Expression*> IdSqB;
 typedef pair<string, string> FieldEle;
 typedef pair<string, Expression*> FieldExpEle;
-
-#include "BasicNode.h"
-#include "ClassEnum.h"
-#include "DecClass.h"
-#include "ExpClass.h"
-#include "LValClass.h"
-#include "MiscClass.h"
 
 #endif // ASTCLASS_H

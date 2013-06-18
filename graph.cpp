@@ -1,6 +1,12 @@
 #include "ASTClass.h"
-#include "Parser.h"
+#include "BasicNode.h"
+#include "ClassEnum.h"
+#include "ExpClass.h"
+#include "DecClass.h"
+#include "LValClass.h"
+#include "MiscClass.h"
 #include "utilities.h"
+#include "Parser.h"
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -411,11 +417,14 @@ int main()
     cerr << "Compiler-T: Parser returned " << parserRtn << "." << endl;
     cerr << "Compiler-T: " << BasicNode::nodeCount() << " AST nodes created." << endl;
 
-    cerr << "Compiler-T: Writing DOT script." << endl;
-    cout << "digraph ast {" << endl;
-    graphVisitExpression(root);
-    cout << "}" << endl;
-
+    if (parserRtn == 0) {
+        cerr << "Compiler-T: Writing DOT script." << endl;
+        cout << "digraph ast {" << endl;
+        graphVisitExpression(root);
+        cout << "}" << endl;
+    } else {
+        cerr << "Compiler-T: Graph creation aborted due to parsing failure." << endl;
+    }
     gettimeofday(&timeEnd, NULL);
     cerr << setiosflags(ios::fixed);
     double timeUs = 1000000 * (timeEnd.tv_sec - timeStart.tv_sec)+ timeEnd.tv_usec - timeStart.tv_usec;

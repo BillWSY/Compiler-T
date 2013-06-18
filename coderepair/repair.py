@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-fprefix = "DecClass"
+fprefix = "MiscClass"
 fp = open("../" + fprefix + ".h")
 fh = open(fprefix + ".h", "w");
 fcpp = open(fprefix + ".cpp", "w");
@@ -40,7 +40,7 @@ for fLine in fList:
         if (fLine.find("(") >= 0):
             curState = INFUNC;
             lhfile = fLine;
-            if (lhfile.find(':') >= 0):
+            if ((lhfile.find(':') >= 0) and (lhfile.find('::') <= 0)):
                 lhfile = lhfile[0:lhfile.find(':')]
             else:
                 lhfile = lhfile[0:lhfile.find('{')]

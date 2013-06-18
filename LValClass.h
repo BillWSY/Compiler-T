@@ -1,9 +1,7 @@
 #ifndef LVALCLASS_H_
 #define LVALCLASS_H_
 
-#include "BasicNode.h"
 #include "ASTClass.h"
-#include "ClassEnum.h"
 
 class LVal : public BasicNode {
   private:

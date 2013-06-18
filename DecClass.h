@@ -1,9 +1,7 @@
 #ifndef DECCLASS_H_
 #define DECCLASS_H_
 
-#include "BasicNode.h"
 #include "ASTClass.h"
-#include "ClassEnum.h"
 
 class Dec : public BasicNode {
   private:

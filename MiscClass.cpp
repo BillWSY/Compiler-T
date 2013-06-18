@@ -1,16 +1,21 @@
-#ifndef MISCCLASS_H_
-#define MISCCLASS_H_
+#include "ASTClass.h"
+#include "BasicNode.h"
+#include "ClassEnum.h"
+#include "ExpClass.h"
+#include "DecClass.h"
+#include "LValClass.h"
+#include "MiscClass.h"
 
 ExpList::ExpList():BasicNode(N_ExpList) {
     //do nothing
 }
-ExpList::Expression*& operator[](size_t idx) {
+Expression*& ExpList::operator[](size_t idx) {
     return expVec[idx];
 }
-ExpList::vector<Expression*>::size_type size() {
+size_t ExpList::size() {
     return expVec.size();
 }
-ExpList::void push_back(Expression* _exp) {
+void ExpList::push_back(Expression* _exp) {
     expVec.push_back(_exp);
 }
 ExpList::~ExpList(){
@@ -23,13 +28,13 @@ ExpList::~ExpList(){
 ArgList::ArgList():BasicNode(N_ArgList) {
     //do nothing
 }
-ArgList::Expression*& operator[](size_t idx) {
+Expression*& ArgList::operator[](size_t idx) {
     return argVec[idx];
 }
-ArgList::vector<Expression*>::size_type size() {
+size_t ArgList::size() {
     return argVec.size();
 }
-ArgList::void push_back(Expression* _arg) {
+void ArgList::push_back(Expression* _arg) {
     argVec.push_back(_arg);
 }
 ArgList::~ArgList(){
@@ -42,13 +47,13 @@ ArgList::~ArgList(){
 DecList::DecList():BasicNode(N_DecList) {
     //do nothing
 }
-DecList::Dec*& operator[](size_t idx) {
+Dec*& DecList::operator[](size_t idx) {
     return decVec[idx];
 }
-DecList::vector<Dec*>::size_type size() {
+size_t DecList::size() {
     return decVec.size();
 }
-DecList::void push_back(Dec* _dec) {
+void DecList::push_back(Dec* _dec) {
     decVec.push_back(_dec);
 }
 DecList::~DecList() {
@@ -61,13 +66,13 @@ DecList::~DecList() {
 FieldExpList::FieldExpList():BasicNode(N_FieldExpList) {
     //do nothing
 }
-FieldExpList::FieldExpEle& operator[](size_t idx) {
+FieldExpEle& FieldExpList::operator[](size_t idx) {
     return fieldExpVec[idx];
 }
-FieldExpList::vector<FieldExpEle>::size_type size() {
+size_t FieldExpList::size() {
     return fieldExpVec.size();
 }
-FieldExpList::void push_back(FieldExpEle _fieldExpEle) {
+void FieldExpList::push_back(FieldExpEle _fieldExpEle) {
     fieldExpVec.push_back(_fieldExpEle);
 }
 FieldExpList::~FieldExpList(){
@@ -80,14 +85,13 @@ FieldExpList::~FieldExpList(){
 FieldList::FieldList():BasicNode(N_FieldList) {
     //do nothing
 }
-FieldList::FieldEle& operator[](size_t idx) {
+FieldEle& FieldList::operator[](size_t idx) {
     return fieldVec[idx];
 }
-FieldList::vector<FieldEle>::size_type size() {
+size_t FieldList::size() {
     return fieldVec.size();
 }
-FieldList::void push_back(FieldEle _fieldEle) {
+void FieldList::push_back(FieldEle _fieldEle) {
     fieldVec.push_back(_fieldEle);
 }
 
-#endif // MISCCLASS_H_

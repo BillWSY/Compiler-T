@@ -1,14 +1,15 @@
-#ifndef DECCLASS_H_
-#define DECCLASS_H_
-
-#include "BasicNode.h"
 #include "ASTClass.h"
+#include "BasicNode.h"
 #include "ClassEnum.h"
+#include "ExpClass.h"
+#include "DecClass.h"
+#include "LValClass.h"
+#include "MiscClass.h"
 
 Dec::Dec(DecNodeType _decNodeType):BasicNode(N_Dec) {
     decNodeType = _decNodeType;
 }
-Dec::DecNodeType getDecType() {
+DecNodeType Dec::getDecType() {
     return decNodeType;
 }
 
@@ -85,5 +86,3 @@ FuncDec::~FuncDec() {
     if (fieldList) delete fieldList;
     fieldList = NULL;
 }
-
-#endif // DECCLASS_H_

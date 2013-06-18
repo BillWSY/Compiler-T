@@ -1,14 +1,15 @@
-#ifndef EXPCLASS_H_
-#define EXPCLASS_H_
-
-#include "BasicNode.h"
 #include "ASTClass.h"
+#include "BasicNode.h"
 #include "ClassEnum.h"
+#include "ExpClass.h"
+#include "DecClass.h"
+#include "LValClass.h"
+#include "MiscClass.h"
 
 Expression::Expression(ExpNodeType nType):BasicNode(N_Exp) {
     expNodeType = nType;
 }
-Expression::ExpNodeType getExpType() {
+ExpNodeType Expression::getExpType() {
     return expNodeType;
 }
 
@@ -116,7 +117,7 @@ ExpAssign::~ExpAssign(){
     lValue = NULL;
 }
 
-ExpIf::ExpIf(Expression *_cond, Expression *_trueStatement, Expression *_falseStatement = NULL):Expression(E_If) {
+ExpIf::ExpIf(Expression *_cond, Expression *_trueStatement, Expression *_falseStatement):Expression(E_If) {
     cond = _cond;
     trueStatement = _trueStatement;
     falseStatement = _falseStatement;
@@ -209,5 +210,3 @@ ExpArray::~ExpArray(){
     if (expInitVal) delete expInitVal;
     expInitVal = NULL;
 }
-
-#endif // EXPCLASS_H_

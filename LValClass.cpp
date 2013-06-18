@@ -1,14 +1,15 @@
-#ifndef LVALCLASS_H_
-#define LVALCLASS_H_
-
-#include "BasicNode.h"
 #include "ASTClass.h"
+#include "BasicNode.h"
 #include "ClassEnum.h"
+#include "ExpClass.h"
+#include "DecClass.h"
+#include "LValClass.h"
+#include "MiscClass.h"
 
 LVal::LVal(LValNodeType _lValNodeType):BasicNode(N_LValue) {
     lValNodeType = _lValNodeType;
 }
-LVal::LValNodeType getLValType() {
+LValNodeType LVal::getLValType() {
     return lValNodeType;
 }
 
@@ -40,5 +41,3 @@ LValElement::~LValElement(){
     if (major) delete major;
     major = NULL;
 }
-
-#endif // LVALCLASS_H_

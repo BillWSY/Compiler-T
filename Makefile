@@ -1,5 +1,5 @@
 graph : Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp
-	g++ Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp -ll -o graph -g -Wall
+	g++ DecClass.cpp ExpClass.cpp LValClass.cpp MiscClass.cpp Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp -ll -o graph -g -Wall
 
 .PHONY: run
 run : graph merge.tig
@@ -7,7 +7,7 @@ run : graph merge.tig
 	dot -Tpng merge.dot -o merge.png
 
 formatter : Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp
-	g++ Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp -ll -o formatter -g -Wall
+	g++ DecClass.cpp ExpClass.cpp LValClass.cpp MiscClass.cpp Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp -ll -o formatter -g -Wall
 
 .PHONY : format
 format : test merge_formater.tig merge.tig

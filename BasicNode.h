@@ -1,17 +1,18 @@
 #ifndef BASICNODE_H_
 #define BASICNODE_H_
 
-#include "ASTClass.h"
 #include "ClassEnum.h"
 
 class BasicNode {
   private:
       IDType id;
       static IDType idCnt;
+      static IDType nodeCnt;
       NodeType nodeType;
   protected:
       BasicNode(NodeType nType) {
           id = idCnt ++;
+          ++ nodeCnt;
           nodeType = nType;
       }
   public:
@@ -23,9 +24,10 @@ class BasicNode {
       }
       virtual ~BasicNode() {
           if (id == idCnt) -- idCnt;
+          -- nodeCnt;
       }
       static int nodeCount() {
-          return idCnt;
+          return nodeCnt;
       }
 };
 

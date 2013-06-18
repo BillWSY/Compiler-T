@@ -1,8 +1,8 @@
 #ifndef EXPCLASS_H_
 #define EXPCLASS_H_
-#include "BasicNode.h"
+
 #include "ASTClass.h"
-#include "ClassEnum.h"
+
 class Expression : public BasicNode {
   private:
       ExpNodeType expNodeType;
