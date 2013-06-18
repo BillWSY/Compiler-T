@@ -24,8 +24,6 @@ class LValID : public LVal {
       LValID(const string& _lValName):LVal(L_ID) {
           lValName = _lValName;
       }
-      LValID():LVal(L_ID) {
-      }
 };
 
 class LValMember : public LVal {
@@ -37,6 +35,10 @@ class LValMember : public LVal {
           memberName = _memberName;
       }
       LValMember() : LVal(L_Member) {
+          major = NULL;
+      }
+      ~LValMember(){
+          if (major) delete major;
           major = NULL;
       }
 };
@@ -52,6 +54,10 @@ class LValElement : public LVal {
       LValElement() : LVal(L_Element) {
           major = NULL;
           idx = NULL;
+      }
+      ~LValElement(){
+          if (major) delete major;
+          major = NULL;
       }
 };
 

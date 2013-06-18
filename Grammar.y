@@ -21,7 +21,7 @@ int main()
 }
 */
 
-int BasicNode::idCnt = 0;
+IDType BasicNode::idCnt = 0;
 
 %}
 
@@ -84,12 +84,14 @@ int BasicNode::idCnt = 0;
 %left TOK_MULT_SIGN TOK_DIV_SIGN
 %nonassoc UNIOP_PREC
 
+%destructor { /* Don't destroy this */ } Prog
+%destructor { if($$) delete $$; $$ = NULL; } <exp><decList><dec><ty><idSqB><lVal><expList><argList><fieldList><fieldExpList><strPtr>
 
 %%
 
 Prog            :       Exp
                         {
-                            root = $1;
+                            root = $$ = $1;
                         }
                 ;
 
@@ -294,6 +296,12 @@ ExpList         :       /* nothing */
                             $$ = $1;
                             $$ -> push_back($3);
                         }
+                |       ExpList error TOK_SEMIC Exp
+                        {
+                            $$ = $1;
+                            $$ -> push_back($4);
+                            cerr << "Statement discarded, continuing." << endl;
+                        }
                 ;
 
 ArgList         :       /* nothing */
@@ -348,6 +356,7 @@ FieldExpList    :       /* nothing */
                             $$ -> push_back(FieldExpEle(*$3, $5));
                             delete $3; $3 = NULL;
                         }
+                |       FieldExpList error TOK_COMMA
                 ;
 
 BinOp_L1        :       TOK_MULT_SIGN
@@ -464,6 +473,8 @@ void yyerror(const char *str)
     if (yylloc.first_line) {
         errHead += toStr(yylloc.first_line);
         errHead += ": ";
+        string lineout = linebuf;
+        string_replace(linebuf, "\t", " ");
         cerr << errHead << linebuf << endl;
         
         string errFill(errHead.length(), ' ');

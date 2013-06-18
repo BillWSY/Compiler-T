@@ -1,3 +1,6 @@
+#ifndef MISCCLASS_H_
+#define MISCCLASS_H_
+
 class ExpList : public BasicNode {
   public:
       vector<Expression*> expVec;
@@ -12,6 +15,12 @@ class ExpList : public BasicNode {
       }
       void push_back(Expression* _exp) {
           expVec.push_back(_exp);
+      }
+      ~ExpList(){
+          for(size_t i = 0; i < expVec.size(); ++ i) {
+              if (expVec[i]) delete expVec[i];
+              expVec[i] = NULL;
+          }
       }
 };
 
@@ -30,6 +39,12 @@ class ArgList : public BasicNode {
       void push_back(Expression* _arg) {
           argVec.push_back(_arg);
       }
+      ~ArgList(){
+          for(size_t i = 0; i < argVec.size(); ++ i) {
+              if (argVec[i]) delete argVec[i];
+              argVec[i] = NULL;
+          }
+      }
 };
 
 class DecList : public BasicNode {
@@ -46,6 +61,12 @@ class DecList : public BasicNode {
       }
       void push_back(Dec* _dec) {
           decVec.push_back(_dec);
+      }
+      ~DecList() {
+          for(size_t i = 0; i < decVec.size(); ++ i) {
+              if (decVec[i]) delete decVec[i];
+              decVec[i] = NULL;
+          }
       }
 };
 
@@ -64,8 +85,13 @@ class FieldExpList : public BasicNode {
       void push_back(FieldExpEle _fieldExpEle) {
           fieldExpVec.push_back(_fieldExpEle);
       }
+      ~FieldExpList(){
+          for(size_t i = 0; i < fieldExpVec.size(); ++ i) {
+              if (fieldExpVec[i].second) delete fieldExpVec[i].second;
+              fieldExpVec[i].second = NULL;
+          }
+      }
 };
-
 
 class FieldList : public BasicNode {
   public:
@@ -84,3 +110,4 @@ class FieldList : public BasicNode {
       }
 };
 
+#endif // MISCCLASS_H_

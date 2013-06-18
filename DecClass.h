@@ -29,6 +29,10 @@ class TyDec : public Dec {
       TyDec():Dec(D_Type) {
           ty = NULL;
       }
+      ~TyDec() {
+          if (ty) delete ty;
+          ty = NULL;
+      }
 };
 
 class Ty : public BasicNode {
@@ -48,6 +52,10 @@ class Ty : public BasicNode {
           tyType = _tyType;
           fieldList = _fieldList;
           tyName = "";
+      }
+      ~Ty() {
+          if (fieldList) delete fieldList;
+          fieldList = NULL;
       }
 };
 
@@ -71,6 +79,10 @@ class VarDec : public Dec {
       }
       VarDec() : Dec(D_Var) {
           hasType = false;
+          initVal = NULL;
+      }
+      ~VarDec() {
+          if (initVal) delete initVal;
           initVal = NULL;
       }
 };
@@ -102,6 +114,10 @@ class FuncDec : public Dec {
           hasReturn = false;
           fieldList = NULL;
           body = NULL;
+      }
+      ~FuncDec() {
+          if (fieldList) delete fieldList;
+          fieldList = NULL;
       }
 };
 

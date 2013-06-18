@@ -27,6 +27,10 @@ class ExpLValue : public Expression {
       ExpLValue(LVal* _lValue):Expression(E_LValue) {
           lValue = _lValue;
       }
+      ~ExpLValue() {
+          if (lValue) delete lValue;
+          lValue = NULL;
+      }
 };
 
 class ExpInteger : public Expression {
@@ -66,6 +70,10 @@ class ExpFuncCall : public Expression {
       ExpFuncCall():Expression(E_FuncCall) {
           argList = NULL;
       }
+      ~ExpFuncCall(){
+          if (argList) delete argList;
+          argList = NULL;
+      }
 };
 
 class ExpBinOp : public Expression {
@@ -82,6 +90,12 @@ class ExpBinOp : public Expression {
           exp1 = NULL;
           binOp = BO_None;
       }
+      ~ExpBinOp(){
+          if (exp0) delete exp0;
+          exp0 = NULL;
+          if (exp1) delete exp1;
+          exp1 = NULL;
+      }
 };
 
 class ExpUnOp : public Expression {
@@ -96,6 +110,10 @@ class ExpUnOp : public Expression {
           exp = NULL;
           unOp = UO_None;
       }
+      ~ExpUnOp(){
+          if (exp) delete exp;
+          exp = NULL;
+      }
 };
 
 class ExpRecord : public Expression {
@@ -109,6 +127,10 @@ class ExpRecord : public Expression {
       ExpRecord():Expression(E_Record) {
           fieldExpList = NULL;
       }
+      ~ExpRecord(){
+          if (fieldExpList) delete fieldExpList;
+          fieldExpList = NULL;
+      }
 };
 
 class ExpExpList : public Expression {
@@ -118,6 +140,10 @@ class ExpExpList : public Expression {
           expList = _expList;
       }
       ExpExpList():Expression(E_ExpList) {
+          expList = NULL;
+      }
+      ~ExpExpList(){
+          if (expList) delete expList;
           expList = NULL;
       }
 };
@@ -133,6 +159,10 @@ class ExpAssign : public Expression {
       ExpAssign(LVal* _lValue, Expression* _rhsValue):Expression(E_Assign) {
           lValue = _lValue;
           rhsValue = _rhsValue;
+      }
+      ~ExpAssign(){
+          if (lValue) delete lValue;
+          lValue = NULL;
       }
 };
 
@@ -156,6 +186,14 @@ class ExpIf : public Expression {
           falseStatement = NULL;
           hasElse = false;
       }
+      ~ExpIf(){
+          if (cond) delete cond;
+          cond = NULL;
+          if (trueStatement) delete trueStatement;
+          trueStatement = NULL;
+          if (falseStatement) delete falseStatement;
+          falseStatement = NULL;
+      }
 };
 
 class ExpWhile : public Expression {
@@ -167,6 +205,12 @@ class ExpWhile : public Expression {
       }
       ExpWhile():Expression(E_While) {
           cond = NULL;
+          loopStatement = NULL;
+      }
+      ~ExpWhile(){
+          if (cond) delete cond;
+          cond = NULL;
+          if (loopStatement) delete loopStatement;
           loopStatement = NULL;
       }
 };
@@ -184,6 +228,14 @@ class ExpFor : public Expression {
       ExpFor():Expression(E_For) {
           beg = NULL;
           end = NULL;
+          loopStatement = NULL;
+      }
+      ~ExpFor(){
+          if (beg) delete beg;
+          beg = NULL;
+          if (end) delete end;
+          end = NULL;
+          if (loopStatement) delete loopStatement;
           loopStatement = NULL;
       }
 };
@@ -207,6 +259,12 @@ class ExpLet : public Expression {
           decList = NULL;
           expList = NULL;
       }
+      ~ExpLet(){
+          if (decList) delete decList;
+          decList = NULL;
+          if (expList) delete expList;
+          expList = NULL;
+      }
 };
 
 class ExpArray : public Expression {
@@ -219,6 +277,12 @@ class ExpArray : public Expression {
       }
       ExpArray():Expression(E_Array) {
           expSize = NULL;
+          expInitVal = NULL;
+      }
+      ~ExpArray(){
+          if (expSize) delete expSize;
+          expSize = NULL;
+          if (expInitVal) delete expInitVal;
           expInitVal = NULL;
       }
 };

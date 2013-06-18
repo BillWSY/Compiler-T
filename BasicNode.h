@@ -7,7 +7,7 @@
 class BasicNode {
   private:
       IDType id;
-      static int idCnt;
+      static IDType idCnt;
       NodeType nodeType;
   protected:
       BasicNode(NodeType nType) {
@@ -20,6 +20,9 @@ class BasicNode {
       }
       NodeType getType() {
           return nodeType;
+      }
+      virtual ~BasicNode() {
+          if (id == idCnt) -- idCnt;
       }
       static int nodeCount() {
           return idCnt;

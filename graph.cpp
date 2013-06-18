@@ -30,7 +30,11 @@ string graphVisitExpression(Expression* exp)
     if (!exp) return string("");
     switch(exp->getExpType()) {
         case E_LValue:
-            return graphVisitLVal(((ExpLValue*)exp)->lValue);
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{ Left Hand Value | <lval> Left Hand Value} }\"];" << endl;
+            tmpStr = graphVisitLVal(((ExpLValue*)exp)->lValue);
+            cout << curID << ":lval" << " -> " << tmpStr << endl;
+            return curID + ":ptr";
             break;
         case E_Integer:
             cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
@@ -80,7 +84,11 @@ string graphVisitExpression(Expression* exp)
             return curID + ":ptr";
             break;
         case E_ExpList:
-            return graphVisitExpList(((ExpExpList*)exp)->expList);
+            cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
+            cout << "{ Expression List | <explist> Expression List} }\"];" << endl;
+            tmpStr = graphVisitExpList(((ExpExpList*)exp)->expList);
+            cout << curID << ":explist" << " -> " << tmpStr << endl;
+            return curID + ":ptr";
             break;
         case E_Assign:
             cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
@@ -383,6 +391,8 @@ string graphVisitFieldList(FieldList* fieldList)
     return curID + ":ptr";
 }
 
+extern void setStart();
+
 int main()
 {
     timeval timeStart;
@@ -396,6 +406,7 @@ int main()
     cerr << "==========================================================" << endl;
 
     cerr << "Compiler-T: Start parsering." << endl;
+    setStart();
     int parserRtn = yyparse();
     cerr << "Compiler-T: Parser returned " << parserRtn << "." << endl;
     cerr << "Compiler-T: " << BasicNode::nodeCount() << " AST nodes created." << endl;
