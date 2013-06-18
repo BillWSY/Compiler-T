@@ -1,0 +1,17 @@
+digraph ast {
+7 [shape=record, label="{ { <ptr> Expression | 7 } |{ If | <cond> Condition | <tstmt> True Statement | <fstmt> False Statement } } "];
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Expression List | <explist> Expression List} }"];
+2 [shape=record, label="{ { <ptr> Expression | 2 } |{ Binary Operation | <exp0> Expression 0 | \> | <exp1> Expression 1} }"];
+0 [shape=record, label="{ { <ptr> Expression | 0 } |{ Integer | 5 } }"];
+2:exp0 -> 0:ptr
+1 [shape=record, label="{ { <ptr> Expression | 1 } |{ Integer | 4 } }"];
+2:exp1 -> 1:ptr
+3:pos0 -> 2:ptr;
+3 [shape=record, label="{ { <ptr> Expression List | 3 } | { 0 | <pos0> Expression } }"];
+4:explist -> 3:ptr
+7:cond -> 4:ptr
+5 [shape=record, label="{ { <ptr> Expression | 5 } |{ Integer | 13 } }"];
+7:tstmt -> 5:ptr
+6 [shape=record, label="{ { <ptr> Expression | 6 } |{ String |   } }"];
+7:fstmt -> 6:ptr
+}

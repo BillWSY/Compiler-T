@@ -1,0 +1,45 @@
+digraph ast {
+22 [shape=record, label="{ { <ptr> Expression | 22 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+17 [shape=record, label="{ { <ptr> Declartion | 17 } | {Function | nfactor | Type int | <exp> Expression } }"];
+16 [shape=record, label="{ { <ptr> Expression | 16 } |{ If | <cond> Condition | <tstmt> True Statement | <fstmt> False Statement } } "];
+5 [shape=record, label="{ { <ptr> Expression | 5 } |{ Binary Operation | <exp0> Expression 0 | = | <exp1> Expression 1} }"];
+3 [shape=record, label="{ { <ptr> Expression | 3 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+2 [shape=record, label="{ { <ptr> Left Hand Value | 2 } | { ID | n } } "];
+3:lval -> 2:ptr
+5:exp0 -> 3:ptr
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Integer | 0 } }"];
+5:exp1 -> 4:ptr
+16:cond -> 5:ptr
+6 [shape=record, label="{ { <ptr> Expression | 6 } |{ Integer | 1 } }"];
+16:tstmt -> 6:ptr
+15 [shape=record, label="{ { <ptr> Expression | 15 } |{ Binary Operation | <exp0> Expression 0 | * | <exp1> Expression 1} }"];
+8 [shape=record, label="{ { <ptr> Expression | 8 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+7 [shape=record, label="{ { <ptr> Left Hand Value | 7 } | { ID | n } } "];
+8:lval -> 7:ptr
+15:exp0 -> 8:ptr
+14 [shape=record, label="{ { <ptr> Expression | 14 } |{ Function Call | nfactor | <argpos> Arguments} }"];
+12 [shape=record, label="{ { <ptr> Expression | 12 } |{ Binary Operation | <exp0> Expression 0 | - | <exp1> Expression 1} }"];
+10 [shape=record, label="{ { <ptr> Expression | 10 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+9 [shape=record, label="{ { <ptr> Left Hand Value | 9 } | { ID | n } } "];
+10:lval -> 9:ptr
+12:exp0 -> 10:ptr
+11 [shape=record, label="{ { <ptr> Expression | 11 } |{ Integer | 1 } }"];
+12:exp1 -> 11:ptr
+13:pos0 -> 12:ptr;
+13 [shape=record, label="{ { <ptr> Argument List | 13 } | { 0 | <pos0> Argument } }"];
+14:argpos -> 13:ptr
+15:exp1 -> 14:ptr
+16:fstmt -> 15:ptr
+17:exp -> 16:ptr;
+0:pos0 -> 17:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion } }"];
+22:dec -> 0:ptr
+20 [shape=record, label="{ { <ptr> Expression | 20 } |{ Function Call | nfactor | <argpos> Arguments} }"];
+18 [shape=record, label="{ { <ptr> Expression | 18 } |{ Integer | 10 } }"];
+19:pos0 -> 18:ptr;
+19 [shape=record, label="{ { <ptr> Argument List | 19 } | { 0 | <pos0> Argument } }"];
+20:argpos -> 19:ptr
+21:pos0 -> 20:ptr;
+21 [shape=record, label="{ { <ptr> Expression List | 21 } | { 0 | <pos0> Expression } }"];
+22:stmt -> 21:ptr
+}

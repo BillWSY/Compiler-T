@@ -1,0 +1,19 @@
+digraph ast {
+8 [shape=record, label="{ { <ptr> Expression | 8 } |{ For Loop | <forvar> Varible [i] | <beg> Begin Value | <ed> End Value | <stmt> Statement } } "];
+0 [shape=record, label="{ { <ptr> Expression | 0 } |{ Integer | 10 } }"];
+8:beg -> 0:ptr
+1 [shape=record, label="{ { <ptr> Expression | 1 } |{ String |   } }"];
+8:ed -> 1:ptr
+7 [shape=record, label="{ { <ptr> Expression | 7 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+2 [shape=record, label="{ { <ptr> Left Hand Value | 2 } | { ID | i } } "];
+7:lval -> 2:ptr
+6 [shape=record, label="{ { <ptr> Expression | 6 } |{ Binary Operation | <exp0> Expression 0 | - | <exp1> Expression 1} }"];
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+3 [shape=record, label="{ { <ptr> Left Hand Value | 3 } | { ID | i } } "];
+4:lval -> 3:ptr
+6:exp0 -> 4:ptr
+5 [shape=record, label="{ { <ptr> Expression | 5 } |{ Integer | 1 } }"];
+6:exp1 -> 5:ptr
+7:rhs -> 6:ptr
+8:stmt -> 7:ptr
+}

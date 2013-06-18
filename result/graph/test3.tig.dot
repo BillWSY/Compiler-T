@@ -1,0 +1,35 @@
+digraph ast {
+16 [shape=record, label="{ { <ptr> Expression | 16 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+3 [shape=record, label="{ { <ptr> Declartion | 3 } | {Type | Name rectype | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Field Expression List | 1 } | { 0 | name | string }| { 1 | age | int } }"]
+2 [shape=record, label="{ { <ptr> Type | 2 } | { Record | <flist> Field List } } "];
+2:flist -> 1:ptr;
+3:ty -> 2:ptr;
+0:pos0 -> 3:ptr;
+8 [shape=record, label="{ { <ptr> Declartion | 8 } | {Variable | rec1 | Type rectype | <initval> Initial Value } }"];
+7 [shape=record, label="{ { <ptr> Expression | 7 } |{ Record | rectype | <flistpos> Field List} }"];
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ String | Nobody } }"];
+5:pos0 -> 4:ptr;
+6 [shape=record, label="{ { <ptr> Expression | 6 } |{ Integer | 1000 } }"];
+5:pos1 -> 6:ptr;
+5 [shape=record, label="{ { <ptr> Field Expression List | 5 } | { 0 | name | <pos0> Expression }| { 1 | age | <pos1> Expression } }"];
+7:flistpos -> 5:ptr
+8:initval -> 7:ptr;
+0:pos1 -> 8:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion } }"];
+16:dec -> 0:ptr
+12 [shape=record, label="{ { <ptr> Expression | 12 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+10 [shape=record, label="{ { <ptr> Left Hand Value | 10 } | { Member Reference | <maj> Major Name | Member Namename} } "];
+9 [shape=record, label="{ { <ptr> Left Hand Value | 9 } | { ID | rec1 } } "];
+10:maj -> 9:ptr;
+12:lval -> 10:ptr
+11 [shape=record, label="{ { <ptr> Expression | 11 } |{ String | Somebody } }"];
+12:rhs -> 11:ptr
+13:pos0 -> 12:ptr;
+15 [shape=record, label="{ { <ptr> Expression | 15 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+14 [shape=record, label="{ { <ptr> Left Hand Value | 14 } | { ID | rec1 } } "];
+15:lval -> 14:ptr
+13:pos1 -> 15:ptr;
+13 [shape=record, label="{ { <ptr> Expression List | 13 } | { 0 | <pos0> Expression }| { 1 | <pos1> Expression } }"];
+16:stmt -> 13:ptr
+}

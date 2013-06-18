@@ -1,0 +1,27 @@
+digraph ast {
+12 [shape=record, label="{ { <ptr> Expression | 12 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+3 [shape=record, label="{ { <ptr> Declartion | 3 } | {Type | Name tree | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Field Expression List | 1 } | { 0 | key | int }| { 1 | children | treelist } }"]
+2 [shape=record, label="{ { <ptr> Type | 2 } | { Record | <flist> Field List } } "];
+2:flist -> 1:ptr;
+3:ty -> 2:ptr;
+0:pos0 -> 3:ptr;
+5 [shape=record, label="{ { <ptr> Declartion | 5 } | {Variable | d | Type int | <initval> Initial Value } }"];
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Integer | 0 } }"];
+5:initval -> 4:ptr;
+0:pos1 -> 5:ptr;
+8 [shape=record, label="{ { <ptr> Declartion | 8 } | {Type | Name treelist | <ty> Type } }"];
+6 [shape=record, label="{ { <ptr> Field Expression List | 6 } | { 0 | hd | tree }| { 1 | tl | treelist } }"]
+7 [shape=record, label="{ { <ptr> Type | 7 } | { Record | <flist> Field List } } "];
+7:flist -> 6:ptr;
+8:ty -> 7:ptr;
+0:pos2 -> 8:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion }| { 2 | <pos2> Declartion } }"];
+12:dec -> 0:ptr
+10 [shape=record, label="{ { <ptr> Expression | 10 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+9 [shape=record, label="{ { <ptr> Left Hand Value | 9 } | { ID | d } } "];
+10:lval -> 9:ptr
+11:pos0 -> 10:ptr;
+11 [shape=record, label="{ { <ptr> Expression List | 11 } | { 0 | <pos0> Expression } }"];
+12:stmt -> 11:ptr
+}

@@ -4,7 +4,7 @@ graph : Parser.cpp Tokeniser.cpp graph.cpp utilities.cpp
 .PHONY: run
 run : graph merge.tig
 	./graph < merge.tig > merge.dot
-	dot -Tpng merge.dot -o merge.png
+	dot -Tpdf merge.dot -o merge.pdf
 
 formatter : Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp
 	g++ DecClass.cpp ExpClass.cpp LValClass.cpp MiscClass.cpp Parser.cpp Tokeniser.cpp formatter.cpp utilities.cpp -ll -o formatter -g -Wall

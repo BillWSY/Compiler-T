@@ -1,0 +1,37 @@
+digraph ast {
+17 [shape=record, label="{ { <ptr> Expression | 17 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+2 [shape=record, label="{ { <ptr> Declartion | 2 } | {Variable | a | <initval> Initial Value } }"];
+1 [shape=record, label="{ { <ptr> Expression | 1 } |{ Integer | 0 } }"];
+2:initval -> 1:ptr;
+0:pos0 -> 2:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion } }"];
+17:dec -> 0:ptr
+15 [shape=record, label="{ { <ptr> Expression | 15 } |{ For Loop | <forvar> Varible [i] | <beg> Begin Value | <ed> End Value | <stmt> Statement } } "];
+3 [shape=record, label="{ { <ptr> Expression | 3 } |{ Integer | 0 } }"];
+15:beg -> 3:ptr
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Integer | 100 } }"];
+15:ed -> 4:ptr
+14 [shape=record, label="{ { <ptr> Expression | 14 } |{ Expression List | <explist> Expression List} }"];
+10 [shape=record, label="{ { <ptr> Expression | 10 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+5 [shape=record, label="{ { <ptr> Left Hand Value | 5 } | { ID | a } } "];
+10:lval -> 5:ptr
+9 [shape=record, label="{ { <ptr> Expression | 9 } |{ Binary Operation | <exp0> Expression 0 | + | <exp1> Expression 1} }"];
+7 [shape=record, label="{ { <ptr> Expression | 7 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+6 [shape=record, label="{ { <ptr> Left Hand Value | 6 } | { ID | a } } "];
+7:lval -> 6:ptr
+9:exp0 -> 7:ptr
+8 [shape=record, label="{ { <ptr> Expression | 8 } |{ Integer | 1 } }"];
+9:exp1 -> 8:ptr
+10:rhs -> 9:ptr
+11:pos0 -> 10:ptr;
+13 [shape=record, label="{ { <ptr> Expression | 13 } |{ Expression List | <explist> Expression List} }"];
+12 [shape=record, label="{ { <ptr> Expression List | 12 } | {Expression List Empty} }"];
+13:explist -> 12:ptr
+11:pos1 -> 13:ptr;
+11 [shape=record, label="{ { <ptr> Expression List | 11 } | { 0 | <pos0> Expression }| { 1 | <pos1> Expression } }"];
+14:explist -> 11:ptr
+15:stmt -> 14:ptr
+16:pos0 -> 15:ptr;
+16 [shape=record, label="{ { <ptr> Expression List | 16 } | { 0 | <pos0> Expression } }"];
+17:stmt -> 16:ptr
+}

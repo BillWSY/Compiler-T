@@ -197,6 +197,7 @@ ExpLet::~ExpLet(){
 }
 
 ExpArray::ExpArray(const string& _typeName, Expression *_expSize, Expression *_expInitVal):Expression(E_Array) {
+    typeName = _typeName;
     expSize = _expSize;
     expInitVal = _expInitVal;
 }

@@ -1,0 +1,39 @@
+digraph ast {
+18 [shape=record, label="{ { <ptr> Expression | 18 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+3 [shape=record, label="{ { <ptr> Declartion | 3 } | {Type | Name intlist | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Field Expression List | 1 } | { 0 | hd | int }| { 1 | tl | intlist } }"]
+2 [shape=record, label="{ { <ptr> Type | 2 } | { Record | <flist> Field List } } "];
+2:flist -> 1:ptr;
+3:ty -> 2:ptr;
+0:pos0 -> 3:ptr;
+6 [shape=record, label="{ { <ptr> Declartion | 6 } | {Type | Name tree | <ty> Type } }"];
+4 [shape=record, label="{ { <ptr> Field Expression List | 4 } | { 0 | key | int }| { 1 | children | treelist } }"]
+5 [shape=record, label="{ { <ptr> Type | 5 } | { Record | <flist> Field List } } "];
+5:flist -> 4:ptr;
+6:ty -> 5:ptr;
+0:pos1 -> 6:ptr;
+9 [shape=record, label="{ { <ptr> Declartion | 9 } | {Type | Name treelist | <ty> Type } }"];
+7 [shape=record, label="{ { <ptr> Field Expression List | 7 } | { 0 | hd | tree }| { 1 | tl | treelist } }"]
+8 [shape=record, label="{ { <ptr> Type | 8 } | { Record | <flist> Field List } } "];
+8:flist -> 7:ptr;
+9:ty -> 8:ptr;
+0:pos2 -> 9:ptr;
+14 [shape=record, label="{ { <ptr> Declartion | 14 } | {Variable | lis | Type intlist | <initval> Initial Value } }"];
+13 [shape=record, label="{ { <ptr> Expression | 13 } |{ Record | intlist | <flistpos> Field List} }"];
+10 [shape=record, label="{ { <ptr> Expression | 10 } |{ Integer | 0 } }"];
+11:pos0 -> 10:ptr;
+12 [shape=record, label="{ { <ptr> Expression | 12 } |{ Nil } }"];
+11:pos1 -> 12:ptr;
+11 [shape=record, label="{ { <ptr> Field Expression List | 11 } | { 0 | hd | <pos0> Expression }| { 1 | tl | <pos1> Expression } }"];
+13:flistpos -> 11:ptr
+14:initval -> 13:ptr;
+0:pos3 -> 14:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion }| { 2 | <pos2> Declartion }| { 3 | <pos3> Declartion } }"];
+18:dec -> 0:ptr
+16 [shape=record, label="{ { <ptr> Expression | 16 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+15 [shape=record, label="{ { <ptr> Left Hand Value | 15 } | { ID | lis } } "];
+16:lval -> 15:ptr
+17:pos0 -> 16:ptr;
+17 [shape=record, label="{ { <ptr> Expression List | 17 } | { 0 | <pos0> Expression } }"];
+18:stmt -> 17:ptr
+}

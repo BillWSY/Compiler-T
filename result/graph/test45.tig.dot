@@ -1,0 +1,21 @@
+digraph ast {
+9 [shape=record, label="{ { <ptr> Expression | 9 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+3 [shape=record, label="{ { <ptr> Declartion | 3 } | {Type | Name rectype | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Field Expression List | 1 } | { 0 | name | string }| { 1 | id | int } }"]
+2 [shape=record, label="{ { <ptr> Type | 2 } | { Record | <flist> Field List } } "];
+2:flist -> 1:ptr;
+3:ty -> 2:ptr;
+0:pos0 -> 3:ptr;
+5 [shape=record, label="{ { <ptr> Declartion | 5 } | {Variable | a | <initval> Initial Value } }"];
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Nil } }"];
+5:initval -> 4:ptr;
+0:pos1 -> 5:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion } }"];
+9:dec -> 0:ptr
+7 [shape=record, label="{ { <ptr> Expression | 7 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+6 [shape=record, label="{ { <ptr> Left Hand Value | 6 } | { ID | a } } "];
+7:lval -> 6:ptr
+8:pos0 -> 7:ptr;
+8 [shape=record, label="{ { <ptr> Expression List | 8 } | { 0 | <pos0> Expression } }"];
+9:stmt -> 8:ptr
+}

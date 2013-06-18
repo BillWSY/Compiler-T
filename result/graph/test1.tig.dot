@@ -1,0 +1,23 @@
+digraph ast {
+10 [shape=record, label="{ { <ptr> Expression | 10 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+2 [shape=record, label="{ { <ptr> Declartion | 2 } | {Type | Name arrtype | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Type | 1 } | { Array | int } } "];
+2:ty -> 1:ptr;
+0:pos0 -> 2:ptr;
+6 [shape=record, label="{ { <ptr> Declartion | 6 } | {Variable | arr1 | Type arrtype | <initval> Initial Value } }"];
+5 [shape=record, label="{ { <ptr> Expression | 5 } |{ Array | Type [arrtype] | <sz> Size | <ival> Initial Value} } "];
+3 [shape=record, label="{ { <ptr> Expression | 3 } |{ Integer | 10 } }"];
+5:sz -> 3:ptr
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Integer | 0 } }"];
+5:ival -> 4:ptr
+6:initval -> 5:ptr;
+0:pos1 -> 6:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion } }"];
+10:dec -> 0:ptr
+8 [shape=record, label="{ { <ptr> Expression | 8 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+7 [shape=record, label="{ { <ptr> Left Hand Value | 7 } | { ID | arr1 } } "];
+8:lval -> 7:ptr
+9:pos0 -> 8:ptr;
+9 [shape=record, label="{ { <ptr> Expression List | 9 } | { 0 | <pos0> Expression } }"];
+10:stmt -> 9:ptr
+}

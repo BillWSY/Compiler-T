@@ -1,0 +1,14 @@
+====================Project Compiler T====================
+=          A Tiger Language AST Graph Generator          =
+=                          By                            =
+=               Shengye Wang  &  Yanbo Bai               =
+==========================================================
+Compiler-T: Start parsering.
+Parser: syntax error, unexpected "nil", expecting "function" or "in" or "type" or "var".
+"nil" at line 5:  var a:= rectype nil
+                 .................^^^
+Compiler-T: Parser returned 1.
+Compiler-T: 0 AST nodes created.
+Compiler-T: Graph creation aborted due to parsing failure.
+Compiler-T: Done. 0.000235 seconds elapsed.
+==========================================================

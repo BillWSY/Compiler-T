@@ -31,6 +31,7 @@ string graphVisitFieldList(FieldList* fieldList);
 
 string graphVisitExpression(Expression* exp)
 {
+    if (!exp) return "";
     string curID = toStr(exp -> getID());
     string tmpStr;
     if (!exp) return string("");
@@ -106,7 +107,7 @@ string graphVisitExpression(Expression* exp)
             return curID + ":ptr";
             break;
         case E_If:
-            if (((ExpIf*)exp)->hasElse) {
+            if (!((ExpIf*)exp)->hasElse) {
                 cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
                 cout << "{ If | <cond> Condition | <stmt> Statement } } \"];" << endl;
                 tmpStr = graphVisitExpression(((ExpIf*)exp)->cond);

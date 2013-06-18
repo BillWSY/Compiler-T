@@ -1,0 +1,19 @@
+digraph ast {
+21 [shape=record, label="{ { <ptr> Expression | 21 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+8 [shape=record, label="{ { <ptr> Declartion | 8 } | {Function | do_nothing1 | <exp> Expression } }"];
+0:pos0 -> 8:ptr;
+15 [shape=record, label="{ { <ptr> Declartion | 15 } | {Function | do_nothing2 | <exp> Expression } }"];
+0:pos1 -> 15:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion } }"];
+21:dec -> 0:ptr
+19 [shape=record, label="{ { <ptr> Expression | 19 } |{ Function Call | do_nothing1 | <argpos> Arguments} }"];
+16 [shape=record, label="{ { <ptr> Expression | 16 } |{ Integer | 0 } }"];
+17:pos0 -> 16:ptr;
+18 [shape=record, label="{ { <ptr> Expression | 18 } |{ String | str2 } }"];
+17:pos1 -> 18:ptr;
+17 [shape=record, label="{ { <ptr> Argument List | 17 } | { 0 | <pos0> Argument }| { 1 | <pos1> Argument } }"];
+19:argpos -> 17:ptr
+20:pos0 -> 19:ptr;
+20 [shape=record, label="{ { <ptr> Expression List | 20 } | { 0 | <pos0> Expression } }"];
+21:stmt -> 20:ptr
+}

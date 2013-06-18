@@ -1,0 +1,151 @@
+digraph ast {
+74 [shape=record, label="{ { <ptr> Expression | 74 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+2 [shape=record, label="{ { <ptr> Declartion | 2 } | {Type | Name arrtype1 | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Type | 1 } | { Array | int } } "];
+2:ty -> 1:ptr;
+0:pos0 -> 2:ptr;
+5 [shape=record, label="{ { <ptr> Declartion | 5 } | {Type | Name rectype1 | <ty> Type } }"];
+3 [shape=record, label="{ { <ptr> Field Expression List | 3 } | { 0 | name | string }| { 1 | address | string }| { 2 | id | int }| { 3 | age | int } }"]
+4 [shape=record, label="{ { <ptr> Type | 4 } | { Record | <flist> Field List } } "];
+4:flist -> 3:ptr;
+5:ty -> 4:ptr;
+0:pos1 -> 5:ptr;
+7 [shape=record, label="{ { <ptr> Declartion | 7 } | {Type | Name arrtype2 | <ty> Type } }"];
+6 [shape=record, label="{ { <ptr> Type | 6 } | { Array | rectype1 } } "];
+7:ty -> 6:ptr;
+0:pos2 -> 7:ptr;
+10 [shape=record, label="{ { <ptr> Declartion | 10 } | {Type | Name rectype2 | <ty> Type } }"];
+8 [shape=record, label="{ { <ptr> Field Expression List | 8 } | { 0 | name | string }| { 1 | dates | arrtype1 } }"]
+9 [shape=record, label="{ { <ptr> Type | 9 } | { Record | <flist> Field List } } "];
+9:flist -> 8:ptr;
+10:ty -> 9:ptr;
+0:pos3 -> 10:ptr;
+12 [shape=record, label="{ { <ptr> Declartion | 12 } | {Type | Name arrtype3 | <ty> Type } }"];
+11 [shape=record, label="{ { <ptr> Type | 11 } | { Array | string } } "];
+12:ty -> 11:ptr;
+0:pos4 -> 12:ptr;
+16 [shape=record, label="{ { <ptr> Declartion | 16 } | {Variable | arr1 | <initval> Initial Value } }"];
+15 [shape=record, label="{ { <ptr> Expression | 15 } |{ Array | Type [arrtype1] | <sz> Size | <ival> Initial Value} } "];
+13 [shape=record, label="{ { <ptr> Expression | 13 } |{ Integer | 10 } }"];
+15:sz -> 13:ptr
+14 [shape=record, label="{ { <ptr> Expression | 14 } |{ Integer | 0 } }"];
+15:ival -> 14:ptr
+16:initval -> 15:ptr;
+0:pos5 -> 16:ptr;
+25 [shape=record, label="{ { <ptr> Declartion | 25 } | {Variable | arr2 | <initval> Initial Value } }"];
+24 [shape=record, label="{ { <ptr> Expression | 24 } |{ Array | Type [arrtype2] | <sz> Size | <ival> Initial Value} } "];
+17 [shape=record, label="{ { <ptr> Expression | 17 } |{ Integer | 5 } }"];
+24:sz -> 17:ptr
+23 [shape=record, label="{ { <ptr> Expression | 23 } |{ Record | rectype1 | <flistpos> Field List} }"];
+18 [shape=record, label="{ { <ptr> Expression | 18 } |{ String | aname } }"];
+19:pos0 -> 18:ptr;
+20 [shape=record, label="{ { <ptr> Expression | 20 } |{ String | somewhere } }"];
+19:pos1 -> 20:ptr;
+21 [shape=record, label="{ { <ptr> Expression | 21 } |{ Integer | 0 } }"];
+19:pos2 -> 21:ptr;
+22 [shape=record, label="{ { <ptr> Expression | 22 } |{ Integer | 0 } }"];
+19:pos3 -> 22:ptr;
+19 [shape=record, label="{ { <ptr> Field Expression List | 19 } | { 0 | name | <pos0> Expression }| { 1 | address | <pos1> Expression }| { 2 | id | <pos2> Expression }| { 3 | age | <pos3> Expression } }"];
+23:flistpos -> 19:ptr
+24:ival -> 23:ptr
+25:initval -> 24:ptr;
+0:pos6 -> 25:ptr;
+29 [shape=record, label="{ { <ptr> Declartion | 29 } | {Variable | arr3 | Type arrtype3 | <initval> Initial Value } }"];
+28 [shape=record, label="{ { <ptr> Expression | 28 } |{ Array | Type [arrtype3] | <sz> Size | <ival> Initial Value} } "];
+26 [shape=record, label="{ { <ptr> Expression | 26 } |{ Integer | 100 } }"];
+28:sz -> 26:ptr
+27 [shape=record, label="{ { <ptr> Expression | 27 } |{ String |  } }"];
+28:ival -> 27:ptr
+29:initval -> 28:ptr;
+0:pos7 -> 29:ptr;
+36 [shape=record, label="{ { <ptr> Declartion | 36 } | {Variable | rec1 | <initval> Initial Value } }"];
+35 [shape=record, label="{ { <ptr> Expression | 35 } |{ Record | rectype1 | <flistpos> Field List} }"];
+30 [shape=record, label="{ { <ptr> Expression | 30 } |{ String | Kapoios } }"];
+31:pos0 -> 30:ptr;
+32 [shape=record, label="{ { <ptr> Expression | 32 } |{ String | Kapou } }"];
+31:pos1 -> 32:ptr;
+33 [shape=record, label="{ { <ptr> Expression | 33 } |{ Integer | 2432 } }"];
+31:pos2 -> 33:ptr;
+34 [shape=record, label="{ { <ptr> Expression | 34 } |{ Integer | 44 } }"];
+31:pos3 -> 34:ptr;
+31 [shape=record, label="{ { <ptr> Field Expression List | 31 } | { 0 | name | <pos0> Expression }| { 1 | address | <pos1> Expression }| { 2 | id | <pos2> Expression }| { 3 | age | <pos3> Expression } }"];
+35:flistpos -> 31:ptr
+36:initval -> 35:ptr;
+0:pos8 -> 36:ptr;
+43 [shape=record, label="{ { <ptr> Declartion | 43 } | {Variable | rec2 | <initval> Initial Value } }"];
+42 [shape=record, label="{ { <ptr> Expression | 42 } |{ Record | rectype2 | <flistpos> Field List} }"];
+37 [shape=record, label="{ { <ptr> Expression | 37 } |{ String | Allos } }"];
+38:pos0 -> 37:ptr;
+41 [shape=record, label="{ { <ptr> Expression | 41 } |{ Array | Type [arrtype1] | <sz> Size | <ival> Initial Value} } "];
+39 [shape=record, label="{ { <ptr> Expression | 39 } |{ Integer | 3 } }"];
+41:sz -> 39:ptr
+40 [shape=record, label="{ { <ptr> Expression | 40 } |{ Integer | 1900 } }"];
+41:ival -> 40:ptr
+38:pos1 -> 41:ptr;
+38 [shape=record, label="{ { <ptr> Field Expression List | 38 } | { 0 | name | <pos0> Expression }| { 1 | dates | <pos1> Expression } }"];
+42:flistpos -> 38:ptr
+43:initval -> 42:ptr;
+0:pos9 -> 43:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion }| { 2 | <pos2> Declartion }| { 3 | <pos3> Declartion }| { 4 | <pos4> Declartion }| { 5 | <pos5> Declartion }| { 6 | <pos6> Declartion }| { 7 | <pos7> Declartion }| { 8 | <pos8> Declartion }| { 9 | <pos9> Declartion } }"];
+74:dec -> 0:ptr
+46 [shape=record, label="{ { <ptr> Expression | 46 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+44 [shape=record, label="{ { <ptr> Left Hand Value | 44 } | { ID | arr1[0] } } "];
+46:lval -> 44:ptr
+45 [shape=record, label="{ { <ptr> Expression | 45 } |{ Integer | 1 } }"];
+46:rhs -> 45:ptr
+47:pos0 -> 46:ptr;
+50 [shape=record, label="{ { <ptr> Expression | 50 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+48 [shape=record, label="{ { <ptr> Left Hand Value | 48 } | { ID | arr1[9] } } "];
+50:lval -> 48:ptr
+49 [shape=record, label="{ { <ptr> Expression | 49 } |{ Integer | 3 } }"];
+50:rhs -> 49:ptr
+47:pos1 -> 50:ptr;
+54 [shape=record, label="{ { <ptr> Expression | 54 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+52 [shape=record, label="{ { <ptr> Left Hand Value | 52 } | { Member Reference | <maj> Major Name | Member Namename} } "];
+51 [shape=record, label="{ { <ptr> Left Hand Value | 51 } | { ID | arr2[3] } } "];
+52:maj -> 51:ptr;
+54:lval -> 52:ptr
+53 [shape=record, label="{ { <ptr> Expression | 53 } |{ String | kati } }"];
+54:rhs -> 53:ptr
+47:pos2 -> 54:ptr;
+58 [shape=record, label="{ { <ptr> Expression | 58 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+56 [shape=record, label="{ { <ptr> Left Hand Value | 56 } | { Member Reference | <maj> Major Name | Member Nameage} } "];
+55 [shape=record, label="{ { <ptr> Left Hand Value | 55 } | { ID | arr2[1] } } "];
+56:maj -> 55:ptr;
+58:lval -> 56:ptr
+57 [shape=record, label="{ { <ptr> Expression | 57 } |{ Integer | 23 } }"];
+58:rhs -> 57:ptr
+47:pos3 -> 58:ptr;
+61 [shape=record, label="{ { <ptr> Expression | 61 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+59 [shape=record, label="{ { <ptr> Left Hand Value | 59 } | { ID | arr3[34] } } "];
+61:lval -> 59:ptr
+60 [shape=record, label="{ { <ptr> Expression | 60 } |{ String | sfd } }"];
+61:rhs -> 60:ptr
+47:pos4 -> 61:ptr;
+65 [shape=record, label="{ { <ptr> Expression | 65 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+63 [shape=record, label="{ { <ptr> Left Hand Value | 63 } | { Member Reference | <maj> Major Name | Member Namename} } "];
+62 [shape=record, label="{ { <ptr> Left Hand Value | 62 } | { ID | rec1 } } "];
+63:maj -> 62:ptr;
+65:lval -> 63:ptr
+64 [shape=record, label="{ { <ptr> Expression | 64 } |{ String | sdf } }"];
+65:rhs -> 64:ptr
+47:pos5 -> 65:ptr;
+69 [shape=record, label="{ { <ptr> Expression | 69 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+67 [shape=record, label="{ { <ptr> Left Hand Value | 67 } | { Member Reference | <maj> Major Name | Member Namedates[0]} } "];
+66 [shape=record, label="{ { <ptr> Left Hand Value | 66 } | { ID | rec2 } } "];
+67:maj -> 66:ptr;
+69:lval -> 67:ptr
+68 [shape=record, label="{ { <ptr> Expression | 68 } |{ Integer | 2323 } }"];
+69:rhs -> 68:ptr
+47:pos6 -> 69:ptr;
+73 [shape=record, label="{ { <ptr> Expression | 73 } |{ Assignment | <lval> LHS | <rhs> RHS } } "];
+71 [shape=record, label="{ { <ptr> Left Hand Value | 71 } | { Member Reference | <maj> Major Name | Member Namedates[2]} } "];
+70 [shape=record, label="{ { <ptr> Left Hand Value | 70 } | { ID | rec2 } } "];
+71:maj -> 70:ptr;
+73:lval -> 71:ptr
+72 [shape=record, label="{ { <ptr> Expression | 72 } |{ Integer | 2323 } }"];
+73:rhs -> 72:ptr
+47:pos7 -> 73:ptr;
+47 [shape=record, label="{ { <ptr> Expression List | 47 } | { 0 | <pos0> Expression }| { 1 | <pos1> Expression }| { 2 | <pos2> Expression }| { 3 | <pos3> Expression }| { 4 | <pos4> Expression }| { 5 | <pos5> Expression }| { 6 | <pos6> Expression }| { 7 | <pos7> Expression } }"];
+74:stmt -> 47:ptr
+}

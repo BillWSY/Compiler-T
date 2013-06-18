@@ -1,0 +1,7 @@
+digraph ast {
+2 [shape=record, label="{ { <ptr> Expression | 2 } |{ Binary Operation | <exp0> Expression 0 | + | <exp1> Expression 1} }"];
+0 [shape=record, label="{ { <ptr> Expression | 0 } |{ Integer | 3 } }"];
+2:exp0 -> 0:ptr
+1 [shape=record, label="{ { <ptr> Expression | 1 } |{ String | var } }"];
+2:exp1 -> 1:ptr
+}

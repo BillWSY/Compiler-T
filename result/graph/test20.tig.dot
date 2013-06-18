@@ -1,0 +1,25 @@
+digraph ast {
+11 [shape=record, label="{ { <ptr> Expression | 11 } |{ While Loop | <cond> Condition | <stmt> Statement } } "];
+2 [shape=record, label="{ { <ptr> Expression | 2 } |{ Binary Operation | <exp0> Expression 0 | \> | <exp1> Expression 1} }"];
+0 [shape=record, label="{ { <ptr> Expression | 0 } |{ Integer | 10 } }"];
+2:exp0 -> 0:ptr
+1 [shape=record, label="{ { <ptr> Expression | 1 } |{ Integer | 5 } }"];
+2:exp1 -> 1:ptr
+11:cond -> 2:ptr
+10 [shape=record, label="{ { <ptr> Expression | 10 } |{ Expression List | <explist> Expression List} }"];
+6 [shape=record, label="{ { <ptr> Expression | 6 } |{ Binary Operation | <exp0> Expression 0 | + | <exp1> Expression 1} }"];
+4 [shape=record, label="{ { <ptr> Expression | 4 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+3 [shape=record, label="{ { <ptr> Left Hand Value | 3 } | { ID | i } } "];
+4:lval -> 3:ptr
+6:exp0 -> 4:ptr
+5 [shape=record, label="{ { <ptr> Expression | 5 } |{ Integer | 1 } }"];
+6:exp1 -> 5:ptr
+7:pos0 -> 6:ptr;
+9 [shape=record, label="{ { <ptr> Expression | 9 } |{ Expression List | <explist> Expression List} }"];
+8 [shape=record, label="{ { <ptr> Expression List | 8 } | {Expression List Empty} }"];
+9:explist -> 8:ptr
+7:pos1 -> 9:ptr;
+7 [shape=record, label="{ { <ptr> Expression List | 7 } | { 0 | <pos0> Expression }| { 1 | <pos1> Expression } }"];
+10:explist -> 7:ptr
+11:stmt -> 10:ptr
+}

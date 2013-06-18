@@ -1,0 +1,11 @@
+====================Project Compiler T====================
+=          A Tiger Language AST Graph Generator          =
+=                          By                            =
+=               Shengye Wang  &  Yanbo Bai               =
+==========================================================
+Compiler-T: Start parsering.
+Compiler-T: Parser returned 0.
+Compiler-T: 14 AST nodes created.
+Compiler-T: Writing DOT script.
+Compiler-T: Done. 0.000325 seconds elapsed.
+==========================================================

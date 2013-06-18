@@ -1,0 +1,51 @@
+digraph ast {
+24 [shape=record, label="{ { <ptr> Expression | 24 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+2 [shape=record, label="{ { <ptr> Declartion | 2 } | {Type | Name arrtype | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Type | 1 } | { Array | int } } "];
+2:ty -> 1:ptr;
+0:pos0 -> 2:ptr;
+5 [shape=record, label="{ { <ptr> Declartion | 5 } | {Type | Name rectype | <ty> Type } }"];
+3 [shape=record, label="{ { <ptr> Field Expression List | 3 } | { 0 | name | string }| { 1 | id | int } }"]
+4 [shape=record, label="{ { <ptr> Type | 4 } | { Record | <flist> Field List } } "];
+4:flist -> 3:ptr;
+5:ty -> 4:ptr;
+0:pos1 -> 5:ptr;
+10 [shape=record, label="{ { <ptr> Declartion | 10 } | {Variable | rec | <initval> Initial Value } }"];
+9 [shape=record, label="{ { <ptr> Expression | 9 } |{ Record | rectype | <flistpos> Field List} }"];
+6 [shape=record, label="{ { <ptr> Expression | 6 } |{ String | aname } }"];
+7:pos0 -> 6:ptr;
+8 [shape=record, label="{ { <ptr> Expression | 8 } |{ Integer | 0 } }"];
+7:pos1 -> 8:ptr;
+7 [shape=record, label="{ { <ptr> Field Expression List | 7 } | { 0 | name | <pos0> Expression }| { 1 | id | <pos1> Expression } }"];
+9:flistpos -> 7:ptr
+10:initval -> 9:ptr;
+0:pos2 -> 10:ptr;
+14 [shape=record, label="{ { <ptr> Declartion | 14 } | {Variable | arr | <initval> Initial Value } }"];
+13 [shape=record, label="{ { <ptr> Expression | 13 } |{ Array | Type [arrtype] | <sz> Size | <ival> Initial Value} } "];
+11 [shape=record, label="{ { <ptr> Expression | 11 } |{ Integer | 3 } }"];
+13:sz -> 11:ptr
+12 [shape=record, label="{ { <ptr> Expression | 12 } |{ Integer | 0 } }"];
+13:ival -> 12:ptr
+14:initval -> 13:ptr;
+0:pos3 -> 14:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion }| { 2 | <pos2> Declartion }| { 3 | <pos3> Declartion } }"];
+24:dec -> 0:ptr
+22 [shape=record, label="{ { <ptr> Expression | 22 } |{ If | <cond> Condition | <tstmt> True Statement | <fstmt> False Statement } } "];
+19 [shape=record, label="{ { <ptr> Expression | 19 } |{ Binary Operation | <exp0> Expression 0 | \<\> | <exp1> Expression 1} }"];
+16 [shape=record, label="{ { <ptr> Expression | 16 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+15 [shape=record, label="{ { <ptr> Left Hand Value | 15 } | { ID | rec } } "];
+16:lval -> 15:ptr
+19:exp0 -> 16:ptr
+18 [shape=record, label="{ { <ptr> Expression | 18 } |{ Left Hand Value | <lval> Left Hand Value} }"];
+17 [shape=record, label="{ { <ptr> Left Hand Value | 17 } | { ID | arr } } "];
+18:lval -> 17:ptr
+19:exp1 -> 18:ptr
+22:cond -> 19:ptr
+20 [shape=record, label="{ { <ptr> Expression | 20 } |{ Integer | 3 } }"];
+22:tstmt -> 20:ptr
+21 [shape=record, label="{ { <ptr> Expression | 21 } |{ Integer | 4 } }"];
+22:fstmt -> 21:ptr
+23:pos0 -> 22:ptr;
+23 [shape=record, label="{ { <ptr> Expression List | 23 } | { 0 | <pos0> Expression } }"];
+24:stmt -> 23:ptr
+}

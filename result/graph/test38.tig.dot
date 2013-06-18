@@ -1,0 +1,17 @@
+digraph ast {
+7 [shape=record, label="{ { <ptr> Expression | 7 } |{ Let | <dec> Declaration | <stmt> Statement } } "];
+2 [shape=record, label="{ { <ptr> Declartion | 2 } | {Type | Name a | <ty> Type } }"];
+1 [shape=record, label="{ { <ptr> Type | 1 } | { Name | int } } "];
+2:ty -> 1:ptr;
+0:pos0 -> 2:ptr;
+4 [shape=record, label="{ { <ptr> Declartion | 4 } | {Type | Name a | <ty> Type } }"];
+3 [shape=record, label="{ { <ptr> Type | 3 } | { Name | string } } "];
+4:ty -> 3:ptr;
+0:pos1 -> 4:ptr;
+0 [shape=record, label="{ { <ptr> Declartion List | 0 } | { 0 | <pos0> Declartion }| { 1 | <pos1> Declartion } }"];
+7:dec -> 0:ptr
+5 [shape=record, label="{ { <ptr> Expression | 5 } |{ Integer | 0 } }"];
+6:pos0 -> 5:ptr;
+6 [shape=record, label="{ { <ptr> Expression List | 6 } | { 0 | <pos0> Expression } }"];
+7:stmt -> 6:ptr
+}
