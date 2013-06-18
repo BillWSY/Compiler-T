@@ -300,6 +300,9 @@ string strVisitFieldList(FieldList* fieldList)
     return rtn;
 }
 
+
+extern void setStart();
+
 int main()
 {
     timeval timeStart;
@@ -313,6 +316,7 @@ int main()
     cerr << "==========================================================" << endl;
 
     cerr << "Compiler-T: Start parsering." << endl;
+    setStart();
     int parserRtn = yyparse();
     cerr << "Compiler-T: Parser returned " << parserRtn << "." << endl;
     cerr << "Compiler-T: " << BasicNode::nodeCount() << " AST nodes created." << endl;

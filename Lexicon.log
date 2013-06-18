@@ -1,22 +1,23 @@
+Lexicon.l:106: warning, rule cannot be matched
 flex version 2.5.37 usage statistics:
   scanner options: -vI8 -Cem -oTokeniser.cpp
-  335/2000 NFA states
-  119/1000 DFA states (493 words)
-  64 rules
+  352/2000 NFA states
+  126/1000 DFA states (529 words)
+  66 rules
   Compressed tables always back-up
-  3/40 start conditions
-  202 epsilon states, 72 double epsilon states
+  4/40 start conditions
+  216 epsilon states, 82 double epsilon states
   9/100 character classes needed 166/500 words of storage, 0 reused
-  2009 state/nextstate pairs created
-  214/1795 unique/duplicate transitions
-  125/1000 base-def entries created
-  197/2000 (peak 391) nxt-chk entries created
-  18/2500 (peak 312) template nxt-chk entries created
+  2419 state/nextstate pairs created
+  226/2193 unique/duplicate transitions
+  135/1000 base-def entries created
+  211/2000 (peak 547) nxt-chk entries created
+  36/2500 (peak 468) template nxt-chk entries created
   0 empty table entries
-  7 protos created
-  6 templates created, 63 uses
+  10 protos created
+  9 templates created, 71 uses
   52/256 equivalence classes created
-  3/256 meta-equivalence classes created
-  57 (2 saved) hash collisions, 102 DFAs equal
+  4/256 meta-equivalence classes created
+  57 (3 saved) hash collisions, 109 DFAs equal
   0 sets of reallocations needed
-  952 total table entries needed
+  1000 total table entries needed

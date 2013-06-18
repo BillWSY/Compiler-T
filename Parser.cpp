@@ -68,14 +68,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "ASTClass.h"
+#include "utilities.h"
 #include <string>
 
 using namespace std;
 
 extern Expression* root;
 
-extern int yyparse();
 extern int yylex();
+extern string linebuf;
+
+void yyerror(const char *str);
 
 /*
 int main()
@@ -84,27 +87,11 @@ int main()
 }
 */
 
-static string strErrReplace(const char* str);
-
-extern char* yytext;
-extern int yylineno;
-
-void yyerror(const char *str)
-{
-    cerr << "error: " << strErrReplace(str) << "." << endl;
-    cerr << yytext << " at line " << yylineno << endl;
-}
-
-int yywrap()
-{
-    return 1;
-}
-
 int BasicNode::idCnt = 0;
 
 
 /* Line 371 of yacc.c  */
-#line 108 "Parser.cpp"
+#line 95 "Parser.cpp"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -194,7 +181,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 41 "Grammar.y"
+#line 28 "Grammar.y"
 
     string *strPtr;
     TInt integer;
@@ -213,15 +200,28 @@ typedef union YYSTYPE
 
 
 /* Line 387 of yacc.c  */
-#line 217 "Parser.cpp"
+#line 204 "Parser.cpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-extern YYSTYPE yylval;
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+} YYLTYPE;
+# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
 
+extern YYSTYPE yylval;
+extern YYLTYPE yylloc;
 #ifdef YYPARSE_PARAM
 #if defined __STDC__ || defined __cplusplus
 int yyparse (void *YYPARSE_PARAM);
@@ -400,13 +400,15 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-	 || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+	 || (defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL \
+	     && defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
   yytype_int16 yyss_alloc;
   YYSTYPE yyvs_alloc;
+  YYLTYPE yyls_alloc;
 };
 
 /* The size of the maximum gap between one aligned stack and the next.  */
@@ -415,8 +417,8 @@ union yyalloc
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE)) \
-      + YYSTACK_GAP_MAXIMUM)
+     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE) + sizeof (YYLTYPE)) \
+      + 2 * YYSTACK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
 
@@ -560,13 +562,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   102,   102,   108,   112,   116,   120,   125,   130,   134,
-     138,   142,   146,   150,   154,   159,   163,   167,   171,   175,
-     179,   184,   188,   192,   199,   205,   208,   215,   216,   217,
-     220,   227,   232,   236,   243,   248,   256,   261,   269,   275,
-     280,   285,   289,   296,   299,   304,   312,   315,   320,   328,
-     331,   338,   348,   351,   357,   365,   369,   374,   378,   383,
-     387,   391,   395,   399,   403,   408,   413,   418
+       0,    90,    90,    96,   100,   104,   108,   113,   118,   122,
+     126,   130,   134,   138,   142,   147,   151,   155,   159,   163,
+     167,   172,   176,   180,   187,   193,   196,   203,   204,   205,
+     208,   215,   220,   224,   231,   236,   244,   249,   257,   263,
+     268,   273,   277,   284,   287,   292,   300,   303,   308,   316,
+     319,   326,   336,   339,   345,   353,   357,   362,   366,   371,
+     375,   379,   383,   387,   391,   396,   401,   406
 };
 #endif
 
@@ -825,9 +827,82 @@ while (YYID (0))
 #define YYERRCODE	256
 
 
-/* This macro is provided for backward compatibility. */
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
+
+#ifndef YYLLOC_DEFAULT
+# define YYLLOC_DEFAULT(Current, Rhs, N)                                \
+    do                                                                  \
+      if (YYID (N))                                                     \
+        {                                                               \
+          (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;        \
+          (Current).first_column = YYRHSLOC (Rhs, 1).first_column;      \
+          (Current).last_line    = YYRHSLOC (Rhs, N).last_line;         \
+          (Current).last_column  = YYRHSLOC (Rhs, N).last_column;       \
+        }                                                               \
+      else                                                              \
+        {                                                               \
+          (Current).first_line   = (Current).last_line   =              \
+            YYRHSLOC (Rhs, 0).last_line;                                \
+          (Current).first_column = (Current).last_column =              \
+            YYRHSLOC (Rhs, 0).last_column;                              \
+        }                                                               \
+    while (YYID (0))
+#endif
+
+#define YYRHSLOC(Rhs, K) ((Rhs)[K])
+
+
+/* YY_LOCATION_PRINT -- Print the location on the stream.
+   This macro was not mandated originally: define only if we know
+   we won't break user code: when these are the locations we know.  */
+
 #ifndef YY_LOCATION_PRINT
-# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+
+/* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
+
+__attribute__((__unused__))
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static unsigned
+yy_location_print_ (FILE *yyo, YYLTYPE const * const yylocp)
+#else
+static unsigned
+yy_location_print_ (yyo, yylocp)
+    FILE *yyo;
+    YYLTYPE const * const yylocp;
+#endif
+{
+  unsigned res = 0;
+  int end_col = 0 != yylocp->last_column ? yylocp->last_column - 1 : 0;
+  if (0 <= yylocp->first_line)
+    {
+      res += fprintf (yyo, "%d", yylocp->first_line);
+      if (0 <= yylocp->first_column)
+        res += fprintf (yyo, ".%d", yylocp->first_column);
+    }
+  if (0 <= yylocp->last_line)
+    {
+      if (yylocp->first_line < yylocp->last_line)
+        {
+          res += fprintf (yyo, "-%d", yylocp->last_line);
+          if (0 <= end_col)
+            res += fprintf (yyo, ".%d", end_col);
+        }
+      else if (0 <= end_col && yylocp->first_column < end_col)
+        res += fprintf (yyo, "-%d", end_col);
+    }
+  return res;
+ }
+
+#  define YY_LOCATION_PRINT(File, Loc)          \
+  yy_location_print_ (File, &(Loc))
+
+# else
+#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# endif
 #endif
 
 
@@ -858,7 +933,7 @@ do {									  \
     {									  \
       YYFPRINTF (stderr, "%s ", Title);					  \
       yy_symbol_print (stderr,						  \
-		  Type, Value); \
+		  Type, Value, Location); \
       YYFPRINTF (stderr, "\n");						  \
     }									  \
 } while (YYID (0))
@@ -872,19 +947,21 @@ do {									  \
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 #else
 static void
-yy_symbol_value_print (yyoutput, yytype, yyvaluep)
+yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    YYLTYPE const * const yylocationp;
 #endif
 {
   FILE *yyo = yyoutput;
   YYUSE (yyo);
   if (!yyvaluep)
     return;
+  YYUSE (yylocationp);
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
     YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
@@ -906,13 +983,14 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 #else
 static void
-yy_symbol_print (yyoutput, yytype, yyvaluep)
+yy_symbol_print (yyoutput, yytype, yyvaluep, yylocationp)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    YYLTYPE const * const yylocationp;
 #endif
 {
   if (yytype < YYNTOKENS)
@@ -920,7 +998,9 @@ yy_symbol_print (yyoutput, yytype, yyvaluep)
   else
     YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
 
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep);
+  YY_LOCATION_PRINT (yyoutput, *yylocationp);
+  YYFPRINTF (yyoutput, ": ");
+  yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp);
   YYFPRINTF (yyoutput, ")");
 }
 
@@ -963,11 +1043,12 @@ do {								\
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (YYSTYPE *yyvsp, int yyrule)
+yy_reduce_print (YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
 #else
 static void
-yy_reduce_print (yyvsp, yyrule)
+yy_reduce_print (yyvsp, yylsp, yyrule)
     YYSTYPE *yyvsp;
+    YYLTYPE *yylsp;
     int yyrule;
 #endif
 {
@@ -982,7 +1063,7 @@ yy_reduce_print (yyvsp, yyrule)
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
 		       &(yyvsp[(yyi + 1) - (yynrhs)])
-		       		       );
+		       , &(yylsp[(yyi + 1) - (yynrhs)])		       );
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -990,7 +1071,7 @@ yy_reduce_print (yyvsp, yyrule)
 # define YY_REDUCE_PRINT(Rule)		\
 do {					\
   if (yydebug)				\
-    yy_reduce_print (yyvsp, Rule); \
+    yy_reduce_print (yyvsp, yylsp, Rule); \
 } while (YYID (0))
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -1270,16 +1351,18 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
 #else
 static void
-yydestruct (yymsg, yytype, yyvaluep)
+yydestruct (yymsg, yytype, yyvaluep, yylocationp)
     const char *yymsg;
     int yytype;
     YYSTYPE *yyvaluep;
+    YYLTYPE *yylocationp;
 #endif
 {
   YYUSE (yyvaluep);
+  YYUSE (yylocationp);
 
   if (!yymsg)
     yymsg = "Deleting";
@@ -1310,6 +1393,14 @@ int yychar;
 
 /* The semantic value of the lookahead symbol.  */
 YYSTYPE yylval YY_INITIAL_VALUE(yyval_default);
+
+/* Location data for the lookahead symbol.  */
+YYLTYPE yylloc
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+  = { 1, 1, 1, 1 }
+# endif
+;
+
 
 /* Number of syntax errors so far.  */
 int yynerrs;
@@ -1348,6 +1439,7 @@ yyparse ()
     /* The stacks and their tools:
        `yyss': related to states.
        `yyvs': related to semantic values.
+       `yyls': related to locations.
 
        Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
@@ -1362,6 +1454,14 @@ yyparse ()
     YYSTYPE *yyvs;
     YYSTYPE *yyvsp;
 
+    /* The location stack.  */
+    YYLTYPE yylsa[YYINITDEPTH];
+    YYLTYPE *yyls;
+    YYLTYPE *yylsp;
+
+    /* The locations where the error started and ended.  */
+    YYLTYPE yyerror_range[3];
+
     YYSIZE_T yystacksize;
 
   int yyn;
@@ -1371,6 +1471,7 @@ yyparse ()
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
+  YYLTYPE yyloc;
 
 #if YYERROR_VERBOSE
   /* Buffer for error messages, and its allocated size.  */
@@ -1379,7 +1480,7 @@ yyparse ()
   YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
-#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
+#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
 
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
@@ -1387,6 +1488,7 @@ yyparse ()
 
   yyssp = yyss = yyssa;
   yyvsp = yyvs = yyvsa;
+  yylsp = yyls = yylsa;
   yystacksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
@@ -1395,6 +1497,7 @@ yyparse ()
   yyerrstatus = 0;
   yynerrs = 0;
   yychar = YYEMPTY; /* Cause a token to be read.  */
+  yylsp[0] = yylloc;
   goto yysetstate;
 
 /*------------------------------------------------------------.
@@ -1420,6 +1523,7 @@ yyparse ()
 	   memory.  */
 	YYSTYPE *yyvs1 = yyvs;
 	yytype_int16 *yyss1 = yyss;
+	YYLTYPE *yyls1 = yyls;
 
 	/* Each stack pointer address is followed by the size of the
 	   data in use in that stack, in bytes.  This used to be a
@@ -1428,8 +1532,10 @@ yyparse ()
 	yyoverflow (YY_("memory exhausted"),
 		    &yyss1, yysize * sizeof (*yyssp),
 		    &yyvs1, yysize * sizeof (*yyvsp),
+		    &yyls1, yysize * sizeof (*yylsp),
 		    &yystacksize);
 
+	yyls = yyls1;
 	yyss = yyss1;
 	yyvs = yyvs1;
       }
@@ -1452,6 +1558,7 @@ yyparse ()
 	  goto yyexhaustedlab;
 	YYSTACK_RELOCATE (yyss_alloc, yyss);
 	YYSTACK_RELOCATE (yyvs_alloc, yyvs);
+	YYSTACK_RELOCATE (yyls_alloc, yyls);
 #  undef YYSTACK_RELOCATE
 	if (yyss1 != yyssa)
 	  YYSTACK_FREE (yyss1);
@@ -1461,6 +1568,7 @@ yyparse ()
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
+      yylsp = yyls + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
 		  (unsigned long int) yystacksize));
@@ -1538,7 +1646,7 @@ yybackup:
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
-
+  *++yylsp = yylloc;
   goto yynewstate;
 
 
@@ -1569,13 +1677,14 @@ yyreduce:
      GCC warning that YYVAL may be used uninitialized.  */
   yyval = yyvsp[1-yylen];
 
-
+  /* Default location.  */
+  YYLLOC_DEFAULT (yyloc, (yylsp - yylen), yylen);
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 103 "Grammar.y"
+#line 91 "Grammar.y"
     {
                             root = (yyvsp[(1) - (1)].exp);
                         }
@@ -1583,7 +1692,7 @@ yyreduce:
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 109 "Grammar.y"
+#line 97 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpLValue((yyvsp[(1) - (1)].lVal));
                         }
@@ -1591,7 +1700,7 @@ yyreduce:
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 113 "Grammar.y"
+#line 101 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpInteger((yyvsp[(1) - (1)].integer));
                         }
@@ -1599,7 +1708,7 @@ yyreduce:
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 117 "Grammar.y"
+#line 105 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpNil();
                         }
@@ -1607,7 +1716,7 @@ yyreduce:
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 121 "Grammar.y"
+#line 109 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpString(*(yyvsp[(1) - (1)].strPtr));
                             delete (yyvsp[(1) - (1)].strPtr); (yyvsp[(1) - (1)].strPtr) = NULL;
@@ -1616,7 +1725,7 @@ yyreduce:
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 126 "Grammar.y"
+#line 114 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpFuncCall(*(yyvsp[(1) - (4)].strPtr), (yyvsp[(3) - (4)].argList));
                             delete (yyvsp[(1) - (4)].strPtr); (yyvsp[(1) - (4)].strPtr) = NULL;
@@ -1625,7 +1734,7 @@ yyreduce:
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 131 "Grammar.y"
+#line 119 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
                         }
@@ -1633,7 +1742,7 @@ yyreduce:
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 135 "Grammar.y"
+#line 123 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
                         }
@@ -1641,7 +1750,7 @@ yyreduce:
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 139 "Grammar.y"
+#line 127 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
                         }
@@ -1649,7 +1758,7 @@ yyreduce:
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 143 "Grammar.y"
+#line 131 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
                         }
@@ -1657,7 +1766,7 @@ yyreduce:
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 147 "Grammar.y"
+#line 135 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpBinOp((yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), (yyvsp[(2) - (3)].binOpType));
                         }
@@ -1665,7 +1774,7 @@ yyreduce:
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 151 "Grammar.y"
+#line 139 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpUnOp((yyvsp[(2) - (2)].exp), (yyvsp[(1) - (2)].unOpType));
                         }
@@ -1673,7 +1782,7 @@ yyreduce:
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 155 "Grammar.y"
+#line 143 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpRecord(*(yyvsp[(1) - (4)].strPtr), (yyvsp[(3) - (4)].fieldExpList));
                             delete (yyvsp[(1) - (4)].strPtr); (yyvsp[(1) - (4)].strPtr) = NULL;
@@ -1682,7 +1791,7 @@ yyreduce:
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 160 "Grammar.y"
+#line 148 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpExpList((yyvsp[(2) - (3)].expList));
                         }
@@ -1690,7 +1799,7 @@ yyreduce:
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 164 "Grammar.y"
+#line 152 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpAssign((yyvsp[(1) - (3)].lVal), (yyvsp[(3) - (3)].exp));
                         }
@@ -1698,7 +1807,7 @@ yyreduce:
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 168 "Grammar.y"
+#line 156 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpIf((yyvsp[(2) - (4)].exp), (yyvsp[(4) - (4)].exp));
                         }
@@ -1706,7 +1815,7 @@ yyreduce:
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 172 "Grammar.y"
+#line 160 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpIf((yyvsp[(2) - (6)].exp), (yyvsp[(4) - (6)].exp), (yyvsp[(6) - (6)].exp));
                         }
@@ -1714,7 +1823,7 @@ yyreduce:
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 176 "Grammar.y"
+#line 164 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpWhile((yyvsp[(2) - (4)].exp), (yyvsp[(4) - (4)].exp));
                         }
@@ -1722,7 +1831,7 @@ yyreduce:
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 180 "Grammar.y"
+#line 168 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpFor(*(yyvsp[(2) - (8)].strPtr), (yyvsp[(4) - (8)].exp), (yyvsp[(6) - (8)].exp), (yyvsp[(8) - (8)].exp));
                             delete (yyvsp[(2) - (8)].strPtr); (yyvsp[(2) - (8)].strPtr) = NULL;
@@ -1731,7 +1840,7 @@ yyreduce:
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 185 "Grammar.y"
+#line 173 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpBreak();
                         }
@@ -1739,7 +1848,7 @@ yyreduce:
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 189 "Grammar.y"
+#line 177 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpLet((yyvsp[(2) - (5)].decList), (yyvsp[(4) - (5)].expList));
                         }
@@ -1747,7 +1856,7 @@ yyreduce:
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 193 "Grammar.y"
+#line 181 "Grammar.y"
     {
                             (yyval.exp) = (Expression*) new ExpArray((yyvsp[(1) - (3)].idSqB) -> first, (yyvsp[(1) - (3)].idSqB) -> second,  (yyvsp[(3) - (3)].exp));
                             delete (yyvsp[(1) - (3)].idSqB); (yyvsp[(1) - (3)].idSqB) = NULL;
@@ -1756,7 +1865,7 @@ yyreduce:
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 200 "Grammar.y"
+#line 188 "Grammar.y"
     {
                             (yyval.exp) = (yyvsp[(2) - (3)].exp);
                         }
@@ -1764,7 +1873,7 @@ yyreduce:
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 205 "Grammar.y"
+#line 193 "Grammar.y"
     {
                             (yyval.decList) = new DecList;
                         }
@@ -1772,7 +1881,7 @@ yyreduce:
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 209 "Grammar.y"
+#line 197 "Grammar.y"
     {
                             (yyvsp[(1) - (2)].decList) -> push_back((yyvsp[(2) - (2)].dec));
                             (yyval.decList) = (yyvsp[(1) - (2)].decList);
@@ -1781,7 +1890,7 @@ yyreduce:
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 221 "Grammar.y"
+#line 209 "Grammar.y"
     {
                             (yyval.dec) = (Dec*) new TyDec(*(yyvsp[(2) - (4)].strPtr), (yyvsp[(4) - (4)].ty));
                             delete (yyvsp[(2) - (4)].strPtr); (yyvsp[(2) - (4)].strPtr) = NULL;
@@ -1790,7 +1899,7 @@ yyreduce:
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 228 "Grammar.y"
+#line 216 "Grammar.y"
     {
                             (yyval.ty) = new Ty(TY_ID, *(yyvsp[(1) - (1)].strPtr));
                             delete (yyvsp[(1) - (1)].strPtr); (yyvsp[(1) - (1)].strPtr) = NULL;
@@ -1799,7 +1908,7 @@ yyreduce:
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 233 "Grammar.y"
+#line 221 "Grammar.y"
     {
                             (yyval.ty) = new Ty(TY_Record, (yyvsp[(2) - (3)].fieldList));
                         }
@@ -1807,7 +1916,7 @@ yyreduce:
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 237 "Grammar.y"
+#line 225 "Grammar.y"
     {
                             (yyval.ty) = new Ty(TY_Array, *(yyvsp[(3) - (3)].strPtr));
                             delete (yyvsp[(3) - (3)].strPtr); (yyvsp[(3) - (3)].strPtr) = NULL;
@@ -1816,7 +1925,7 @@ yyreduce:
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 244 "Grammar.y"
+#line 232 "Grammar.y"
     {
                             (yyval.dec) = (Dec*) new VarDec(*(yyvsp[(2) - (4)].strPtr), (yyvsp[(4) - (4)].exp));
                             delete (yyvsp[(2) - (4)].strPtr); (yyvsp[(2) - (4)].strPtr) = NULL;
@@ -1825,7 +1934,7 @@ yyreduce:
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 249 "Grammar.y"
+#line 237 "Grammar.y"
     {
                             (yyval.dec) = (Dec*) new VarDec(*(yyvsp[(2) - (6)].strPtr), *(yyvsp[(4) - (6)].strPtr), (yyvsp[(6) - (6)].exp));
                             delete (yyvsp[(2) - (6)].strPtr); (yyvsp[(2) - (6)].strPtr) = NULL;
@@ -1835,7 +1944,7 @@ yyreduce:
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 257 "Grammar.y"
+#line 245 "Grammar.y"
     {
                             (yyval.dec) = (Dec*) new FuncDec(*(yyvsp[(2) - (7)].strPtr), (yyvsp[(4) - (7)].fieldList), (yyvsp[(7) - (7)].exp));
                             delete (yyvsp[(2) - (7)].strPtr); (yyvsp[(2) - (7)].strPtr) = NULL;
@@ -1844,7 +1953,7 @@ yyreduce:
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 262 "Grammar.y"
+#line 250 "Grammar.y"
     {
                             (yyval.dec) = (Dec*) new FuncDec(*(yyvsp[(2) - (9)].strPtr), (yyvsp[(4) - (9)].fieldList), *(yyvsp[(7) - (9)].strPtr), (yyvsp[(9) - (9)].exp));
                             delete (yyvsp[(2) - (9)].strPtr); (yyvsp[(2) - (9)].strPtr) = NULL;
@@ -1854,7 +1963,7 @@ yyreduce:
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 270 "Grammar.y"
+#line 258 "Grammar.y"
     {
                             (yyval.idSqB) = new IdSqB(*(yyvsp[(1) - (2)].strPtr), (yyvsp[(2) - (2)].exp));
                             delete (yyvsp[(1) - (2)].strPtr); (yyvsp[(1) - (2)].strPtr) = NULL;
@@ -1863,7 +1972,7 @@ yyreduce:
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 276 "Grammar.y"
+#line 264 "Grammar.y"
     {
                             (yyval.lVal) = (LVal*) new LValID(*(yyvsp[(1) - (1)].strPtr));
                             delete (yyvsp[(1) - (1)].strPtr); (yyvsp[(1) - (1)].strPtr) = NULL;
@@ -1872,7 +1981,7 @@ yyreduce:
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 281 "Grammar.y"
+#line 269 "Grammar.y"
     {
                             (yyval.lVal) = (LVal*) new LValMember((yyvsp[(1) - (3)].lVal), *(yyvsp[(3) - (3)].strPtr));
                             delete (yyvsp[(3) - (3)].strPtr); (yyvsp[(3) - (3)].strPtr) = NULL;
@@ -1881,7 +1990,7 @@ yyreduce:
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 286 "Grammar.y"
+#line 274 "Grammar.y"
     {
                             (yyval.lVal) = (LVal*) new LValElement((LVal*) new LValID((yyvsp[(1) - (1)].idSqB) -> first), (yyvsp[(1) - (1)].idSqB) -> second);
                         }
@@ -1889,7 +1998,7 @@ yyreduce:
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 290 "Grammar.y"
+#line 278 "Grammar.y"
     {
                             (yyval.lVal) = (LVal*) new LValElement((yyvsp[(1) - (2)].lVal), (yyvsp[(2) - (2)].exp));
                         }
@@ -1897,7 +2006,7 @@ yyreduce:
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 296 "Grammar.y"
+#line 284 "Grammar.y"
     {
                             (yyval.expList) = new ExpList;
                         }
@@ -1905,7 +2014,7 @@ yyreduce:
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 300 "Grammar.y"
+#line 288 "Grammar.y"
     {
                             (yyval.expList) = new ExpList;
                             (yyval.expList) -> push_back((yyvsp[(1) - (1)].exp));
@@ -1914,7 +2023,7 @@ yyreduce:
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 305 "Grammar.y"
+#line 293 "Grammar.y"
     {
                             (yyval.expList) = (yyvsp[(1) - (3)].expList);
                             (yyval.expList) -> push_back((yyvsp[(3) - (3)].exp));
@@ -1923,7 +2032,7 @@ yyreduce:
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 312 "Grammar.y"
+#line 300 "Grammar.y"
     {
                             (yyval.argList) = new ArgList;
                         }
@@ -1931,7 +2040,7 @@ yyreduce:
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 316 "Grammar.y"
+#line 304 "Grammar.y"
     {
                             (yyval.argList) = new ArgList;
                             (yyval.argList) -> push_back((yyvsp[(1) - (1)].exp));
@@ -1940,7 +2049,7 @@ yyreduce:
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 321 "Grammar.y"
+#line 309 "Grammar.y"
     {
                             (yyval.argList) = (yyvsp[(1) - (3)].argList);
                             (yyval.argList) -> push_back((yyvsp[(3) - (3)].exp));
@@ -1949,7 +2058,7 @@ yyreduce:
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 328 "Grammar.y"
+#line 316 "Grammar.y"
     {
                             (yyval.fieldList) = new FieldList;
                         }
@@ -1957,7 +2066,7 @@ yyreduce:
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 332 "Grammar.y"
+#line 320 "Grammar.y"
     {
                             (yyval.fieldList) = new FieldList;
                             (yyval.fieldList) -> push_back(FieldEle(*(yyvsp[(1) - (3)].strPtr), *(yyvsp[(3) - (3)].strPtr)));
@@ -1968,7 +2077,7 @@ yyreduce:
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 339 "Grammar.y"
+#line 327 "Grammar.y"
     {
                             (yyval.fieldList) = (yyvsp[(1) - (5)].fieldList);
                             (yyval.fieldList) -> push_back(FieldEle(*(yyvsp[(3) - (5)].strPtr), *(yyvsp[(5) - (5)].strPtr)));
@@ -1979,7 +2088,7 @@ yyreduce:
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 348 "Grammar.y"
+#line 336 "Grammar.y"
     {
                             (yyval.fieldExpList) = new FieldExpList;
                         }
@@ -1987,7 +2096,7 @@ yyreduce:
 
   case 53:
 /* Line 1792 of yacc.c  */
-#line 352 "Grammar.y"
+#line 340 "Grammar.y"
     {
                             (yyval.fieldExpList) = new FieldExpList;
                             (yyval.fieldExpList) -> push_back(FieldExpEle(*(yyvsp[(1) - (3)].strPtr), (yyvsp[(3) - (3)].exp)));
@@ -1997,7 +2106,7 @@ yyreduce:
 
   case 54:
 /* Line 1792 of yacc.c  */
-#line 358 "Grammar.y"
+#line 346 "Grammar.y"
     {
                             (yyval.fieldExpList) = (yyvsp[(1) - (5)].fieldExpList);
                             (yyval.fieldExpList) -> push_back(FieldExpEle(*(yyvsp[(3) - (5)].strPtr), (yyvsp[(5) - (5)].exp)));
@@ -2007,7 +2116,7 @@ yyreduce:
 
   case 55:
 /* Line 1792 of yacc.c  */
-#line 366 "Grammar.y"
+#line 354 "Grammar.y"
     {
                             (yyval.binOpType) = BO_Mul;
                         }
@@ -2015,7 +2124,7 @@ yyreduce:
 
   case 56:
 /* Line 1792 of yacc.c  */
-#line 370 "Grammar.y"
+#line 358 "Grammar.y"
     {
                             (yyval.binOpType) = BO_Div;
                         }
@@ -2023,7 +2132,7 @@ yyreduce:
 
   case 57:
 /* Line 1792 of yacc.c  */
-#line 375 "Grammar.y"
+#line 363 "Grammar.y"
     {
                             (yyval.binOpType) = BO_Plus;
                         }
@@ -2031,7 +2140,7 @@ yyreduce:
 
   case 58:
 /* Line 1792 of yacc.c  */
-#line 379 "Grammar.y"
+#line 367 "Grammar.y"
     {
                             (yyval.binOpType) = BO_Minus;
                         }
@@ -2039,7 +2148,7 @@ yyreduce:
 
   case 59:
 /* Line 1792 of yacc.c  */
-#line 384 "Grammar.y"
+#line 372 "Grammar.y"
     {
                             (yyval.binOpType) = BO_Neq;
                         }
@@ -2047,7 +2156,7 @@ yyreduce:
 
   case 60:
 /* Line 1792 of yacc.c  */
-#line 388 "Grammar.y"
+#line 376 "Grammar.y"
     {
                             (yyval.binOpType) = BO_LT;
                         }
@@ -2055,7 +2164,7 @@ yyreduce:
 
   case 61:
 /* Line 1792 of yacc.c  */
-#line 392 "Grammar.y"
+#line 380 "Grammar.y"
     {
                             (yyval.binOpType) = BO_LTE;
                         }
@@ -2063,7 +2172,7 @@ yyreduce:
 
   case 62:
 /* Line 1792 of yacc.c  */
-#line 396 "Grammar.y"
+#line 384 "Grammar.y"
     {
                             (yyval.binOpType) = BO_GT;
                         }
@@ -2071,7 +2180,7 @@ yyreduce:
 
   case 63:
 /* Line 1792 of yacc.c  */
-#line 400 "Grammar.y"
+#line 388 "Grammar.y"
     {
                             (yyval.binOpType) = BO_GTE;
                         }
@@ -2079,7 +2188,7 @@ yyreduce:
 
   case 64:
 /* Line 1792 of yacc.c  */
-#line 404 "Grammar.y"
+#line 392 "Grammar.y"
     {
                             (yyval.binOpType) = BO_Equal;
                         }
@@ -2087,7 +2196,7 @@ yyreduce:
 
   case 65:
 /* Line 1792 of yacc.c  */
-#line 409 "Grammar.y"
+#line 397 "Grammar.y"
     {
                             (yyval.binOpType) = BO_And;
                         }
@@ -2095,7 +2204,7 @@ yyreduce:
 
   case 66:
 /* Line 1792 of yacc.c  */
-#line 414 "Grammar.y"
+#line 402 "Grammar.y"
     {
                             (yyval.binOpType) = BO_Or;
                         }
@@ -2103,7 +2212,7 @@ yyreduce:
 
   case 67:
 /* Line 1792 of yacc.c  */
-#line 419 "Grammar.y"
+#line 407 "Grammar.y"
     {
                             (yyval.unOpType) = UO_Neg;
                         }
@@ -2111,7 +2220,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2115 "Parser.cpp"
+#line 2224 "Parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2132,6 +2241,7 @@ yyreduce:
   YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
+  *++yylsp = yyloc;
 
   /* Now `shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
@@ -2196,7 +2306,7 @@ yyerrlab:
 #endif
     }
 
-
+  yyerror_range[1] = yylloc;
 
   if (yyerrstatus == 3)
     {
@@ -2212,7 +2322,7 @@ yyerrlab:
       else
 	{
 	  yydestruct ("Error: discarding",
-		      yytoken, &yylval);
+		      yytoken, &yylval, &yylloc);
 	  yychar = YYEMPTY;
 	}
     }
@@ -2233,6 +2343,7 @@ yyerrorlab:
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
 
+  yyerror_range[1] = yylsp[1-yylen];
   /* Do not reclaim the symbols of the rule which action triggered
      this YYERROR.  */
   YYPOPSTACK (yylen);
@@ -2266,9 +2377,9 @@ yyerrlab1:
       if (yyssp == yyss)
 	YYABORT;
 
-
+      yyerror_range[1] = *yylsp;
       yydestruct ("Error: popping",
-		  yystos[yystate], yyvsp);
+		  yystos[yystate], yyvsp, yylsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -2278,6 +2389,11 @@ yyerrlab1:
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
+  yyerror_range[2] = yylloc;
+  /* Using YYLLOC is tempting, but would change the location of
+     the lookahead.  YYLOC is available though.  */
+  YYLLOC_DEFAULT (yyloc, yyerror_range, 2);
+  *++yylsp = yyloc;
 
   /* Shift the error token.  */
   YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
@@ -2317,7 +2433,7 @@ yyreturn:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval);
+                  yytoken, &yylval, &yylloc);
     }
   /* Do not reclaim the symbols of the rule which action triggered
      this YYABORT or YYACCEPT.  */
@@ -2326,7 +2442,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-		  yystos[*yyssp], yyvsp);
+		  yystos[*yyssp], yyvsp, yylsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -2343,7 +2459,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 424 "Grammar.y"
+#line 412 "Grammar.y"
 
 
 static const char *const yyprintname[] =
@@ -2383,5 +2499,37 @@ static string strErrReplace(const char* str)
         }
     }
     return strBig;
+}
+
+
+static string strErrReplace(const char* str);
+
+extern char* yytext;
+extern int yylineno;
+extern int yycolumn;
+
+void yyerror(const char *str)
+{
+    cerr << "Parser: " << strErrReplace(str) << "." << endl;
+    string errHead = toStr(string("\"") + yytext + "\"" + " at line ");
+    if (yylloc.first_line) {
+        errHead += toStr(yylloc.first_line);
+        errHead += ": ";
+        cerr << errHead << linebuf << endl;
+        
+        string errFill(errHead.length(), ' ');
+        string errLeading(yylloc.first_column - 1, '.');
+        string errSymbol(yylloc.last_column - yylloc.first_column + 1, '^');
+        string errTrailing(linebuf.length() - yylloc.last_column, '.');
+        cerr << errFill << errLeading << errSymbol << errTrailing << endl;
+        
+        // cerr << yylloc.first_line << ":" << yylloc.first_column << " - ";
+        // cerr << yylloc.last_line << ":" << yylloc.last_column << endl;
+    }
+}
+
+int yywrap()
+{
+    return 1;
 }
 

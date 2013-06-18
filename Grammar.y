@@ -2,14 +2,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "ASTClass.h"
+#include "utilities.h"
 #include <string>
 
 using namespace std;
 
 extern Expression* root;
 
-extern int yyparse();
 extern int yylex();
+extern string linebuf;
+
+void yyerror(const char *str);
 
 /*
 int main()
@@ -17,22 +20,6 @@ int main()
     yyparse();
 }
 */
-
-static string strErrReplace(const char* str);
-
-extern char* yytext;
-extern int yylineno;
-
-void yyerror(const char *str)
-{
-    cerr << "error: " << strErrReplace(str) << "." << endl;
-    cerr << yytext << " at line " << yylineno << endl;
-}
-
-int yywrap()
-{
-    return 1;
-}
 
 int BasicNode::idCnt = 0;
 
@@ -56,6 +43,7 @@ int BasicNode::idCnt = 0;
 };
 
 %error-verbose
+%locations
 
 %token TOK_ARRAY TOK_BREAK TOK_DO TOK_ELSE TOK_END
 %token TOK_FOR TOK_FUNCTION TOK_IF TOK_IN TOK_LET
@@ -460,5 +448,37 @@ static string strErrReplace(const char* str)
         }
     }
     return strBig;
+}
+
+
+static string strErrReplace(const char* str);
+
+extern char* yytext;
+extern int yylineno;
+extern int yycolumn;
+
+void yyerror(const char *str)
+{
+    cerr << "Parser: " << strErrReplace(str) << "." << endl;
+    string errHead = toStr(string("\"") + yytext + "\"" + " at line ");
+    if (yylloc.first_line) {
+        errHead += toStr(yylloc.first_line);
+        errHead += ": ";
+        cerr << errHead << linebuf << endl;
+        
+        string errFill(errHead.length(), ' ');
+        string errLeading(yylloc.first_column - 1, '.');
+        string errSymbol(yylloc.last_column - yylloc.first_column + 1, '^');
+        string errTrailing(linebuf.length() - yylloc.last_column, '.');
+        cerr << errFill << errLeading << errSymbol << errTrailing << endl;
+        
+        // cerr << yylloc.first_line << ":" << yylloc.first_column << " - ";
+        // cerr << yylloc.last_line << ":" << yylloc.last_column << endl;
+    }
+}
+
+int yywrap()
+{
+    return 1;
 }
 

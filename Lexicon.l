@@ -14,6 +14,14 @@ int commentNesting = 0;
 string lexStr;
 bool escStr;
 
+extern string linebuf;
+string linebuf;
+int yycolumn = 1;
+
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
+yylloc.first_column = yycolumn; yylloc.last_column = yycolumn + yyleng-1; \
+yycolumn += yyleng;
+
 %}
 
 %option yylineno
@@ -23,10 +31,21 @@ BLANK           [ \t\n\r\f]
 OCTCH           \\[0-7]{3}
 HEXCH           \\x[0-9a-fA-F]{2}
 
+%x              FIRSTLINE
 %x              COMMENT
 %x              STRING
 %%
-
+<FIRSTLINE>.*   {   
+                    linebuf = yytext;
+                    yycolumn = 1;
+                    BEGIN INITIAL;
+                    yyless(0);
+                }
+<INITIAL,COMMENT,STRING>\n.* {
+                    linebuf = yytext + 1;
+                    yycolumn = 1;
+                    yyless(1);
+                }
 "array"         {   return  TOK_ARRAY;              }
 "break"         {   return  TOK_BREAK;              }
 "do"            {   return  TOK_DO;                 }
@@ -210,4 +229,11 @@ HEXCH           \\x[0-9a-fA-F]{2}
 <STRING>.       {   lexStr += yytext;               }
 
 %%
+
+
+void setStart()
+{
+    BEGIN FIRSTLINE;
+}
+
 
