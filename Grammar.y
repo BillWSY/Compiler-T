@@ -2,15 +2,31 @@
 #include <stdio.h>
 #include <string.h>
 #include "ASTClass.h"
+#include <string>
+
+using namespace std;
 
 extern Expression* root;
 
 extern int yyparse();
 extern int yylex();
 
+/*
+int main()
+{
+    yyparse();
+}
+*/
+
+static string strErrReplace(const char* str);
+
+extern char* yytext;
+extern int yylineno;
+
 void yyerror(const char *str)
 {
-    fprintf(stderr,"error: %s\n",str);
+    cerr << "error: " << strErrReplace(str) << "." << endl;
+    cerr << yytext << " at line " << yylineno << endl;
 }
 
 int yywrap()
@@ -19,13 +35,6 @@ int yywrap()
 }
 
 int BasicNode::idCnt = 0;
-
-/*
-int main()
-{
-    yyparse();
-}
-*/
 
 %}
 
@@ -45,6 +54,8 @@ int main()
     BinOpType binOpType;
     UnOpType unOpType;
 };
+
+%error-verbose
 
 %token TOK_ARRAY TOK_BREAK TOK_DO TOK_ELSE TOK_END
 %token TOK_FOR TOK_FUNCTION TOK_IF TOK_IN TOK_LET
@@ -409,3 +420,45 @@ UnOp            :       TOK_MINUS_SIGN
                             $$ = UO_Neg;
                         }
                 ;
+
+%%
+
+static const char *const yyprintname[] =
+{
+  "end of file", "error", "undefined", "\"array\"", "\"break\"", "\"do\"",
+  "\"else\"", "\"end\"", "\"for\"", "\"function\"", "\"if\"", "\"in\"",
+  "\"let\"", "\"nil\"", "\"of\"", "\"then\"", "\"to\"", "\"type\"",
+  "\"var\"", "\"while\"", "\"+\"", "\"-\"",
+  "\"*\"", "\"/\"", "\"&\"", "\"|\"", "\"=\"",
+  "\"<>\"", "\"<\"", "\"<=\"", "\">\"", "\">=\"", "\":=\"",
+  "\";\"", "\",\"", "\":\"", "\".\"", "\"(\"", "\")\"",
+  "\"[\"", "\"]\"", "\"{\"", "\"}\"", "integer",
+  "identifier", "string", "EXP_REDUCE_PREC", "IF_WO_ELSE_PREC",
+  "UNIOP_PREC", "$accept", "Program", "Expression", "Square Brace Expression", "Declaration List", "Declaration",
+  "Type Declaration", "Type", "Variable Declaration", "Function Declartion", "Identifier Square Brace Expression", "Left Hand Value", "Expression List",
+  "Argument List", "Field List", "Field Expression List", "Binary Operation Level 1", "Binary Operation Level 2",
+  "Binary Operation Level 3", "Binary Operation Level 4", "Binary Operation Level 5", "Uni-Operation", YY_NULL
+};
+
+static string strErrReplace(const char* str)
+{
+    string strBig = str;
+    for (const char* const* src = yytname, * const* dst = yyprintname; *src != YY_NULL; ++ src, ++ dst) {
+        string::size_type pos=0;
+        string strsrc = *src;
+        string strdst = *dst;
+        string::size_type srclen=strsrc.size();
+        string::size_type dstlen=strdst.size();
+        while( (pos=strBig.find(strsrc, pos)) != string::npos)
+        {
+            if (((pos + srclen) < strBig.size()) && (isalpha(strBig[pos + srclen]) || (strBig[pos + srclen] == '_'))) {
+                ++ pos;
+                continue;
+            }
+            strBig.replace(pos, srclen, strdst);
+            pos += dstlen;
+        }
+    }
+    return strBig;
+}
+

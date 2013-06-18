@@ -15,6 +15,9 @@ string lexStr;
 bool escStr;
 
 %}
+
+%option yylineno
+
 ID              [a-zA-Z][0-9a-zA-z_]*
 BLANK           [ \t\n\r\f]
 OCTCH           \\[0-7]{3}

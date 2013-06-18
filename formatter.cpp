@@ -3,6 +3,9 @@
 #include "utilities.h"
 #include <iostream>
 #include <string>
+#include <iomanip>
+#include <stdlib.h>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -136,12 +139,13 @@ string strVisitExpression(Expression* exp)
         default:
             return string("WRONG_EXPRESSION");
     }
+    return string("WRONG_EXPRESSION");
 }
 
 string strVisitExpList(ExpList* expList)
 {
     string rtn;
-    for(int i = 0; i < expList->size(); ++ i) {
+    for(size_t i = 0; i < expList->size(); ++ i) {
         rtn += strVisitExpression((*expList)[i]);
         if (i != expList->size() - 1) {
             rtn += ";";
@@ -154,7 +158,7 @@ string strVisitExpList(ExpList* expList)
 string strVisitDecList(DecList* decList)
 {
     string rtn;
-    for(int i = 0; i < decList->size(); ++ i) {
+    for(size_t i = 0; i < decList->size(); ++ i) {
         rtn += strVisitDec((*decList)[i]);
         if (i != decList->size() - 1) {
             rtn += "\n";
@@ -187,12 +191,13 @@ string strVisitLVal(LVal* lVal)
         default:
             return "WRONG_LVALUE";
     }
+    return "WRONG_LVALUE";
 }
 
 string strVisitArgList(ArgList* argList)
 {
     string rtn;
-    for(int i = 0; i < argList->size(); ++ i) {
+    for(size_t i = 0; i < argList->size(); ++ i) {
         rtn += strVisitExpression((*argList)[i]);
         if (i != argList->size() - 1) {
             rtn += ", ";
@@ -204,7 +209,7 @@ string strVisitArgList(ArgList* argList)
 string strVisitFieldExpList(FieldExpList* fieldExpList)
 {
     string rtn;
-    for(int i = 0; i < fieldExpList->size(); ++ i) {
+    for(size_t i = 0; i < fieldExpList->size(); ++ i) {
         FieldExpEle cur = (*fieldExpList)[i];
         rtn += cur.first + " = " + strVisitExpression(cur.second);
         if (i != fieldExpList->size() - 1) {
@@ -256,6 +261,7 @@ string strVisitDec(Dec* dec)
         default:
             return string("WRONG_DECLARATION");
     }
+    return string("WRONG_DECLARATION");
 }
 
 string strVisitTy(Ty* ty)
@@ -278,12 +284,13 @@ string strVisitTy(Ty* ty)
         default:
             return string("WRONG_TY");
     }
+    return string("WRONG_TY");
 }
 
 string strVisitFieldList(FieldList* fieldList)
 {
     string rtn;
-    for(int i = 0; i < fieldList->size(); ++ i) {
+    for(size_t i = 0; i < fieldList->size(); ++ i) {
         FieldEle cur = (*fieldList)[i];
         rtn += cur.first + " : " + cur.second;
         if (i != fieldList->size() - 1) {
@@ -295,7 +302,29 @@ string strVisitFieldList(FieldList* fieldList)
 
 int main()
 {
-    yyparse();
-    cout << strVisitExpression(root);
+    timeval timeStart;
+    timeval timeEnd;
+    gettimeofday(&timeStart, NULL);
+
+    cerr << "====================Project Compiler T====================" << endl;
+    cerr << "=               A Tiger Language Formatter               =" << endl;
+    cerr << "=                          By                            =" << endl;
+    cerr << "=               Shengye Wang  &  Yanbo Bai               =" << endl;
+    cerr << "==========================================================" << endl;
+
+    cerr << "Compiler-T: Start parsering." << endl;
+    int parserRtn = yyparse();
+    cerr << "Compiler-T: Parser returned " << parserRtn << "." << endl;
+    cerr << "Compiler-T: " << BasicNode::nodeCount() << " AST nodes created." << endl;
+
+    cerr << "Compiler-T: Rewriting Tiger source." << endl;
+    cout << strVisitExpression(root) << endl;
+
+    gettimeofday(&timeEnd, NULL);
+    cerr << setiosflags(ios::fixed);
+    double timeUs = 1000000 * (timeEnd.tv_sec - timeStart.tv_sec)+ timeEnd.tv_usec - timeStart.tv_usec;
+    timeUs /= 1000000;
+    cerr << "Compiler-T: Done." << " " << timeUs << " seconds elapsed." << endl;
+    cerr << "==========================================================" << endl;
 }
 

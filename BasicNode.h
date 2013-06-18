@@ -21,6 +21,9 @@ class BasicNode {
       NodeType getType() {
           return nodeType;
       }
+      static int nodeCount() {
+          return idCnt;
+      }
 };
 
 #endif // BASICNODE_H_

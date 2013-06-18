@@ -3,6 +3,9 @@
 #include "utilities.h"
 #include <iostream>
 #include <string>
+#include <iomanip>
+#include <stdlib.h>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -54,7 +57,6 @@ string graphVisitExpression(Expression* exp)
         case E_BinOp:
             cout << curID << " [shape=record, label=\"{ { <ptr> Expression | " << curID << " } |";
             cout << "{ Binary Operation | <exp0> Expression 0 | " << binOpToStrEsc(((ExpBinOp*)exp)->binOp);
-            //cout << "{ Binary Operation | <exp0> Expression 0 | " << "XX";
             cout << " | <exp1> Expression 1} }\"];" << endl;
             tmpStr = graphVisitExpression(((ExpBinOp*)exp)->exp0);
             cout << curID << ":exp0" << " -> " << tmpStr << endl;
@@ -157,6 +159,7 @@ string graphVisitExpression(Expression* exp)
         default:
             return string("WRONG_EXPRESSION");
     }
+    return string("WRONG_EXPRESSION");
 }
 
 string graphVisitExpList(ExpList* expList)
@@ -166,7 +169,7 @@ string graphVisitExpList(ExpList* expList)
     string result;
     string tmpStr;
     result = curID + " [shape=record, label=\"{ { <ptr> Expression List | " + curID + " } ";
-    for(int i = 0; i < expList->size(); ++ i) {
+    for(size_t i = 0; i < expList->size(); ++ i) {
         result += "| { " + toStr(i) + " | <pos" + toStr(i) + "> Expression }";
         tmpStr = graphVisitExpression((*expList)[i]);
         cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";" << endl;
@@ -186,7 +189,7 @@ string graphVisitDecList(DecList* decList)
     string result;
     string tmpStr;
     result = curID + " [shape=record, label=\"{ { <ptr> Declartion List | " + curID + " } ";
-    for(int i = 0; i < decList->size(); ++ i) {
+    for(size_t i = 0; i < decList->size(); ++ i) {
         result += "| { " + toStr(i) + " | <pos" + toStr(i) + "> Declartion }";
         tmpStr = graphVisitDec((*decList)[i]);
         cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";" << endl;
@@ -232,6 +235,7 @@ string graphVisitLVal(LVal* lVal)
         default:
             return "WRONG_LVALUE";
     }
+    return "WRONG_LVALUE";
 }
 
 string graphVisitArgList(ArgList* argList)
@@ -241,7 +245,7 @@ string graphVisitArgList(ArgList* argList)
     string result;
     string tmpStr;
     result = curID + " [shape=record, label=\"{ { <ptr> Argument List | " + curID + " } ";
-    for(int i = 0; i < argList->size(); ++ i) {
+    for(size_t i = 0; i < argList->size(); ++ i) {
         result += "| { " + toStr(i) + " | <pos" + toStr(i) + "> Argument }";
         tmpStr = graphVisitExpression((*argList)[i]);
         cout << curID << ":pos" + toStr(i) + " -> " << tmpStr << ";" << endl;
@@ -261,7 +265,7 @@ string graphVisitFieldExpList(FieldExpList* fieldExpList)
     string result;
     string tmpStr;
     result = curID + " [shape=record, label=\"{ { <ptr> Field Expression List | " + curID + " } ";
-    for(int i = 0; i < fieldExpList->size(); ++ i) {
+    for(size_t i = 0; i < fieldExpList->size(); ++ i) {
         FieldExpEle cur = (*fieldExpList)[i];
         result += "| { " + toStr(i) + " | " + cur.first + " | ";
         result += "<pos" + toStr(i) + "> Expression }";
@@ -326,6 +330,7 @@ string graphVisitDec(Dec* dec)
         default:
             return string("WRONG_DECLARATION");
     }
+    return string("WRONG_DECLARATION");
 }
 
 string graphVisitTy(Ty* ty)
@@ -356,6 +361,7 @@ string graphVisitTy(Ty* ty)
         default:
             return string("WRONG_TY");
     }
+    return string("WRONG_TY");
 }
 
 string graphVisitFieldList(FieldList* fieldList)
@@ -365,7 +371,7 @@ string graphVisitFieldList(FieldList* fieldList)
     string result;
     string tmpStr;
     result = curID + " [shape=record, label=\"{ { <ptr> Field Expression List | " + curID + " } ";
-    for(int i = 0; i < fieldList->size(); ++ i) {
+    for(size_t i = 0; i < fieldList->size(); ++ i) {
         FieldEle cur = (*fieldList)[i];
         result += "| { " + toStr(i) + " | " + cur.first + " | " + cur.second + " }";
     }
@@ -379,9 +385,31 @@ string graphVisitFieldList(FieldList* fieldList)
 
 int main()
 {
-    yyparse();
+    timeval timeStart;
+    timeval timeEnd;
+    gettimeofday(&timeStart, NULL);
+
+    cerr << "====================Project Compiler T====================" << endl;
+    cerr << "=          A Tiger Language AST Graph Generator          =" << endl;
+    cerr << "=                          By                            =" << endl;
+    cerr << "=               Shengye Wang  &  Yanbo Bai               =" << endl;
+    cerr << "==========================================================" << endl;
+
+    cerr << "Compiler-T: Start parsering." << endl;
+    int parserRtn = yyparse();
+    cerr << "Compiler-T: Parser returned " << parserRtn << "." << endl;
+    cerr << "Compiler-T: " << BasicNode::nodeCount() << " AST nodes created." << endl;
+
+    cerr << "Compiler-T: Writing DOT script." << endl;
     cout << "digraph ast {" << endl;
     graphVisitExpression(root);
     cout << "}" << endl;
+
+    gettimeofday(&timeEnd, NULL);
+    cerr << setiosflags(ios::fixed);
+    double timeUs = 1000000 * (timeEnd.tv_sec - timeStart.tv_sec)+ timeEnd.tv_usec - timeStart.tv_usec;
+    timeUs /= 1000000;
+    cerr << "Compiler-T: Done." << " " << timeUs << " seconds elapsed." << endl;
+    cerr << "==========================================================" << endl;
 }
 
