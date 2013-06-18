@@ -2156,9 +2156,9 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 300 "Grammar.y"
     {
+                            cerr << "Statement discarded, continuing." << endl;
                             (yyval.expList) = (yyvsp[(1) - (4)].expList);
                             (yyval.expList) -> push_back((yyvsp[(4) - (4)].exp));
-                            cerr << "Statement discarded, continuing." << endl;
                         }
     break;
 

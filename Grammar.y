@@ -298,9 +298,9 @@ ExpList         :       /* nothing */
                         }
                 |       ExpList error TOK_SEMIC Exp
                         {
+                            cerr << "Statement discarded, continuing." << endl;
                             $$ = $1;
                             $$ -> push_back($4);
-                            cerr << "Statement discarded, continuing." << endl;
                         }
                 ;
 
