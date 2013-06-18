@@ -636,37 +636,10 @@ Compiler-T: Done. 0.002452 seconds elapsed.
 ==========================================================
 \end{verbatim}
 
-限于篇幅，这里再提供一个规模较小的代码，可以看到较为清晰的抽象语法树。
-
-\begin{center}
-\includegraphics[width=\columnwidth]{small}  \\
-测试用例 1
-\end{center}
-
-原始代码如下：
-
-\begin{verbatim}
-/* an array type and an array variable */
-let
-	type  arrtype = array of int
-	var arr1:arrtype := arrtype [10] of 0
-in
-	arr1
-end
-\end{verbatim}
-
 对于每一个测试用例，生成的格式化后代码和dot代码、PDF图像均可以在Result目录下找到。
 
 \section{心得体会}
 
-flex和bison是强大的词法和句法分析器产生器。flex可以灵活地用正则表达式描述词法，而bison使用LALR(1)文法，基本只需要直观地用BNF范式描述上下文无关文法规则即可。之后合理设计优先级，消除冲突即可。
 
-flex和bison两个工具联系紧密。bison能为flex生成标示符定义。flex为bison设定位置信息。两者的协同工作能够很好地完成所需要的任务。
-
-整个设计的复杂点在于数据结构的设计。合理的组织方式才能为抽象语法树到下一级的中间表示提供便利。因为使用了LALR(1)文法，和“合理”的表示更为贴近，所以设计出的数据结构更为合理。
-
-整个设计的亮点在于
-
-本人现在为复旦大学专用集成电路与系统国家重点实验室工作。我们的下一个项目是粗粒度可重构的计算阵列。我为其设计控制模块。我可能会设计一种专用的语言来描述控制信号的行为。想必此次编译器前端设计的经历能为这个项目带来很大的帮助。
 
 \end{document}

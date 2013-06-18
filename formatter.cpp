@@ -321,7 +321,7 @@ int main()
     cerr << "=               Shengye Wang  &  Yanbo Bai               =" << endl;
     cerr << "==========================================================" << endl;
 
-    cerr << "Compiler-T: Start parsering." << endl;
+    cerr << "Compiler-T: Start parsing." << endl;
     setStart();
     int parserRtn = yyparse();
     cerr << "Compiler-T: Parser returned " << parserRtn << "." << endl;
